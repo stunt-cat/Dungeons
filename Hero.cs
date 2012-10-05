@@ -10,7 +10,7 @@ using System;
 using System.Drawing;
 
 
-namespace MoveAndFight
+namespace Dungeons
 {
 	/// <summary>
 	/// Hero extends Character and represents the forces of good.

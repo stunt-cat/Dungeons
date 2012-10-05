@@ -9,7 +9,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace MoveAndFight
+namespace Dungeons
 {
 	/// <summary>
 	/// Class with program entry point.

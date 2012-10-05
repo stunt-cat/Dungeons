@@ -15,7 +15,7 @@ using System.Resources;
 using System.Timers;
 using System.Linq;
 
-namespace MoveAndFight
+namespace Dungeons
 {
 	/// <summary>
 	/// MainForm is where all the jazz goes down.
@@ -56,7 +56,7 @@ namespace MoveAndFight
 		int roomSquaresX;
 		int roomSquaresY;
 		
-		ResourceManager resources = new ResourceManager("MoveAndFight.images", Assembly.GetExecutingAssembly());
+		ResourceManager resources = new ResourceManager("Dungeons.images", Assembly.GetExecutingAssembly());
 		private System.Drawing.Graphics g;
 		private System.Drawing.Pen pen1 = new System.Drawing.Pen(Color.Blue, 7F);
 		private System.Drawing.Pen pen2 = new System.Drawing.Pen(Color.Red, 10F);
@@ -91,15 +91,15 @@ namespace MoveAndFight
 			if (roomSelectorButton1.Checked){
 				roomSquaresX = 3;
 				roomSquaresY = 5;
-				this.pictureBox1.BackgroundImage = global::MoveAndFight.Images.room3x5;
+				this.pictureBox1.BackgroundImage = global::Dungeons.Images.room3x5;
 			} else if (roomSelectorButton2.Checked){
 				roomSquaresX = 4;
 				roomSquaresY = 4;
-				this.pictureBox1.BackgroundImage = global::MoveAndFight.Images.room4x4;
+				this.pictureBox1.BackgroundImage = global::Dungeons.Images.room4x4;
 			} else if (roomSelectorButton3.Checked){
 				roomSquaresX = 5;
 				roomSquaresY = 5;
-				this.pictureBox1.BackgroundImage = global::MoveAndFight.Images.room5x5;
+				this.pictureBox1.BackgroundImage = global::Dungeons.Images.room5x5;
 			}
 			
 			room = new Room(roomSquaresX, roomSquaresY);
@@ -239,33 +239,33 @@ namespace MoveAndFight
 		
 		void ActivateHeroButton1Click(object sender, EventArgs e)
 		{
-			leftTurnButton.Image = global::MoveAndFight.Images.arrow_leftturn_1;
-			rightTurnButton.Image = global::MoveAndFight.Images.arrow_rightturn_1;
-			forwardButton.Image = global::MoveAndFight.Images.arrow_north_1;
+			leftTurnButton.Image = global::Dungeons.Images.arrow_leftturn_1;
+			rightTurnButton.Image = global::Dungeons.Images.arrow_rightturn_1;
+			forwardButton.Image = global::Dungeons.Images.arrow_north_1;
 			activeHero = (Hero) heroes[0];
 		}
 		
 		void ActivateHeroButton2Click(object sender, EventArgs e)
 		{
-			leftTurnButton.Image = global::MoveAndFight.Images.arrow_leftturn_2;
-			rightTurnButton.Image = global::MoveAndFight.Images.arrow_rightturn_2;
-			forwardButton.Image = global::MoveAndFight.Images.arrow_north_2;
+			leftTurnButton.Image = global::Dungeons.Images.arrow_leftturn_2;
+			rightTurnButton.Image = global::Dungeons.Images.arrow_rightturn_2;
+			forwardButton.Image = global::Dungeons.Images.arrow_north_2;
 			activeHero = (Hero) heroes[1];
 		}
 		
 		void ActivateHeroButton3Click(object sender, EventArgs e)
 		{
-			leftTurnButton.Image = global::MoveAndFight.Images.arrow_leftturn_3;
-			rightTurnButton.Image = global::MoveAndFight.Images.arrow_rightturn_3;
-			forwardButton.Image = global::MoveAndFight.Images.arrow_north_3;
+			leftTurnButton.Image = global::Dungeons.Images.arrow_leftturn_3;
+			rightTurnButton.Image = global::Dungeons.Images.arrow_rightturn_3;
+			forwardButton.Image = global::Dungeons.Images.arrow_north_3;
 			activeHero = (Hero) heroes[2];
 		}
 
 		void ActivateHeroButton4Click(object sender, EventArgs e)
 		{
-			leftTurnButton.Image = global::MoveAndFight.Images.arrow_leftturn_4;
-			rightTurnButton.Image = global::MoveAndFight.Images.arrow_rightturn_4;
-			forwardButton.Image = global::MoveAndFight.Images.arrow_north_4;
+			leftTurnButton.Image = global::Dungeons.Images.arrow_leftturn_4;
+			rightTurnButton.Image = global::Dungeons.Images.arrow_rightturn_4;
+			forwardButton.Image = global::Dungeons.Images.arrow_north_4;
 			activeHero = (Hero) heroes[3];
 		}
 		

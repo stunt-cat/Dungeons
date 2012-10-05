@@ -9,7 +9,7 @@
 using System;
 using System.Drawing;
 
-namespace MoveAndFight
+namespace Dungeons
 {
 	
 	public enum Direction {North, East, South, West};

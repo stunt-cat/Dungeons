@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 # SharpDevelop 4.1.0.8000
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoveAndFight", "MoveAndFight.csproj", "{D80EB835-FE66-4FCA-8801-FC671AA5A288}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dungeons", "Dungeons.csproj", "{D80EB835-FE66-4FCA-8801-FC671AA5A288}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -9,7 +9,7 @@
 using System;
 using System.Drawing;
 
-namespace MoveAndFight
+namespace Dungeons
 {
 	/// <summary>
 	/// Baddie extends Character and represents the forces of evil.

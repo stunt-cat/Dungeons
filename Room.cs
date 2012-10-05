@@ -9,7 +9,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MoveAndFight
+namespace Dungeons
 {
 	/// <summary>
 	/// Room in which amazing action takes place.

@@ -6,7 +6,7 @@
  * 
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
-namespace MoveAndFight
+namespace Dungeons
 	
 {
 	partial class MainForm
@@ -95,7 +95,7 @@ namespace MoveAndFight
 			// closeCombatButton
 			// 
 			this.closeCombatButton.Enabled = false;
-			this.closeCombatButton.Image = global::MoveAndFight.Images.closeCombat;
+			this.closeCombatButton.Image = global::Dungeons.Images.closeCombat;
 			this.closeCombatButton.Location = new System.Drawing.Point(593, 249);
 			this.closeCombatButton.Name = "closeCombatButton";
 			this.closeCombatButton.Size = new System.Drawing.Size(100, 100);
@@ -106,7 +106,7 @@ namespace MoveAndFight
 			// forwardButton
 			// 
 			this.forwardButton.Enabled = false;
-			this.forwardButton.Image = global::MoveAndFight.Images.arrow_north_1;
+			this.forwardButton.Image = global::Dungeons.Images.arrow_north_1;
 			this.forwardButton.Location = new System.Drawing.Point(655, 31);
 			this.forwardButton.Name = "forwardButton";
 			this.forwardButton.Size = new System.Drawing.Size(100, 100);
@@ -149,7 +149,7 @@ namespace MoveAndFight
 			// leftTurnButton
 			// 
 			this.leftTurnButton.Enabled = false;
-			this.leftTurnButton.Image = global::MoveAndFight.Images.arrow_leftturn_1;
+			this.leftTurnButton.Image = global::Dungeons.Images.arrow_leftturn_1;
 			this.leftTurnButton.Location = new System.Drawing.Point(536, 66);
 			this.leftTurnButton.Name = "leftTurnButton";
 			this.leftTurnButton.Size = new System.Drawing.Size(100, 100);
@@ -160,7 +160,7 @@ namespace MoveAndFight
 			// rightTurnButton
 			// 
 			this.rightTurnButton.Enabled = false;
-			this.rightTurnButton.Image = global::MoveAndFight.Images.arrow_rightturn_1;
+			this.rightTurnButton.Image = global::Dungeons.Images.arrow_rightturn_1;
 			this.rightTurnButton.Location = new System.Drawing.Point(773, 66);
 			this.rightTurnButton.Name = "rightTurnButton";
 			this.rightTurnButton.Size = new System.Drawing.Size(100, 100);
@@ -182,7 +182,7 @@ namespace MoveAndFight
 			// rangedCombatButton
 			// 
 			this.rangedCombatButton.Enabled = false;
-			this.rangedCombatButton.Image = global::MoveAndFight.Images.rangedCombat;
+			this.rangedCombatButton.Image = global::Dungeons.Images.rangedCombat;
 			this.rangedCombatButton.Location = new System.Drawing.Point(712, 249);
 			this.rangedCombatButton.Name = "rangedCombatButton";
 			this.rangedCombatButton.Size = new System.Drawing.Size(100, 100);
@@ -361,7 +361,7 @@ namespace MoveAndFight
 			// activateHeroButton2
 			// 
 			this.activateHeroButton2.Enabled = false;
-			this.activateHeroButton2.Image = global::MoveAndFight.Images.hero_select_2;
+			this.activateHeroButton2.Image = global::Dungeons.Images.hero_select_2;
 			this.activateHeroButton2.Location = new System.Drawing.Point(650, 182);
 			this.activateHeroButton2.Name = "activateHeroButton2";
 			this.activateHeroButton2.Size = new System.Drawing.Size(50, 50);
@@ -373,7 +373,7 @@ namespace MoveAndFight
 			// activateHeroButton1
 			// 
 			this.activateHeroButton1.Enabled = false;
-			this.activateHeroButton1.Image = global::MoveAndFight.Images.hero_select_1;
+			this.activateHeroButton1.Image = global::Dungeons.Images.hero_select_1;
 			this.activateHeroButton1.Location = new System.Drawing.Point(594, 182);
 			this.activateHeroButton1.Name = "activateHeroButton1";
 			this.activateHeroButton1.Size = new System.Drawing.Size(50, 50);
@@ -385,7 +385,7 @@ namespace MoveAndFight
 			// activateHeroButton3
 			// 
 			this.activateHeroButton3.Enabled = false;
-			this.activateHeroButton3.Image = global::MoveAndFight.Images.hero_select_3;
+			this.activateHeroButton3.Image = global::Dungeons.Images.hero_select_3;
 			this.activateHeroButton3.Location = new System.Drawing.Point(706, 182);
 			this.activateHeroButton3.Name = "activateHeroButton3";
 			this.activateHeroButton3.Size = new System.Drawing.Size(50, 50);
@@ -397,7 +397,7 @@ namespace MoveAndFight
 			// activateHeroButton4
 			// 
 			this.activateHeroButton4.Enabled = false;
-			this.activateHeroButton4.Image = global::MoveAndFight.Images.hero_select_4;
+			this.activateHeroButton4.Image = global::Dungeons.Images.hero_select_4;
 			this.activateHeroButton4.Location = new System.Drawing.Point(762, 182);
 			this.activateHeroButton4.Name = "activateHeroButton4";
 			this.activateHeroButton4.Size = new System.Drawing.Size(50, 50);
