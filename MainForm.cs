@@ -48,13 +48,12 @@ namespace Dungeons
 		public Direction baddieMoveDirection;
 		
 		public IEnumerable<Character> everybody;
-		public Point shotLocation;
-		public Character shotVictim;
+		//public Point shotLocation;
+		//public Character shotVictim;
 		
 		// Create Room for action to take place in
-		public Room room;
-		int roomSquaresX;
-		int roomSquaresY;
+		public Room room = new Room();
+		
 		
 		ResourceManager resources = new ResourceManager("Dungeons.images", Assembly.GetExecutingAssembly());
 		private System.Drawing.Graphics g;
@@ -87,6 +86,7 @@ namespace Dungeons
 			
 			heroes = new List<Character>(numberOfHeroes);
 			
+			/*
 			// Get room parameters from RadioBox in roomSelectorPanel - also select correct background image
 			if (roomSelectorButton1.Checked){
 				roomSquaresX = 3;
@@ -101,31 +101,29 @@ namespace Dungeons
 				roomSquaresY = 5;
 				this.pictureBox1.BackgroundImage = global::Dungeons.Images.room5x5;
 			}
-			
-			room = new Room(roomSquaresX, roomSquaresY);
-			
+			*/
 			
 			// Randomly select hero start point(s), ensuring there are no conflicts with other heroes (N.B. no baddies exist at this point)
 			for (int i = 0; i < numberOfHeroes; i++)
 			{
-				Point bufferLocation = RandomLocation();
-				Boolean pointAvailable = true;
+				Tile bufferLocation = RandomLocation();
+				Boolean tileAvailable = true;
 				
 				// Check other Hero locations and reassign bufferLocation until it is an available location
 					do{
 						// Assume location is initially free
-						pointAvailable = true;
+						tileAvailable = true;
 						foreach (Character hero in heroes)
 						{
 							if (bufferLocation == hero.location)
 							{
 								// If location not free, choose another and check everybody again
 								bufferLocation = RandomLocation();
-								pointAvailable = false;
+								tileAvailable = false;
 								break;
 							}
 						}
-					} while (!pointAvailable);	
+					} while (!tileAvailable);	
 				
 				// bufferLocation is available, so assign it to new Hero
 				heroes.Add(new Hero (bufferLocation, (Direction) random.Next(4), i+1));
@@ -149,35 +147,35 @@ namespace Dungeons
 			// Only assigns location if it is not occupied already by hero or preceding baddie
 			for (int i = 0; i < numberOfBaddies; i++) {
 				
-				Point bufferLocation = RandomLocation();
-				Boolean pointAvailable = true;
+				tile bufferLocation = RandomLocation();
+				Boolean tileAvailable = true;
 				IEnumerable<Character> everybody = heroes.Concat(baddies);
 				
 				// Check other locations and reassign bufferLocation until it is an available location
 				do{
 					// Assume location is initially free
-					pointAvailable = true;
+					tileAvailable = true;
 					foreach (Character anybody in everybody)
 					{
 						if (bufferLocation == anybody.location)
 						{
 							// If location not free, chooose another and check everybody again
 							bufferLocation = RandomLocation();
-							pointAvailable = false;
+							tileAvailable = false;
 							break;
 						}
 					}
-				} while (!pointAvailable);
+				} while (!tileAvailable);
 					
 				// bufferLocation is available, so assign it to new Baddie
 				baddies.Add(new Baddie (bufferLocation));
 			}
 		}
 		
-		public Point RandomLocation()
+		public Tile RandomLocation()
 		{
-			Point randomPoint = new Point(random.Next(roomSquaresX)*100, random.Next(roomSquaresY)*100);
-			return randomPoint;
+			Tile randomTile = tiles[random.Next(16)];
+			return randomTile;
 		}
 		
 		void ResetGame()
@@ -272,30 +270,14 @@ namespace Dungeons
 		void ForwardButtonClick(object sender, System.EventArgs e)
 		
 		{
-			Boolean moveProblem = false;
-				
-			// Check hero isn't trying to walk into a wall
-			if (room.WallCollision(activeHero, activeHero.facing)) moveProblem = true;
-			
-			// Check hero isn't trying to walk into baddie(s) or other hero(es)
-			everybody = heroes.Concat(baddies);
-			foreach (Character anybody in everybody)
-			{
-				if (!CheckAdjacencyAvailable(activeHero.facing, activeHero.location, anybody.location))
-				{
-				moveProblem = true;
-				break;
-				}
-			}
-			
-			if(moveProblem)
+			if(!CheckDirection(activeHero, activeHero.facing))
 			{
 				OutOfBounds();
 				DrawLocation();
 			} else
 			{
 				// Move is okay to execute!
-				activeHero.MoveForward();
+				activeHero.MoveTo(activeHero.location.Move(activeHero.facing));
 				
 				// Possibly move baddie also! (1/2 chance for each baddie)
 				if (random.Next(2) == 0) MoveBaddie();
@@ -305,11 +287,35 @@ namespace Dungeons
 			
 		}
 		
+		Boolean CheckDirection(Character mover, Direction intendedDirection){
+			Boolean directionProblem = false;
+			
+			// Check movement direction exists to be potentially moved into.
+			// i.e. direction leads somewhere and there is not a closed door in the way.
+			ITileJoiner intendedLocation = mover.location.Move(intendedDirection);
+			if(intendedLocation == mover.location){		// N.B. Move() returns current location if move problem of any kind.
+				directionProblem true;
+			}
+			
+			// Check location is free i.e. no baddie or other hero there
+			everybody = heroes.Concat(baddies);
+			foreach (Character anybody in everybody)
+			{
+				if (anybody.location == intendedLocation)
+				{
+				directionProblem = true;
+				break;
+				}
+			}
+			
+			return directionProblem;
+		}
+		
 		void MoveBaddie()
 		{
 			// N.B. Baddies only have one chance to move - if the baddieMoveDirection turns out to not be possible
 			// 		the baddie doesn't move i.e. they don't get to keep trying directions until they can move.
-			
+		
 			everybody = heroes.Concat(baddies);
 			
 			foreach (Baddie movingBaddie in baddies)
@@ -319,13 +325,17 @@ namespace Dungeons
 				// Choose direction for baddie
 				baddieMoveDirection = (Direction)(random.Next(4));
 				
-				// Check no wall
-				if (room.WallCollision(movingBaddie, baddieMoveDirection)) moveProblem = true;
+				// Check movement direction exists to be potentially moved into.
+				// i.e. direction leads somewhere and there is not a closed door in the way.
+				ITileJoiner intendedLocation = movingBaddie.location.Move(movingBaddie.facing);
+				if(intendedLocation == movingBaddie.location){
+					moveProblem true;
+				}
 				
-				// check baddie isn't trying to walk into baddie(s) or hero(es)
+				// Check location is free i.e. no baddie or other hero there
 				foreach (Character anybody in everybody)
 				{
-					if (!CheckAdjacencyAvailable(baddieMoveDirection, movingBaddie.location, anybody.location))
+					if (anybody.location == intendedLocation)
 					{
 					moveProblem = true;
 					break;
@@ -335,26 +345,15 @@ namespace Dungeons
 				if(!moveProblem)
 				{
 					// Move is okay to execute!
-					movingBaddie.Move(baddieMoveDirection);
+					movingBaddie.MoveTo(baddieMoveDirection);
+					// Update movingBaddie facing to reflect move
+					movingBaddie.NewFacing(baddieMoveDirection);
+					
 					DrawLocation();
 					
 					// N.B. If (moveProblem) movingBaddie doesn't move
 				} 
 			}
-		}
-		
-		Boolean CheckAdjacencyAvailable(Direction intendedDirection, Point startLocation, Point intendedLocation)
-		{
-			
-			Boolean result = true;
-			switch (intendedDirection)
-			{
-					case Direction.North: if((intendedLocation.X == startLocation.X) && (intendedLocation.Y == startLocation.Y -100)) result = false; break;
-					case Direction.East: if((intendedLocation.Y == startLocation.Y) && (intendedLocation.X == startLocation.X +100)) result = false; break;
-					case Direction.South: if((intendedLocation.X == startLocation.X) && (intendedLocation.Y == startLocation.Y +100)) result = false; break;
-					case Direction.West: if((intendedLocation.Y == startLocation.Y) && (intendedLocation.X == startLocation.X -100)) result = false; break;
-			}
-			return result;
 		}
 		
 		private void OutOfBounds()

@@ -17,21 +17,10 @@ namespace Dungeons
 	/// 
 	public class Baddie : Character
 	{
-		public Baddie(Point location) : base (location)
+		public Baddie(Tile location, Direction facing) : base (location, facing)
 		{
 			
 		}
 		
-		public void Move(Direction moveDirection)
-		{
-			switch (moveDirection)
-			{
-				case Direction.North: this.location.Y -= 100; break;
-				case Direction.East: this.location.X += 100; break;
-				case Direction.South: this.location.Y += 100; break;
-				case Direction.West: this.location.X -= 100; break;
-			}
-			
-		}
 	}
 }
