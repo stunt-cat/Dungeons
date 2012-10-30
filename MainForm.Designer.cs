@@ -76,6 +76,7 @@ namespace Dungeons
 			this.roomSelectorButton3 = new System.Windows.Forms.RadioButton();
 			this.roomSelectorButton2 = new System.Windows.Forms.RadioButton();
 			this.roomSelectorButton1 = new System.Windows.Forms.RadioButton();
+			this.useDoorButton = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.baddieSelectorPanel.SuspendLayout();
 			this.heroesSelectorPanel.SuspendLayout();
@@ -96,7 +97,7 @@ namespace Dungeons
 			// 
 			this.closeCombatButton.Enabled = false;
 			this.closeCombatButton.Image = global::Dungeons.Images.closeCombat;
-			this.closeCombatButton.Location = new System.Drawing.Point(593, 249);
+			this.closeCombatButton.Location = new System.Drawing.Point(544, 249);
 			this.closeCombatButton.Name = "closeCombatButton";
 			this.closeCombatButton.Size = new System.Drawing.Size(100, 100);
 			this.closeCombatButton.TabIndex = 1;
@@ -183,7 +184,7 @@ namespace Dungeons
 			// 
 			this.rangedCombatButton.Enabled = false;
 			this.rangedCombatButton.Image = global::Dungeons.Images.rangedCombat;
-			this.rangedCombatButton.Location = new System.Drawing.Point(712, 249);
+			this.rangedCombatButton.Location = new System.Drawing.Point(656, 249);
 			this.rangedCombatButton.Name = "rangedCombatButton";
 			this.rangedCombatButton.Size = new System.Drawing.Size(100, 100);
 			this.rangedCombatButton.TabIndex = 14;
@@ -455,11 +456,23 @@ namespace Dungeons
 			this.roomSelectorButton1.Text = "3x5";
 			this.roomSelectorButton1.UseVisualStyleBackColor = true;
 			// 
+			// useDoorButton
+			// 
+			this.useDoorButton.Enabled = false;
+			this.useDoorButton.Image = global::Dungeons.Images.useDoor;
+			this.useDoorButton.Location = new System.Drawing.Point(773, 249);
+			this.useDoorButton.Name = "useDoorButton";
+			this.useDoorButton.Size = new System.Drawing.Size(100, 100);
+			this.useDoorButton.TabIndex = 29;
+			this.useDoorButton.UseVisualStyleBackColor = true;
+			this.useDoorButton.Click += new System.EventHandler(this.UseDoorButtonClick);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(897, 736);
+			this.Controls.Add(this.useDoorButton);
 			this.Controls.Add(this.roomSizeSelectorPanel);
 			this.Controls.Add(this.roomSizeLabel);
 			this.Controls.Add(this.activateHeroButton4);
@@ -492,6 +505,7 @@ namespace Dungeons
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.Button useDoorButton;
 		private System.Windows.Forms.RadioButton roomSelectorButton1;
 		private System.Windows.Forms.RadioButton roomSelectorButton2;
 		private System.Windows.Forms.RadioButton roomSelectorButton3;

@@ -23,12 +23,12 @@ namespace Dungeons
 	public class Tile : ITileJoiner
 	{
 		public Dictionary<Direction, ITileJoiner> adjacent = new Dictionary<Direction, ITileJoiner>();
-		public Point tileLocation = new Point(0,0);								// Locates Tile w.r.t. game area origin.
-		public string imageRef;
+		public Point tileLocation = new Point(0,0);			// Locates Tile w.r.t. game area origin.
+		public string imageRef;								// Basic image for Tile
 		public TileType type;
 		
 		public Tile(Point offset){
-			this.tileLocation = offset;		// Adds room origin location to point locations.
+			this.tileLocation = offset;						// Adds room origin location to point locations.
 		}
 		
 		public void InitialiseTile(TileType type, Point tileLocationOffset, string imageRef, ITileJoiner north, ITileJoiner east, ITileJoiner south, ITileJoiner west)
@@ -49,18 +49,14 @@ namespace Dungeons
 		public Tile Adjacent(Direction intendedDirection){
 			ITileJoiner potentialAdjacent = this.adjacent[intendedDirection];
 			if(potentialAdjacent != null){
-				if(potentialAdjacent is Room){
-					return (Tile)potentialAdjacent;
-				} else if(potentialAdjacent is Door){
+				if(potentialAdjacent is Tile) return (Tile)potentialAdjacent;
+				if(potentialAdjacent is Door){
 					Door door = (Door)potentialAdjacent;
 					// If Door open, return Tile on the other side.
-					if (door.open){
-						return door.OtherSide(this);
-					}
-					// If Door closed, return current location i.e. no move.
-					else return null;
-				} else return null; // May add other types of ITile in the future, so update options here!
-			} else return null;	// There is no adjacent move.	
+					if (door.open) return door.OtherSide(this);
+				}
+			}
+			return null; // There is no adjacent move.
 		}
 	}
 }

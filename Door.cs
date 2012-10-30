@@ -19,55 +19,55 @@ namespace Dungeons
 		public Boolean open = false;		// Refers to if door is open or closed.
 		private Tile sideA;
 		private Tile sideB;
-		private string imageRef;
-		private Direction location;			// Refers to side of Tile the door is on.		N.B. Is this necessary??
+		public string imageRef = "door_e_closed";
+		public Tile location;
+		public Direction wallLocation;			// Refers to side of Tile the door is on.		N.B. Is this necessary??
 		
-		public Tile OtherSide(ITileJoiner viewer)
+		public Tile OtherSide(Tile viewer)
 		{
 			if(viewer == sideA){
 				return sideB;
 			} else return sideA;
 		}
 		
-		public Door(Direction location, Tile sideA, Tile sideB)
+		public Door(Tile location, Direction wallLocation, Tile sideA, Tile sideB)
 		{
 			this.location = location;
+			this.wallLocation = wallLocation;
 			this.sideA = sideA;
 			this.sideB = sideB;
 			
 			// Get correct image file for door.
-			switch(location){
-				case Direction.North: imageRef = "door_n_closed.gif"; break;
-				case Direction.East: imageRef = "door_e_closed.gif"; break;
-				case Direction.South: imageRef = "door_s_closed.gif"; break;
-				case Direction.West: imageRef = "door_w_closed.gif"; break;
+			switch(wallLocation){
+				case Direction.North: this.imageRef = "door_n_closed"; break;
+				case Direction.East: this.imageRef = "door_e_closed"; break;
+				case Direction.South: this.imageRef = "door_s_closed"; break;
+				case Direction.West: this.imageRef = "door_w_closed"; break;
 			}
 		}
 		
 		// Method to open/shut door.
-		public Boolean OpenShut()
+		public void OpenShut()
 		{
-			if (open == false)
+			if (this.open == false)
 			{
-				open = true;
-				switch(location){
-					case Direction.North: imageRef = "door_n_open.gif"; break;
-					case Direction.East: imageRef = "door_e_open.gif"; break;
-					case Direction.South: imageRef = "door_s_open.gif"; break;
-					case Direction.West: imageRef = "door_w_open.gif"; break;
+				this.open = true;
+				switch(this.wallLocation){
+					case Direction.North: this.imageRef = "door_n_open"; break;
+					case Direction.East: this.imageRef = "door_e_open"; break;
+					case Direction.South: this.imageRef = "door_s_open"; break;
+					case Direction.West: this.imageRef = "door_w_open"; break;
 				}
 			} else
 			{
-				open = false;
-				switch(location){
-					case Direction.North: imageRef = "door_n_closed.gif"; break;
-					case Direction.East: imageRef = "door_e_closed.gif"; break;
-					case Direction.South: imageRef = "door_s_closed.gif"; break;
-					case Direction.West: imageRef = "door_w_closed.gif"; break;
+				this.open = false;
+				switch(this.wallLocation){
+					case Direction.North: this.imageRef = "door_n_closed"; break;
+					case Direction.East: this.imageRef = "door_e_closed"; break;
+					case Direction.South: this.imageRef = "door_s_closed"; break;
+					case Direction.West: this.imageRef = "door_w_closed"; break;
 				}
 			}
-			//TODO redraw door
-					return open;
 		}
 	}
 }

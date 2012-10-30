@@ -177,7 +177,7 @@ namespace Dungeons
 		
 		public Tile RandomLocation()
 		{
-			Tile randomTile = room.tiles[random.Next(16)];
+			Tile randomTile = (Tile)room.tiles[random.Next(16)];			// EDIT THIS WHEN CHANGING TRIAL ROOM!!!
 			return randomTile;
 		}
 		
@@ -193,6 +193,7 @@ namespace Dungeons
 			rightTurnButton.Enabled = true;
 			closeCombatButton.Enabled = true;
 			rangedCombatButton.Enabled = true;
+			useDoorButton.Enabled = true;
 			drawHeroSelectorButtons(numberOfHeroes);	
 			DrawLocation();
 		}
@@ -228,7 +229,20 @@ namespace Dungeons
 			
 			// Draw Room(s)
 			foreach (Tile tile in room.tiles){
-				g.DrawImageUnscaled((Bitmap)resources.GetObject(tile.imageRef), tile.tileLocation);   //tile.imageRef
+				
+				g.DrawImageUnscaled((Bitmap)resources.GetObject(tile.imageRef), tile.tileLocation);
+				
+				// Draw wall images as necessary over the Tile base image.
+				if(tile.adjacent[Direction.North] == null) g.DrawImageUnscaled((Bitmap)resources.GetObject("tileWallN"), tile.tileLocation);
+				if(tile.adjacent[Direction.East] == null) g.DrawImageUnscaled((Bitmap)resources.GetObject("tileWallE"), tile.tileLocation);
+				if(tile.adjacent[Direction.South] == null) g.DrawImageUnscaled((Bitmap)resources.GetObject("tileWallS"), tile.tileLocation);
+				if(tile.adjacent[Direction.West] == null) g.DrawImageUnscaled((Bitmap)resources.GetObject("tileWallW"), tile.tileLocation);	
+				
+				// Draw door images as necessary over the Tile base image.
+				if(tile.adjacent[Direction.North] is Door) g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacent[Direction.North] as Door).imageRef), (tile.adjacent[Direction.North] as Door).location.tileLocation);
+				if(tile.adjacent[Direction.East] is Door) g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacent[Direction.East] as Door).imageRef), (tile.adjacent[Direction.East] as Door).location.tileLocation);
+				if(tile.adjacent[Direction.South] is Door) g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacent[Direction.South] as Door).imageRef), (tile.adjacent[Direction.South] as Door).location.tileLocation);
+				if(tile.adjacent[Direction.West] is Door) g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacent[Direction.West] as Door).imageRef), (tile.adjacent[Direction.West] as Door).location.tileLocation);
 			}
 			
 			// Draw baddie(s)
@@ -402,6 +416,7 @@ namespace Dungeons
 			rightTurnButton.Enabled = false;
 			closeCombatButton.Enabled = false;
 			rangedCombatButton.Enabled = false;
+			useDoorButton.Enabled = false;
 
 			// Find if there is a baddie adjacent to activeHero, and if so set activeBaddie to it.
 			activeBaddie = null;
@@ -440,13 +455,10 @@ namespace Dungeons
 				this.score += 5;
 				scoreTextBox.Clear();
 				scoreTextBox.Text = score.ToString();
-				
-				/*
-				// TODO!!!
-				// Draw dead baddie
-				g.DrawImageUnscaled((Bitmap) resources.GetObject("dead_baddie"), activeBaddie.location);
-				g.DrawRectangle (pen2, activeBaddie.location.X, activeBaddie.location.Y, 100, 100);
-				*/
+		
+				// Draw dead baddie, with wide-lined red square round!
+				g.DrawImageUnscaled((Bitmap) resources.GetObject("dead_baddie"), activeBaddie.location.tileLocation);
+				g.DrawRectangle (pen2, activeBaddie.location.tileLocation.X, activeBaddie.location.tileLocation.Y, 100, 100);
 				
 				// Remove baddie from baddies
 				baddies.Remove(activeBaddie);
@@ -474,6 +486,7 @@ namespace Dungeons
 			closeCombatButton.Enabled = true;
 			rangedCombatButton.Enabled = true;
 			activateHeroButton2.Enabled = true;
+			useDoorButton.Enabled = true;
 			DrawLocation();
 		}
 		
@@ -634,6 +647,14 @@ namespace Dungeons
 			baddieSelectorPanel.Visible = true;
 			roomSizeSelectorPanel.Visible = true;
 			gameOverButton.Visible = false;
+		}
+		
+		void UseDoorButtonClick(object sender, EventArgs e)
+		{
+			if(activeHero.location.adjacent[activeHero.facing] is Door){
+				(activeHero.location.adjacent[activeHero.facing] as Door).OpenShut();
+				DrawLocation();
+			}
 		}
 	}
 }

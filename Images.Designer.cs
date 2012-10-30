@@ -165,6 +165,62 @@ namespace Dungeons {
 			}
 		}
 		
+		internal static System.Drawing.Bitmap door_e_closed {
+			get {
+				object obj = ResourceManager.GetObject("door_e_closed", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap door_e_open {
+			get {
+				object obj = ResourceManager.GetObject("door_e_open", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap door_n_closed {
+			get {
+				object obj = ResourceManager.GetObject("door_n_closed", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap door_n_open {
+			get {
+				object obj = ResourceManager.GetObject("door_n_open", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap door_s_closed {
+			get {
+				object obj = ResourceManager.GetObject("door_s_closed", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap door_s_open {
+			get {
+				object obj = ResourceManager.GetObject("door_s_open", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap door_w_closed {
+			get {
+				object obj = ResourceManager.GetObject("door_w_closed", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap door_w_open {
+			get {
+				object obj = ResourceManager.GetObject("door_w_open", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
 		internal static System.Drawing.Bitmap hero_east_1 {
 			get {
 				object obj = ResourceManager.GetObject("hero_east_1", resourceCulture);
@@ -357,6 +413,41 @@ namespace Dungeons {
 		internal static System.Drawing.Bitmap tile4 {
 			get {
 				object obj = ResourceManager.GetObject("tile4", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap tileWallE {
+			get {
+				object obj = ResourceManager.GetObject("tileWallE", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap tileWallN {
+			get {
+				object obj = ResourceManager.GetObject("tileWallN", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap tileWallS {
+			get {
+				object obj = ResourceManager.GetObject("tileWallS", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap tileWallW {
+			get {
+				object obj = ResourceManager.GetObject("tileWallW", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap useDoor {
+			get {
+				object obj = ResourceManager.GetObject("useDoor", resourceCulture);
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}
