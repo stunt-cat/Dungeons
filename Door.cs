@@ -16,7 +16,7 @@ namespace Dungeons
 	
 	public class Door : ITileJoiner
 	{
-		private Boolean status = false;		// Refers to if door is open or closed.
+		public Boolean open = false;		// Refers to if door is open or closed.
 		private Tile sideA;
 		private Tile sideB;
 		private string imageRef;
@@ -37,37 +37,37 @@ namespace Dungeons
 			
 			// Get correct image file for door.
 			switch(location){
-				case Direction.North: imageRef = "door_n_closed.gif";
-				case Direction.East: imageRef = "door_e_closed.gif";
-				case Direction.South: imageRef = "door_s_closed.gif";
-				case Direction.West: imageRef = "door_w_closed.gif";
+				case Direction.North: imageRef = "door_n_closed.gif"; break;
+				case Direction.East: imageRef = "door_e_closed.gif"; break;
+				case Direction.South: imageRef = "door_s_closed.gif"; break;
+				case Direction.West: imageRef = "door_w_closed.gif"; break;
 			}
 		}
 		
 		// Method to open/shut door.
 		public Boolean OpenShut()
 		{
-			if (status == false)
+			if (open == false)
 			{
-				status = true;
+				open = true;
 				switch(location){
-					case Direction.North: imageRef = "door_n_open.gif";
-					case Direction.East: imageRef = "door_e_open.gif";
-					case Direction.South: imageRef = "door_s_open.gif";
-					case Direction.West: imageRef = "door_w_open.gif";
+					case Direction.North: imageRef = "door_n_open.gif"; break;
+					case Direction.East: imageRef = "door_e_open.gif"; break;
+					case Direction.South: imageRef = "door_s_open.gif"; break;
+					case Direction.West: imageRef = "door_w_open.gif"; break;
 				}
 			} else
 			{
-				status = false;
+				open = false;
 				switch(location){
-					case Direction.North: imageRef = "door_n_closed.gif";
-					case Direction.East: imageRef = "door_e_closed.gif";
-					case Direction.South: imageRef = "door_s_closed.gif";
-					case Direction.West: imageRef = "door_w_closed.gif";
+					case Direction.North: imageRef = "door_n_closed.gif"; break;
+					case Direction.East: imageRef = "door_e_closed.gif"; break;
+					case Direction.South: imageRef = "door_s_closed.gif"; break;
+					case Direction.West: imageRef = "door_w_closed.gif"; break;
 				}
 			}
 			//TODO redraw door
-					return status;
+					return open;
 		}
 	}
 }

@@ -56,7 +56,7 @@ namespace Dungeons
 			this.facing = newFacing;
 		}
 		
-		public void MoveTo(ITileJoiner location){	// N.B. Does not have to be adjacent to current location!
+		public void MoveTo(Tile location){	// N.B. Does not have to be adjacent to current location!
 			this.location = location;
 		}
 	}

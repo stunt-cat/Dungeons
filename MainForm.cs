@@ -51,10 +51,12 @@ namespace Dungeons
 		//public Point shotLocation;
 		//public Character shotVictim;
 		
+		// Origin for all graphics locations - N.B. All graphics are 100x100 pixels.
+		public Point origin;
+		
 		// Create Room for action to take place in
-		public Room room = new Room();
-		
-		
+		public Room room;
+	
 		ResourceManager resources = new ResourceManager("Dungeons.images", Assembly.GetExecutingAssembly());
 		private System.Drawing.Graphics g;
 		private System.Drawing.Pen pen1 = new System.Drawing.Pen(Color.Blue, 7F);
@@ -67,7 +69,6 @@ namespace Dungeons
 		
 		void StartButtonClick(object sender, EventArgs e)
 		{
-			
 			// Get numberOfBaddies from RadioBox in baddieSelectorPanel
 			if (baddieSelectorButton1.Checked) numberOfBaddies = 1;
 			else if (baddieSelectorButton2.Checked) numberOfBaddies = 2;
@@ -102,6 +103,8 @@ namespace Dungeons
 				this.pictureBox1.BackgroundImage = global::Dungeons.Images.room5x5;
 			}
 			*/
+			origin = new Point(0,0);
+			room = new Room(origin);  // Currently room is the only room, so is anchored at origin.
 			
 			// Randomly select hero start point(s), ensuring there are no conflicts with other heroes (N.B. no baddies exist at this point)
 			for (int i = 0; i < numberOfHeroes; i++)
@@ -147,7 +150,7 @@ namespace Dungeons
 			// Only assigns location if it is not occupied already by hero or preceding baddie
 			for (int i = 0; i < numberOfBaddies; i++) {
 				
-				tile bufferLocation = RandomLocation();
+				Tile bufferLocation = RandomLocation();
 				Boolean tileAvailable = true;
 				IEnumerable<Character> everybody = heroes.Concat(baddies);
 				
@@ -168,13 +171,13 @@ namespace Dungeons
 				} while (!tileAvailable);
 					
 				// bufferLocation is available, so assign it to new Baddie
-				baddies.Add(new Baddie (bufferLocation));
+				baddies.Add(new Baddie (bufferLocation, (Direction)random.Next(4)));
 			}
 		}
 		
 		public Tile RandomLocation()
 		{
-			Tile randomTile = tiles[random.Next(16)];
+			Tile randomTile = room.tiles[random.Next(16)];
 			return randomTile;
 		}
 		
@@ -223,15 +226,20 @@ namespace Dungeons
 			pictureBox1.Refresh();
 			g = pictureBox1.CreateGraphics();
 			
+			// Draw Room(s)
+			foreach (Tile tile in room.tiles){
+				g.DrawImageUnscaled((Bitmap)resources.GetObject(tile.imageRef), tile.tileLocation);   //tile.imageRef
+			}
+			
 			// Draw baddie(s)
 			foreach (Baddie baddie in baddies) {
-				g.DrawImageUnscaled((Bitmap)resources.GetObject("baddie"), baddie.location);
+				g.DrawImageUnscaled((Bitmap)resources.GetObject("baddie"), baddie.location.tileLocation);
 			}    
 			
 			// Draw hero(es)
 			foreach (Hero hero in heroes) {
 				string arrow = string.Format("hero_{0}_{1}", hero.facing.ToString().ToLower(), hero.number.ToString());
-				g.DrawImageUnscaled((Bitmap)resources.GetObject(arrow), hero.location);
+				g.DrawImageUnscaled((Bitmap)resources.GetObject(arrow), hero.location.tileLocation);
 			}                                       
 		}
 		
@@ -270,88 +278,84 @@ namespace Dungeons
 		void ForwardButtonClick(object sender, System.EventArgs e)
 		
 		{
-			if(!CheckDirection(activeHero, activeHero.facing))
-			{
-				OutOfBounds();
-				DrawLocation();
-			} else
-			{
-				// Move is okay to execute!
-				activeHero.MoveTo(activeHero.location.Move(activeHero.facing));
-				
-				// Possibly move baddie also! (1/2 chance for each baddie)
-				if (random.Next(2) == 0) MoveBaddie();
-				
-				DrawLocation();
-			}
-			
-		}
-		
-		Boolean CheckDirection(Character mover, Direction intendedDirection){
+			Tile moveTarget = activeHero.location.Adjacent(activeHero.facing);
 			Boolean directionProblem = false;
-			
-			// Check movement direction exists to be potentially moved into.
-			// i.e. direction leads somewhere and there is not a closed door in the way.
-			ITileJoiner intendedLocation = mover.location.Move(intendedDirection);
-			if(intendedLocation == mover.location){		// N.B. Move() returns current location if move problem of any kind.
-				directionProblem true;
-			}
-			
-			// Check location is free i.e. no baddie or other hero there
 			everybody = heroes.Concat(baddies);
-			foreach (Character anybody in everybody)
-			{
-				if (anybody.location == intendedLocation)
-				{
+			
+			// Check there is an adjacent Tile (could be occupied at this point).
+			if(moveTarget == null){
 				directionProblem = true;
-				break;
+			} else {
+				// Check to see if the tile is occupied.
+				foreach(Character anybody in everybody){
+					if(anybody.location == moveTarget){
+						directionProblem = true;
+						break;
+					}
 				}
 			}
 			
-			return directionProblem;
+			// Resolve move.
+			if(directionProblem){				// Problem of some sort - inform user.
+				OutOfBounds();
+				DrawLocation();
+			} else {
+				activeHero.MoveTo(moveTarget);  // Move is fine to execute!
+				DrawLocation();
+				
+				// Possibly also move Baddies, 50% chance of running method.
+				if(random.Next(2) == 0){
+					MoveBaddie();
+				}
+			}
+			
 		}
 		
 		void MoveBaddie()
 		{
 			// N.B. Baddies only have one chance to move - if the baddieMoveDirection turns out to not be possible
 			// 		the baddie doesn't move i.e. they don't get to keep trying directions until they can move.
-		
+			
+			// TODO Add some AI to the baddie/baddies so they move more intelligently!
+			// Currently the MoveBaddie() routine copies the Hero movement one - this will change when Baddies have brains..
+			
 			everybody = heroes.Concat(baddies);
 			
 			foreach (Baddie movingBaddie in baddies)
 			{
-				Boolean moveProblem = false;
+				Boolean directionProblem = false;
 				
-				// Choose direction for baddie
+				// Choose random direction for baddie move.
 				baddieMoveDirection = (Direction)(random.Next(4));
 				
-				// Check movement direction exists to be potentially moved into.
-				// i.e. direction leads somewhere and there is not a closed door in the way.
-				ITileJoiner intendedLocation = movingBaddie.location.Move(movingBaddie.facing);
-				if(intendedLocation == movingBaddie.location){
-					moveProblem true;
-				}
+				// Get adjacent tile in chosen (random) direction.
+				Tile moveTarget = movingBaddie.location.Adjacent(baddieMoveDirection);
 				
-				// Check location is free i.e. no baddie or other hero there
-				foreach (Character anybody in everybody)
-				{
-					if (anybody.location == intendedLocation)
-					{
-					moveProblem = true;
-					break;
+				// <start> CODE FROM HERO MOVEMENT
+				// Check there is an adjacent Tile (could be occupied at this point).
+				if(moveTarget == null){
+					directionProblem = true;
+				} else {
+					// Check to see if the tile is occupied.
+					foreach(Character anybody in everybody){
+						if(anybody.location == moveTarget){
+							directionProblem = true;
+							break;
+						}
 					}
 				}
+				// <end> CODE FROM HERO MOVEMENT
 				
-				if(!moveProblem)
+				if(!directionProblem)
 				{
 					// Move is okay to execute!
-					movingBaddie.MoveTo(baddieMoveDirection);
-					// Update movingBaddie facing to reflect move
+					movingBaddie.MoveTo(moveTarget);
+					// Update movingBaddie facing to reflect completed move.
 					movingBaddie.NewFacing(baddieMoveDirection);
 					
 					DrawLocation();
 					
-					// N.B. If (moveProblem) movingBaddie doesn't move
+					// N.B. If moveProblem=true movingBaddie doesn't move or change facing.
 				} 
 			}
 		}
@@ -399,21 +403,35 @@ namespace Dungeons
 			closeCombatButton.Enabled = false;
 			rangedCombatButton.Enabled = false;
 
-			// Find if there is a baddie adjacent to activeHero, and if so set activeBaddie to it
+			// Find if there is a baddie adjacent to activeHero, and if so set activeBaddie to it.
 			activeBaddie = null;
-			foreach (Baddie baddie in baddies)
-			{
-				switch(activeHero.facing){
-					case Direction.North: if (!CheckAdjacencyAvailable(Direction.North, activeHero.location, baddie.location))
-								activeBaddie = baddie; break;
-					case Direction.East : if (!CheckAdjacencyAvailable(Direction.East, activeHero.location, baddie.location))
-								activeBaddie = baddie; break;
-					case Direction.South : if (!CheckAdjacencyAvailable(Direction.South, activeHero.location, baddie.location))
-								activeBaddie = baddie; break;
-					case Direction.West : if (!CheckAdjacencyAvailable(Direction.West, activeHero.location, baddie.location))
-								activeBaddie = baddie; break;
-				}
+			Tile attackLocation = null;
+			
+			// If there is an adjacent Tile set attackLocation to it.
+			switch(activeHero.facing){
+				case Direction.North: if(activeHero.location.Adjacent(Direction.North) != null){
+						attackLocation = activeHero.location.Adjacent(Direction.North);
+					} break;
+				case Direction.East : if(activeHero.location.Adjacent(Direction.East) != null){
+						attackLocation = activeHero.location.Adjacent(Direction.East);
+					} break;
+				case Direction.South : if(activeHero.location.Adjacent(Direction.South) != null){
+						attackLocation = activeHero.location.Adjacent(Direction.South);
+					} break;
+				case Direction.West : if(activeHero.location.Adjacent(Direction.West) != null){
+						attackLocation = activeHero.location.Adjacent(Direction.West);
+					} break;
 			}
+			
+			// If attackLocation exists see who is in it. If nobody, fight is over.
+			if (attackLocation !=null){
+				foreach (Baddie baddie in baddies){
+					if(baddie.location == attackLocation){
+						activeBaddie = baddie;
+						break;
+					}
+				}
+			} else failedFightButton.Visible = true;
 			
 			// If there is a baddie infront of activeHero, kill it
 			if (activeBaddie !=null)
@@ -423,9 +441,12 @@ namespace Dungeons
 				scoreTextBox.Clear();
 				scoreTextBox.Text = score.ToString();
 				
+				/*
+				// TODO!!!
 				// Draw dead baddie
 				g.DrawImageUnscaled((Bitmap) resources.GetObject("dead_baddie"), activeBaddie.location);
 				g.DrawRectangle (pen2, activeBaddie.location.X, activeBaddie.location.Y, 100, 100);
+				*/
 				
 				// Remove baddie from baddies
 				baddies.Remove(activeBaddie);
@@ -456,6 +477,11 @@ namespace Dungeons
 			DrawLocation();
 		}
 		
+		void RangedCombatButtonClick(object sender, EventArgs e){
+			// This is just a dummy while I work out how to do it again..
+		}
+		
+		/*  TODO ADD RANGED COMBAT BACK IN!!
 		void RangedCombatButtonClick(object sender, EventArgs e)
 		{
 			shotLocation = activeHero.location;
@@ -539,17 +565,6 @@ namespace Dungeons
 			} else FailShot();
 		}
 		
-		Boolean FreeLocation(Point location)
-		{
-			Boolean result = true;
-			foreach (Character anybody in everybody)
-			{
-				if(location == anybody.location)
-					result = false;
-			}
-			return result;
-		}
-		
 		void KillShot()
 		{
 			g.DrawImageUnscaled((Bitmap) resources.GetObject("dead_baddie"), activeBaddie.location);
@@ -576,6 +591,7 @@ namespace Dungeons
 			activateHeroButton2.Enabled = false;
 			failedFightButton.Visible = true;
 		}
+		*/
 		
 		void GameTimeUp(Object o, EventArgs e)
 		{

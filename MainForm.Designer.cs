@@ -413,6 +413,7 @@ namespace Dungeons
 			this.roomSizeLabel.Size = new System.Drawing.Size(103, 22);
 			this.roomSizeLabel.TabIndex = 28;
 			this.roomSizeLabel.Text = "Room size";
+			this.roomSizeLabel.Visible = false;
 			// 
 			// roomSizeSelectorPanel
 			// 
@@ -423,6 +424,7 @@ namespace Dungeons
 			this.roomSizeSelectorPanel.Name = "roomSizeSelectorPanel";
 			this.roomSizeSelectorPanel.Size = new System.Drawing.Size(84, 59);
 			this.roomSizeSelectorPanel.TabIndex = 25;
+			this.roomSizeSelectorPanel.Visible = false;
 			// 
 			// roomSelectorButton3
 			// 

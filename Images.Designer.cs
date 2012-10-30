@@ -339,5 +339,26 @@ namespace Dungeons {
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}
+		
+		internal static System.Drawing.Bitmap tile2 {
+			get {
+				object obj = ResourceManager.GetObject("tile2", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap tile3 {
+			get {
+				object obj = ResourceManager.GetObject("tile3", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap tile4 {
+			get {
+				object obj = ResourceManager.GetObject("tile4", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
 	}
 }

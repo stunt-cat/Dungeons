@@ -62,7 +62,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Area.cs" />
     <Compile Include="Baddie.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="Door.cs" />

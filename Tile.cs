@@ -8,6 +8,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace Dungeons
 {
@@ -21,36 +22,45 @@ namespace Dungeons
 	
 	public class Tile : ITileJoiner
 	{
-		private Dictionary<Direction, ITileJoiner> adjacent;
-		private Character occupant;
+		public Dictionary<Direction, ITileJoiner> adjacent = new Dictionary<Direction, ITileJoiner>();
+		public Point tileLocation = new Point(0,0);								// Locates Tile w.r.t. game area origin.
 		public string imageRef;
 		public TileType type;
 		
-		public Tile(){}
-		
-		public InitialiseTile(TileType type, string imageRef, ITileJoiner north, ITileJoiner east, ITileJoiner south, ITileJoiner west)
-		{
-			this.type = type;
-			this.imageRef = imageRef;
-			adjacent.Add(Direction.North, north);
-			adjacent.Add(Direction.East, east);
-			adjacent.Add(Direction.South, south);
-			adjacent.Add(Direction.West, west);
+		public Tile(Point offset){
+			this.tileLocation = offset;		// Adds room origin location to point locations.
 		}
 		
-		public ITileJoiner Move(Direction intendedDirection){
-			if(this.adjacent.TryGetValue(intendedDirection, out ITileJoiner)){
-				if(ITileJoiner is Room){
-					return ITileJoiner;
-				} else if(ITileJoiner is Door){
-					// If Door open, return ITileJoiner on the other side.
-					if (ITileJoiner.status){
-						return ITileJoiner.OtherSide(this);
+		public void InitialiseTile(TileType type, Point tileLocationOffset, string imageRef, ITileJoiner north, ITileJoiner east, ITileJoiner south, ITileJoiner west)
+		{
+			this.type = type;
+			tileLocation.Offset(tileLocationOffset);
+			this.imageRef = imageRef;
+			this.adjacent.Add(Direction.North, north);
+			this.adjacent.Add(Direction.East, east);
+			this.adjacent.Add(Direction.South, south);
+			this.adjacent.Add(Direction.West, west);
+		}
+		
+		
+		// Method to find out which Tile, if any, is adjacent to the one in question.
+		// Returns null if there is no adjacent Tile.
+		// N.B. It can return an occupied Tile!!.
+		public Tile Adjacent(Direction intendedDirection){
+			ITileJoiner potentialAdjacent = this.adjacent[intendedDirection];
+			if(potentialAdjacent != null){
+				if(potentialAdjacent is Room){
+					return (Tile)potentialAdjacent;
+				} else if(potentialAdjacent is Door){
+					Door door = (Door)potentialAdjacent;
+					// If Door open, return Tile on the other side.
+					if (door.open){
+						return door.OtherSide(this);
 					}
 					// If Door closed, return current location i.e. no move.
-					else return this;
-				} else return this; // May add other types of ITile in the future, so update options here!
-			} else return this;	// There is no key so return current location of Character attempting move.	
+					else return null;
+				} else return null; // May add other types of ITile in the future, so update options here!
+			} else return null;	// There is no adjacent move.	
 		}
 	}
 }
