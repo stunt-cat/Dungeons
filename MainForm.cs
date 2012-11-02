@@ -48,8 +48,8 @@ namespace Dungeons
 		public Direction baddieMoveDirection;
 		
 		public IEnumerable<Character> everybody;
-		//public Point shotLocation;
-		//public Character shotVictim;
+		public Tile shotLocation;
+		public Character shotVictim;
 		
 		// Origin for all graphics locations - N.B. All graphics are 100x100 pixels.
 		public Point origin;
@@ -233,16 +233,16 @@ namespace Dungeons
 				g.DrawImageUnscaled((Bitmap)resources.GetObject(tile.imageRef), tile.tileLocation);
 				
 				// Draw wall images as necessary over the Tile base image.
-				if(tile.adjacent[Direction.North] == null) g.DrawImageUnscaled((Bitmap)resources.GetObject("tileWallN"), tile.tileLocation);
-				if(tile.adjacent[Direction.East] == null) g.DrawImageUnscaled((Bitmap)resources.GetObject("tileWallE"), tile.tileLocation);
-				if(tile.adjacent[Direction.South] == null) g.DrawImageUnscaled((Bitmap)resources.GetObject("tileWallS"), tile.tileLocation);
-				if(tile.adjacent[Direction.West] == null) g.DrawImageUnscaled((Bitmap)resources.GetObject("tileWallW"), tile.tileLocation);	
+				if(tile.adjacencies[Direction.North] == null) g.DrawImageUnscaled((Bitmap)resources.GetObject("tileWallN"), tile.tileLocation);
+				if(tile.adjacencies[Direction.East] == null) g.DrawImageUnscaled((Bitmap)resources.GetObject("tileWallE"), tile.tileLocation);
+				if(tile.adjacencies[Direction.South] == null) g.DrawImageUnscaled((Bitmap)resources.GetObject("tileWallS"), tile.tileLocation);
+				if(tile.adjacencies[Direction.West] == null) g.DrawImageUnscaled((Bitmap)resources.GetObject("tileWallW"), tile.tileLocation);	
 				
 				// Draw door images as necessary over the Tile base image.
-				if(tile.adjacent[Direction.North] is Door) g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacent[Direction.North] as Door).imageRef), (tile.adjacent[Direction.North] as Door).location.tileLocation);
-				if(tile.adjacent[Direction.East] is Door) g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacent[Direction.East] as Door).imageRef), (tile.adjacent[Direction.East] as Door).location.tileLocation);
-				if(tile.adjacent[Direction.South] is Door) g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacent[Direction.South] as Door).imageRef), (tile.adjacent[Direction.South] as Door).location.tileLocation);
-				if(tile.adjacent[Direction.West] is Door) g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacent[Direction.West] as Door).imageRef), (tile.adjacent[Direction.West] as Door).location.tileLocation);
+				if(tile.adjacencies[Direction.North] is Door) g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.North] as Door).imageRef), (tile.adjacencies[Direction.North] as Door).location.tileLocation);
+				if(tile.adjacencies[Direction.East] is Door) g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.East] as Door).imageRef), (tile.adjacencies[Direction.East] as Door).location.tileLocation);
+				if(tile.adjacencies[Direction.South] is Door) g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.South] as Door).imageRef), (tile.adjacencies[Direction.South] as Door).location.tileLocation);
+				if(tile.adjacencies[Direction.West] is Door) g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.West] as Door).imageRef), (tile.adjacencies[Direction.West] as Door).location.tileLocation);
 			}
 			
 			// Draw baddie(s)
@@ -492,79 +492,38 @@ namespace Dungeons
 		
 		void RangedCombatButtonClick(object sender, EventArgs e){
 			// This is just a dummy while I work out how to do it again..
-		}
-		
-		/*  TODO ADD RANGED COMBAT BACK IN!!
-		void RangedCombatButtonClick(object sender, EventArgs e)
-		{
+			
+			// See if there is an adjacent Tile in activeHero.facing direction, next to activeHero.location
+			//   if (adjacent = null), fail shot
+			//	 if (adjacent != null) see who is in location
+			//   	if(nobody) continue shot
+			//		if baddie, kill it
+			//		if hero, fail shot
+			
 			shotLocation = activeHero.location;
+			Boolean shotOver = false;
 			activeBaddie = null;
 			shotVictim = null;
 			everybody = heroes.Concat(baddies);
 			
 			// Shoot in straight line until hit wall or other Character. If Character encountered, decide outcome based on Type.
 			
-			switch(activeHero.facing)
-			{
-					case Direction.North: 
-						while ((shotVictim == null) && (shotLocation.Y > 0))
-							{
-								foreach (Character potentialVictim in everybody)
-								{
-									if (!CheckAdjacencyAvailable(Direction.North, shotLocation, potentialVictim.location))
-									{
-										shotVictim = potentialVictim;
-										break;
-									}
-								}
-							g.DrawRectangle(pen1, shotLocation.X, shotLocation.Y - 100, 100, 100);
-							shotLocation.Y -= 100;
-						} break;
-					case Direction.East:
-						while ((shotVictim == null) && (shotLocation.X < 400))
-							{
-								foreach (Character potentialVictim in everybody)
-								{
-									if (!CheckAdjacencyAvailable(Direction.East, shotLocation, potentialVictim.location))
-									{
-										shotVictim = potentialVictim;
-										break;
-									}
-								}
-							g.DrawRectangle(pen1, shotLocation.X + 100, shotLocation.Y, 100, 100);
-							shotLocation.X += 100;
-						}						
-						break;
-					case Direction.South: 
-						while ((shotVictim == null) && (shotLocation.Y < 400))
-							{
-								foreach (Character potentialVictim in everybody)
-								{
-									if (!CheckAdjacencyAvailable(Direction.South, shotLocation, potentialVictim.location))
-									{
-										shotVictim = potentialVictim;
-										break;
-									}
-								}
-							g.DrawRectangle(pen1, shotLocation.X, shotLocation.Y + 100, 100, 100);
-							shotLocation.Y += 100;
+			while (!shotOver){
+				if(shotLocation.Adjacent(activeHero.facing) == null) shotOver = true;
+				else
+				{
+					shotLocation = shotLocation.Adjacent(activeHero.facing);
+					foreach(Character potentialVictim in everybody)
+					{
+						if(potentialVictim.location == shotLocation)
+						{
+							shotVictim = potentialVictim;
+							shotOver = true;
+							break;
 						}
-						break;
-					case Direction.West: 
-						while ((shotVictim == null) && (shotLocation.X > 0))
-							{
-								foreach (Character potentialVictim in everybody)
-								{
-									if (!CheckAdjacencyAvailable(Direction.West, shotLocation, potentialVictim.location))
-									{
-										shotVictim = potentialVictim;
-										break;
-									}
-								}
-							g.DrawRectangle(pen1, shotLocation.X - 100, shotLocation.Y, 100, 100);
-							shotLocation.X -= 100;
-						}
-						break;
+					}
+					g.DrawRectangle(pen1, shotLocation.tileLocation.X, shotLocation.tileLocation.Y, 100, 100);
+				}
 			}
 			
 			// If there is a shotVictim, check its type. If if it a Baddie, kill it! If it is a Hero, shot does nothing.
@@ -580,8 +539,8 @@ namespace Dungeons
 		
 		void KillShot()
 		{
-			g.DrawImageUnscaled((Bitmap) resources.GetObject("dead_baddie"), activeBaddie.location);
-			g.DrawRectangle(pen3, shotLocation.X, shotLocation.Y, 100, 100);
+			g.DrawImageUnscaled((Bitmap) resources.GetObject("dead_baddie"), activeBaddie.location.tileLocation);
+			g.DrawRectangle(pen3, shotLocation.tileLocation.X, shotLocation.tileLocation.Y, 100, 100);
 			this.score += 3;
 			scoreTextBox.Clear();
 			scoreTextBox.Text = score.ToString();
@@ -590,6 +549,7 @@ namespace Dungeons
 			rightTurnButton.Enabled = false;
 			closeCombatButton.Enabled = false;
 			rangedCombatButton.Enabled = false;
+			useDoorButton.Enabled = false;
 			successfulFightButton.Visible = true;
 			baddies.Remove(activeBaddie);
 		}
@@ -601,10 +561,9 @@ namespace Dungeons
 			rightTurnButton.Enabled = false;
 			closeCombatButton.Enabled = false;
 			rangedCombatButton.Enabled = false;
-			activateHeroButton2.Enabled = false;
+			useDoorButton.Enabled = false;
 			failedFightButton.Visible = true;
 		}
-		*/
 		
 		void GameTimeUp(Object o, EventArgs e)
 		{
@@ -619,6 +578,7 @@ namespace Dungeons
 			rightTurnButton.Enabled = false;
 			closeCombatButton.Enabled = false;
 			rangedCombatButton.Enabled = false;
+			useDoorButton.Enabled = false;
 			
 			// Fire ActivateHeroButton1Click event so correct movement buttons displayed if number of heroes goes from > 1 to 1.
 			activateHeroButton1.PerformClick();
@@ -651,8 +611,8 @@ namespace Dungeons
 		
 		void UseDoorButtonClick(object sender, EventArgs e)
 		{
-			if(activeHero.location.adjacent[activeHero.facing] is Door){
-				(activeHero.location.adjacent[activeHero.facing] as Door).OpenShut();
+			if(activeHero.location.adjacencies[activeHero.facing] is Door){
+				(activeHero.location.adjacencies[activeHero.facing] as Door).OpenShut();
 				DrawLocation();
 			}
 		}
