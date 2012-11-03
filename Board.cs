@@ -30,7 +30,7 @@ namespace Dungeons
 			
 			// Then create Room(s)
 			rooms.Add(new Room(new Point(0,0), 1));
-			rooms.Add(new Room(new Point(250,0), 1));
+			rooms.Add(new Room(new Point(3,0), 1));
 			          
 			// Then initialise any Door(s) and update relevant Tiles in relevant Room(s) to point to it/them.
 			doors[0].InitialiseDoor(rooms[0].tiles[5], Direction.East, rooms[1].tiles[4]);

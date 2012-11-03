@@ -22,7 +22,7 @@ namespace Dungeons
 	
 	public class Tile : ITileJoiner
 	{
-		public Dictionary<Direction, ITileJoiner> adjacencies = new Dictionary<Direction, ITileJoiner>();
+		public Dictionary <Direction, ITileJoiner> adjacencies = new Dictionary <Direction, ITileJoiner>();
 		public Point tileLocation = new Point(0,0);			// Locates Tile w.r.t. game area origin.
 		public string imageRef;								// Basic image for Tile
 		public TileType type;
@@ -46,11 +46,15 @@ namespace Dungeons
 		// Method to find out which Tile, if any, is adjacent to the one in question.
 		// Returns null if there is no adjacent Tile.
 		// N.B. It can return an occupied Tile!!.
-		public Tile Adjacent(Direction intendedDirection){
+		public Tile Adjacent(Direction intendedDirection)
+		{
 			ITileJoiner potentialAdjacent = this.adjacencies[intendedDirection];
-			if(potentialAdjacent != null){
+			
+			if(potentialAdjacent != null)
+			{
 				if(potentialAdjacent is Tile) return (Tile)potentialAdjacent;
-				if(potentialAdjacent is Door){
+				if(potentialAdjacent is Door)
+				{
 					Door door = (Door)potentialAdjacent;
 					// If Door open, return Tile on the other side.
 					if (door.open) return door.OtherSide(this);

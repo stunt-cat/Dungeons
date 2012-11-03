@@ -56,6 +56,9 @@ namespace Dungeons
 		
 		// Create Board for action to take place in
 		public Board board;
+		
+		// Set scale for Board
+		public int scale;			// TODO Make this a user selectable figure (25?, 50, 75?, 100) radio button/drop-down list. Redraw upon change.
 	
 		ResourceManager resources = new ResourceManager("Dungeons.images", Assembly.GetExecutingAssembly());
 		private System.Drawing.Graphics g;
@@ -69,7 +72,7 @@ namespace Dungeons
 		
 		void StartButtonClick(object sender, EventArgs e)
 		{
-			// Get numberOfBaddies from RadioBox in baddieSelectorPanel
+			// Get numberOfBaddies from RadioBox in baddieSelectorPanel.
 			if (baddieSelectorButton1.Checked) numberOfBaddies = 1;
 			else if (baddieSelectorButton2.Checked) numberOfBaddies = 2;
 			else if (baddieSelectorButton3.Checked) numberOfBaddies = 3;
@@ -79,7 +82,7 @@ namespace Dungeons
 			
 			baddies = new List<Character>(numberOfBaddies);
 			
-			// Get numberOfHeroes from RadioBox in heroSelectorPanel
+			// Get numberOfHeroes from RadioBox in heroSelectorPanel.
 			if (heroSelectorButton1.Checked) numberOfHeroes = 1;
 			else if (heroSelectorButton2.Checked) numberOfHeroes = 2;
 			else if (heroSelectorButton3.Checked) numberOfHeroes = 3;
@@ -87,33 +90,23 @@ namespace Dungeons
 			
 			heroes = new List<Character>(numberOfHeroes);
 			
-			/*
-			// Get room parameters from RadioBox in roomSelectorPanel - also select correct background image
-			if (roomSelectorButton1.Checked){
-				roomSquaresX = 3;
-				roomSquaresY = 5;
-				this.pictureBox1.BackgroundImage = global::Dungeons.Images.room3x5;
-			} else if (roomSelectorButton2.Checked){
-				roomSquaresX = 4;
-				roomSquaresY = 4;
-				this.pictureBox1.BackgroundImage = global::Dungeons.Images.room4x4;
-			} else if (roomSelectorButton3.Checked){
-				roomSquaresX = 5;
-				roomSquaresY = 5;
-				this.pictureBox1.BackgroundImage = global::Dungeons.Images.room5x5;
-			}
-			*/
+			// Get scale from RadioBox in scalePanel.
+			if (scaleRadioButton_50.Checked) scale = 50;
+			if (scaleRadioButton_100.Checked) scale = 100;
 			
+			// Create board.
+			// N.B. All Points are in abstract integer sizes to relate each Room/Tile to each other.
+			// 		These sizes are converted to actual pixels in DrawLocation().
 			origin = new Point(0,0);
 			board = new Board();
 			
-			// Randomly select hero start point(s), ensuring there are no conflicts with other heroes (N.B. no baddies exist at this point)
+			// Randomly select hero start point(s), ensuring there are no conflicts with other heroes (N.B. no baddies exist at this point).
 			for (int i = 0; i < numberOfHeroes; i++)
 			{
 				Tile bufferLocation = RandomLocation();
 				Boolean tileAvailable = true;
 				
-				// Check other Hero locations and reassign bufferLocation until it is an available location
+				// Check other Hero locations and reassign bufferLocation until it is an available location.
 					do{
 						// Assume location is initially free
 						tileAvailable = true;
@@ -121,7 +114,7 @@ namespace Dungeons
 						{
 							if (bufferLocation == hero.location)
 							{
-								// If location not free, choose another and check everybody again
+								// If location not free, choose another and check everybody again.
 								bufferLocation = RandomLocation();
 								tileAvailable = false;
 								break;
@@ -187,7 +180,6 @@ namespace Dungeons
 		{
 			baddieSelectorPanel.Visible = false;
 			heroesSelectorPanel.Visible = false;
-			roomSizeSelectorPanel.Visible = false;
 			gameOverButton.Visible = false;
 			startButton.Visible = false;
 			controlsGroupBox.Visible = true;
@@ -231,33 +223,33 @@ namespace Dungeons
 				foreach (Tile tile in room.tiles)
 				{
 				
-				g.DrawImageUnscaled((Bitmap)resources.GetObject(tile.imageRef), tile.tileLocation);
+					g.DrawImage((Bitmap)resources.GetObject(tile.imageRef), new Rectangle(tile.tileLocation.X*scale, tile.tileLocation.Y*scale, scale, scale));
 				
 				// Draw wall images as necessary over the Tile base image.
-				if(tile.adjacencies[Direction.North] == null) g.DrawImageUnscaled((Bitmap)resources.GetObject("tileWallN"), tile.tileLocation);
-				if(tile.adjacencies[Direction.East] == null) g.DrawImageUnscaled((Bitmap)resources.GetObject("tileWallE"), tile.tileLocation);
-				if(tile.adjacencies[Direction.South] == null) g.DrawImageUnscaled((Bitmap)resources.GetObject("tileWallS"), tile.tileLocation);
-				if(tile.adjacencies[Direction.West] == null) g.DrawImageUnscaled((Bitmap)resources.GetObject("tileWallW"), tile.tileLocation);	
+				if(tile.adjacencies[Direction.North] == null) g.DrawImage((Bitmap)resources.GetObject("tileWallN"), new Rectangle(tile.tileLocation.X*scale, tile.tileLocation.Y*scale, scale, scale));
+				if(tile.adjacencies[Direction.East] == null) g.DrawImage((Bitmap)resources.GetObject("tileWallE"), new Rectangle(tile.tileLocation.X*scale, tile.tileLocation.Y*scale, scale, scale));
+				if(tile.adjacencies[Direction.South] == null) g.DrawImage((Bitmap)resources.GetObject("tileWallS"), new Rectangle(tile.tileLocation.X*scale, tile.tileLocation.Y*scale, scale, scale));
+				if(tile.adjacencies[Direction.West] == null) g.DrawImage((Bitmap)resources.GetObject("tileWallW"), new Rectangle(tile.tileLocation.X*scale, tile.tileLocation.Y*scale, scale, scale));	
 				
 					// Draw door images as necessary over the Tile base images. N.B. There is a front and a back image for each Door.
 					if(tile.adjacencies[Direction.North] is Door)
 					{
 						// See if front or back image is required.
 						if(tile.tileLocation == (tile.adjacencies[Direction.North] as Door).sideA.tileLocation){			// tile is location of Door, so front image required.
-							g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.North] as Door).imageRefSideA), tile.tileLocation);
+							g.DrawImage((Bitmap)resources.GetObject((tile.adjacencies[Direction.North] as Door).imageRefSideA), new Rectangle(tile.tileLocation.X*scale, tile.tileLocation.Y*scale, scale, scale));
 						} else {																							// tile is not location of Door, so back image required.
-							g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.North] as Door).imageRefSideB), tile.tileLocation);
+							g.DrawImage((Bitmap)resources.GetObject((tile.adjacencies[Direction.North] as Door).imageRefSideB), new Rectangle(tile.tileLocation.X*scale, tile.tileLocation.Y*scale, scale, scale));
 						}
 					}
 					if(tile.adjacencies[Direction.East] is Door)
-						g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.East] as Door).imageRefSideA), tile.tileLocation);
+						g.DrawImage((Bitmap)resources.GetObject((tile.adjacencies[Direction.East] as Door).imageRefSideA), new Rectangle(tile.tileLocation.X*scale, tile.tileLocation.Y*scale, scale, scale));
 					/*
 					{
 						// See if front or back image is required.
 						if(tile.tileLocation == (tile.adjacencies[Direction.East] as Door).sideA.tileLocation){			// tile is location of Door, so front image required.
-							g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.East] as Door).imageRefSideA), tile.tileLocation);
+							g.DrawImage((Bitmap)resources.GetObject((tile.adjacencies[Direction.East] as Door).imageRefSideA), new Rectangle(tile.tileLocation.X*scale, tile.tileLocation.Y*scale, scale, scale));
 						} else {																							// tile is not location of Door, so back image required.
-							g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.East] as Door).imageRefSideB), tile.tileLocation);
+							g.DrawImage((Bitmap)resources.GetObject((tile.adjacencies[Direction.East] as Door).imageRefSideB), new Rectangle(tile.tileLocation.X*scale, tile.tileLocation.Y*scale, scale, scale));
 						}
 					}
 					
@@ -266,18 +258,18 @@ namespace Dungeons
 					{
 						// See if front or back image is required.
 						if(tile.tileLocation == (tile.adjacencies[Direction.South] as Door).sideA.tileLocation){			// tile is location of Door, so front image required.
-							g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.South] as Door).imageRefSideA), tile.tileLocation);
+							g.DrawImage((Bitmap)resources.GetObject((tile.adjacencies[Direction.South] as Door).imageRefSideA), new Rectangle(tile.tileLocation.X*scale, tile.tileLocation.Y*scale, scale, scale));
 						} else {																							// tile is not location of Door, so back image required.
-							g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.South] as Door).imageRefSideB), tile.tileLocation);
+							g.DrawImage((Bitmap)resources.GetObject((tile.adjacencies[Direction.South] as Door).imageRefSideB), new Rectangle(tile.tileLocation.X*scale, tile.tileLocation.Y*scale, scale, scale));
 						}
 					}
 					if(tile.adjacencies[Direction.West] is Door)
 					{
 						// See if front or back image is required.
 						if(tile.tileLocation == (tile.adjacencies[Direction.West] as Door).sideA.tileLocation){			// tile is location of Door, so front image required.
-							g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.West] as Door).imageRefSideA), tile.tileLocation);
+							g.DrawImage((Bitmap)resources.GetObject((tile.adjacencies[Direction.West] as Door).imageRefSideA), new Rectangle(tile.tileLocation.X*scale, tile.tileLocation.Y*scale, scale, scale));
 						} else {																							// tile is not location of Door, so back image required.
-							g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.West] as Door).imageRefSideB), tile.tileLocation);
+							g.DrawImage((Bitmap)resources.GetObject((tile.adjacencies[Direction.West] as Door).imageRefSideB), new Rectangle(tile.tileLocation.X*scale, tile.tileLocation.Y*scale, scale, scale));
 						}
 					}
 				}
@@ -285,14 +277,15 @@ namespace Dungeons
 			
 			
 			// Draw baddie(s)
-			foreach (Baddie baddie in baddies) {
-				g.DrawImageUnscaled((Bitmap)resources.GetObject("baddie"), baddie.location.tileLocation);
+			foreach (Baddie baddie in baddies)
+			{
+				g.DrawImage((Bitmap)resources.GetObject("baddie"), new Rectangle(baddie.location.tileLocation.X*scale, baddie.location.tileLocation.Y*scale, scale, scale));
 			}    
 			
 			// Draw hero(es)
 			foreach (Hero hero in heroes) {
 				string arrow = string.Format("hero_{0}_{1}", hero.facing.ToString().ToLower(), hero.number.ToString());
-				g.DrawImageUnscaled((Bitmap)resources.GetObject(arrow), hero.location.tileLocation);
+				g.DrawImage((Bitmap)resources.GetObject(arrow), new Rectangle(hero.location.tileLocation.X*scale, hero.location.tileLocation.Y*scale, scale, scale));
 			}                                       
 		}
 		
@@ -481,8 +474,8 @@ namespace Dungeons
 				scoreTextBox.Text = score.ToString();
 		
 				// Draw dead baddie, with wide-lined red square round!
-				g.DrawImageUnscaled((Bitmap) resources.GetObject("dead_baddie"), activeBaddie.location.tileLocation);
-				g.DrawRectangle (pen2, activeBaddie.location.tileLocation.X, activeBaddie.location.tileLocation.Y, 100, 100);
+				g.DrawImage((Bitmap) resources.GetObject("dead_baddie"), new Rectangle(activeBaddie.location.tileLocation.X*scale, activeBaddie.location.tileLocation.Y*scale, scale, scale));
+				g.DrawRectangle (pen2, activeBaddie.location.tileLocation.X*scale, activeBaddie.location.tileLocation.Y*scale, scale, scale);
 				
 				// Remove baddie from baddies
 				baddies.Remove(activeBaddie);
@@ -540,7 +533,7 @@ namespace Dungeons
 							break;
 						}
 					}
-					g.DrawRectangle(pen1, shotLocation.tileLocation.X, shotLocation.tileLocation.Y, 100, 100);
+					g.DrawRectangle(pen1, new Rectangle(shotLocation.tileLocation.X*scale, shotLocation.tileLocation.Y*scale, scale, scale));
 				}
 			}
 			
@@ -557,8 +550,8 @@ namespace Dungeons
 		
 		void KillShot()
 		{
-			g.DrawImageUnscaled((Bitmap) resources.GetObject("dead_baddie"), activeBaddie.location.tileLocation);
-			g.DrawRectangle(pen3, shotLocation.tileLocation.X, shotLocation.tileLocation.Y, 100, 100);
+			g.DrawImage((Bitmap) resources.GetObject("dead_baddie"), new Rectangle(activeBaddie.location.tileLocation.X*scale, activeBaddie.location.tileLocation.Y*scale, scale, scale));
+			g.DrawRectangle(pen3, shotLocation.tileLocation.X*scale, shotLocation.tileLocation.Y*scale, scale, scale);
 			this.score += 3;
 			scoreTextBox.Clear();
 			scoreTextBox.Text = score.ToString();
@@ -609,7 +602,6 @@ namespace Dungeons
 			startButton.Visible = true;
 			heroesSelectorPanel.Visible = true;
 			baddieSelectorPanel.Visible = true;
-			roomSizeSelectorPanel.Visible = true;
 			gameOverButton.Visible = false;
 		}
 		
@@ -619,6 +611,18 @@ namespace Dungeons
 				(activeHero.location.adjacencies[activeHero.facing] as Door).OpenShut();
 				DrawLocation();
 			}
+		}
+		
+		void ScaleRadioButton_50CheckedChanged(object sender, EventArgs e)
+		{
+			scale = 50;
+			DrawLocation();
+		}
+		
+		void ScaleRadioButton_100CheckedChanged(object sender, EventArgs e)
+		{
+			scale = 100;
+			DrawLocation();
 		}
 	}
 }

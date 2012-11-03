@@ -71,18 +71,17 @@ namespace Dungeons
 			this.activateHeroButton1 = new System.Windows.Forms.Button();
 			this.activateHeroButton3 = new System.Windows.Forms.Button();
 			this.activateHeroButton4 = new System.Windows.Forms.Button();
-			this.roomSizeLabel = new System.Windows.Forms.Label();
-			this.roomSizeSelectorPanel = new System.Windows.Forms.Panel();
-			this.roomSelectorButton3 = new System.Windows.Forms.RadioButton();
-			this.roomSelectorButton2 = new System.Windows.Forms.RadioButton();
-			this.roomSelectorButton1 = new System.Windows.Forms.RadioButton();
 			this.useDoorButton = new System.Windows.Forms.Button();
 			this.controlsGroupBox = new System.Windows.Forms.GroupBox();
+			this.scaleLabel = new System.Windows.Forms.Label();
+			this.scaleSelectorPanel = new System.Windows.Forms.Panel();
+			this.scaleRadioButton_100 = new System.Windows.Forms.RadioButton();
+			this.scaleRadioButton_50 = new System.Windows.Forms.RadioButton();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.baddieSelectorPanel.SuspendLayout();
 			this.heroesSelectorPanel.SuspendLayout();
-			this.roomSizeSelectorPanel.SuspendLayout();
 			this.controlsGroupBox.SuspendLayout();
+			this.scaleSelectorPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// pictureBox1
@@ -404,55 +403,6 @@ namespace Dungeons
 			this.activateHeroButton4.Visible = false;
 			this.activateHeroButton4.Click += new System.EventHandler(this.ActivateHeroButton4Click);
 			// 
-			// roomSizeLabel
-			// 
-			this.roomSizeLabel.Location = new System.Drawing.Point(397, 9);
-			this.roomSizeLabel.Name = "roomSizeLabel";
-			this.roomSizeLabel.Size = new System.Drawing.Size(103, 22);
-			this.roomSizeLabel.TabIndex = 28;
-			this.roomSizeLabel.Text = "Room size";
-			this.roomSizeLabel.Visible = false;
-			// 
-			// roomSizeSelectorPanel
-			// 
-			this.roomSizeSelectorPanel.Controls.Add(this.roomSelectorButton3);
-			this.roomSizeSelectorPanel.Controls.Add(this.roomSelectorButton2);
-			this.roomSizeSelectorPanel.Controls.Add(this.roomSelectorButton1);
-			this.roomSizeSelectorPanel.Location = new System.Drawing.Point(456, 6);
-			this.roomSizeSelectorPanel.Name = "roomSizeSelectorPanel";
-			this.roomSizeSelectorPanel.Size = new System.Drawing.Size(84, 59);
-			this.roomSizeSelectorPanel.TabIndex = 25;
-			this.roomSizeSelectorPanel.Visible = false;
-			// 
-			// roomSelectorButton3
-			// 
-			this.roomSelectorButton3.Location = new System.Drawing.Point(5, 37);
-			this.roomSelectorButton3.Name = "roomSelectorButton3";
-			this.roomSelectorButton3.Size = new System.Drawing.Size(53, 22);
-			this.roomSelectorButton3.TabIndex = 4;
-			this.roomSelectorButton3.Text = "5x5";
-			this.roomSelectorButton3.UseVisualStyleBackColor = true;
-			// 
-			// roomSelectorButton2
-			// 
-			this.roomSelectorButton2.Location = new System.Drawing.Point(5, 19);
-			this.roomSelectorButton2.Name = "roomSelectorButton2";
-			this.roomSelectorButton2.Size = new System.Drawing.Size(53, 22);
-			this.roomSelectorButton2.TabIndex = 3;
-			this.roomSelectorButton2.Text = "4x4";
-			this.roomSelectorButton2.UseVisualStyleBackColor = true;
-			// 
-			// roomSelectorButton1
-			// 
-			this.roomSelectorButton1.Checked = true;
-			this.roomSelectorButton1.Location = new System.Drawing.Point(5, 1);
-			this.roomSelectorButton1.Name = "roomSelectorButton1";
-			this.roomSelectorButton1.Size = new System.Drawing.Size(53, 22);
-			this.roomSelectorButton1.TabIndex = 2;
-			this.roomSelectorButton1.TabStop = true;
-			this.roomSelectorButton1.Text = "3x5";
-			this.roomSelectorButton1.UseVisualStyleBackColor = true;
-			// 
 			// useDoorButton
 			// 
 			this.useDoorButton.Image = global::Dungeons.Images.useDoor;
@@ -483,14 +433,53 @@ namespace Dungeons
 			this.controlsGroupBox.Text = "Controls";
 			this.controlsGroupBox.Visible = false;
 			// 
+			// scaleLabel
+			// 
+			this.scaleLabel.Location = new System.Drawing.Point(402, 12);
+			this.scaleLabel.Name = "scaleLabel";
+			this.scaleLabel.Size = new System.Drawing.Size(103, 22);
+			this.scaleLabel.TabIndex = 31;
+			this.scaleLabel.Text = "Scale";
+			// 
+			// scaleSelectorPanel
+			// 
+			this.scaleSelectorPanel.Controls.Add(this.scaleRadioButton_100);
+			this.scaleSelectorPanel.Controls.Add(this.scaleRadioButton_50);
+			this.scaleSelectorPanel.Location = new System.Drawing.Point(402, 31);
+			this.scaleSelectorPanel.Name = "scaleSelectorPanel";
+			this.scaleSelectorPanel.Size = new System.Drawing.Size(114, 28);
+			this.scaleSelectorPanel.TabIndex = 25;
+			// 
+			// scaleRadioButton_100
+			// 
+			this.scaleRadioButton_100.Checked = true;
+			this.scaleRadioButton_100.Location = new System.Drawing.Point(49, 0);
+			this.scaleRadioButton_100.Name = "scaleRadioButton_100";
+			this.scaleRadioButton_100.Size = new System.Drawing.Size(54, 21);
+			this.scaleRadioButton_100.TabIndex = 1;
+			this.scaleRadioButton_100.TabStop = true;
+			this.scaleRadioButton_100.Text = "100%";
+			this.scaleRadioButton_100.UseVisualStyleBackColor = true;
+			this.scaleRadioButton_100.CheckedChanged += new System.EventHandler(this.ScaleRadioButton_100CheckedChanged);
+			// 
+			// scaleRadioButton_50
+			// 
+			this.scaleRadioButton_50.Location = new System.Drawing.Point(3, -2);
+			this.scaleRadioButton_50.Name = "scaleRadioButton_50";
+			this.scaleRadioButton_50.Size = new System.Drawing.Size(52, 25);
+			this.scaleRadioButton_50.TabIndex = 0;
+			this.scaleRadioButton_50.Text = "50%";
+			this.scaleRadioButton_50.UseVisualStyleBackColor = true;
+			this.scaleRadioButton_50.CheckedChanged += new System.EventHandler(this.ScaleRadioButton_50CheckedChanged);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(897, 736);
+			this.Controls.Add(this.scaleSelectorPanel);
+			this.Controls.Add(this.scaleLabel);
 			this.Controls.Add(this.controlsGroupBox);
-			this.Controls.Add(this.roomSizeSelectorPanel);
-			this.Controls.Add(this.roomSizeLabel);
 			this.Controls.Add(this.heroesSelectorPanel);
 			this.Controls.Add(this.baddieSelectorPanel);
 			this.Controls.Add(this.numberOfHeroesLabel);
@@ -508,18 +497,17 @@ namespace Dungeons
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.baddieSelectorPanel.ResumeLayout(false);
 			this.heroesSelectorPanel.ResumeLayout(false);
-			this.roomSizeSelectorPanel.ResumeLayout(false);
 			this.controlsGroupBox.ResumeLayout(false);
+			this.scaleSelectorPanel.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.RadioButton scaleRadioButton_50;
+		private System.Windows.Forms.RadioButton scaleRadioButton_100;
+		private System.Windows.Forms.Panel scaleSelectorPanel;
+		private System.Windows.Forms.Label scaleLabel;
 		private System.Windows.Forms.GroupBox controlsGroupBox;
 		private System.Windows.Forms.Button useDoorButton;
-		private System.Windows.Forms.RadioButton roomSelectorButton1;
-		private System.Windows.Forms.RadioButton roomSelectorButton2;
-		private System.Windows.Forms.RadioButton roomSelectorButton3;
-		private System.Windows.Forms.Panel roomSizeSelectorPanel;
-		private System.Windows.Forms.Label roomSizeLabel;
 		private System.Windows.Forms.Button activateHeroButton4;
 		private System.Windows.Forms.Button activateHeroButton3;
 		private System.Windows.Forms.RadioButton baddieSelectorButton4;
