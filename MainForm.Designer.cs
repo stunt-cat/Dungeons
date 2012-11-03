@@ -77,10 +77,12 @@ namespace Dungeons
 			this.roomSelectorButton2 = new System.Windows.Forms.RadioButton();
 			this.roomSelectorButton1 = new System.Windows.Forms.RadioButton();
 			this.useDoorButton = new System.Windows.Forms.Button();
+			this.controlsGroupBox = new System.Windows.Forms.GroupBox();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.baddieSelectorPanel.SuspendLayout();
 			this.heroesSelectorPanel.SuspendLayout();
 			this.roomSizeSelectorPanel.SuspendLayout();
+			this.controlsGroupBox.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// pictureBox1
@@ -95,9 +97,8 @@ namespace Dungeons
 			// 
 			// closeCombatButton
 			// 
-			this.closeCombatButton.Enabled = false;
 			this.closeCombatButton.Image = global::Dungeons.Images.closeCombat;
-			this.closeCombatButton.Location = new System.Drawing.Point(544, 249);
+			this.closeCombatButton.Location = new System.Drawing.Point(17, 227);
 			this.closeCombatButton.Name = "closeCombatButton";
 			this.closeCombatButton.Size = new System.Drawing.Size(100, 100);
 			this.closeCombatButton.TabIndex = 1;
@@ -106,9 +107,8 @@ namespace Dungeons
 			// 
 			// forwardButton
 			// 
-			this.forwardButton.Enabled = false;
 			this.forwardButton.Image = global::Dungeons.Images.arrow_north_1;
-			this.forwardButton.Location = new System.Drawing.Point(655, 31);
+			this.forwardButton.Location = new System.Drawing.Point(128, 9);
 			this.forwardButton.Name = "forwardButton";
 			this.forwardButton.Size = new System.Drawing.Size(100, 100);
 			this.forwardButton.TabIndex = 5;
@@ -149,9 +149,8 @@ namespace Dungeons
 			// 
 			// leftTurnButton
 			// 
-			this.leftTurnButton.Enabled = false;
 			this.leftTurnButton.Image = global::Dungeons.Images.arrow_leftturn_1;
-			this.leftTurnButton.Location = new System.Drawing.Point(536, 66);
+			this.leftTurnButton.Location = new System.Drawing.Point(9, 44);
 			this.leftTurnButton.Name = "leftTurnButton";
 			this.leftTurnButton.Size = new System.Drawing.Size(100, 100);
 			this.leftTurnButton.TabIndex = 11;
@@ -160,9 +159,8 @@ namespace Dungeons
 			// 
 			// rightTurnButton
 			// 
-			this.rightTurnButton.Enabled = false;
 			this.rightTurnButton.Image = global::Dungeons.Images.arrow_rightturn_1;
-			this.rightTurnButton.Location = new System.Drawing.Point(773, 66);
+			this.rightTurnButton.Location = new System.Drawing.Point(246, 44);
 			this.rightTurnButton.Name = "rightTurnButton";
 			this.rightTurnButton.Size = new System.Drawing.Size(100, 100);
 			this.rightTurnButton.TabIndex = 12;
@@ -182,9 +180,8 @@ namespace Dungeons
 			// 
 			// rangedCombatButton
 			// 
-			this.rangedCombatButton.Enabled = false;
 			this.rangedCombatButton.Image = global::Dungeons.Images.rangedCombat;
-			this.rangedCombatButton.Location = new System.Drawing.Point(656, 249);
+			this.rangedCombatButton.Location = new System.Drawing.Point(129, 227);
 			this.rangedCombatButton.Name = "rangedCombatButton";
 			this.rangedCombatButton.Size = new System.Drawing.Size(100, 100);
 			this.rangedCombatButton.TabIndex = 14;
@@ -363,7 +360,7 @@ namespace Dungeons
 			// 
 			this.activateHeroButton2.Enabled = false;
 			this.activateHeroButton2.Image = global::Dungeons.Images.hero_select_2;
-			this.activateHeroButton2.Location = new System.Drawing.Point(650, 182);
+			this.activateHeroButton2.Location = new System.Drawing.Point(123, 160);
 			this.activateHeroButton2.Name = "activateHeroButton2";
 			this.activateHeroButton2.Size = new System.Drawing.Size(50, 50);
 			this.activateHeroButton2.TabIndex = 17;
@@ -375,7 +372,7 @@ namespace Dungeons
 			// 
 			this.activateHeroButton1.Enabled = false;
 			this.activateHeroButton1.Image = global::Dungeons.Images.hero_select_1;
-			this.activateHeroButton1.Location = new System.Drawing.Point(594, 182);
+			this.activateHeroButton1.Location = new System.Drawing.Point(67, 160);
 			this.activateHeroButton1.Name = "activateHeroButton1";
 			this.activateHeroButton1.Size = new System.Drawing.Size(50, 50);
 			this.activateHeroButton1.TabIndex = 25;
@@ -387,7 +384,7 @@ namespace Dungeons
 			// 
 			this.activateHeroButton3.Enabled = false;
 			this.activateHeroButton3.Image = global::Dungeons.Images.hero_select_3;
-			this.activateHeroButton3.Location = new System.Drawing.Point(706, 182);
+			this.activateHeroButton3.Location = new System.Drawing.Point(179, 160);
 			this.activateHeroButton3.Name = "activateHeroButton3";
 			this.activateHeroButton3.Size = new System.Drawing.Size(50, 50);
 			this.activateHeroButton3.TabIndex = 26;
@@ -399,7 +396,7 @@ namespace Dungeons
 			// 
 			this.activateHeroButton4.Enabled = false;
 			this.activateHeroButton4.Image = global::Dungeons.Images.hero_select_4;
-			this.activateHeroButton4.Location = new System.Drawing.Point(762, 182);
+			this.activateHeroButton4.Location = new System.Drawing.Point(235, 160);
 			this.activateHeroButton4.Name = "activateHeroButton4";
 			this.activateHeroButton4.Size = new System.Drawing.Size(50, 50);
 			this.activateHeroButton4.TabIndex = 27;
@@ -458,43 +455,53 @@ namespace Dungeons
 			// 
 			// useDoorButton
 			// 
-			this.useDoorButton.Enabled = false;
 			this.useDoorButton.Image = global::Dungeons.Images.useDoor;
-			this.useDoorButton.Location = new System.Drawing.Point(773, 249);
+			this.useDoorButton.Location = new System.Drawing.Point(246, 227);
 			this.useDoorButton.Name = "useDoorButton";
 			this.useDoorButton.Size = new System.Drawing.Size(100, 100);
 			this.useDoorButton.TabIndex = 29;
 			this.useDoorButton.UseVisualStyleBackColor = true;
 			this.useDoorButton.Click += new System.EventHandler(this.UseDoorButtonClick);
 			// 
+			// controlsGroupBox
+			// 
+			this.controlsGroupBox.Controls.Add(this.useDoorButton);
+			this.controlsGroupBox.Controls.Add(this.activateHeroButton4);
+			this.controlsGroupBox.Controls.Add(this.activateHeroButton3);
+			this.controlsGroupBox.Controls.Add(this.activateHeroButton1);
+			this.controlsGroupBox.Controls.Add(this.activateHeroButton2);
+			this.controlsGroupBox.Controls.Add(this.rangedCombatButton);
+			this.controlsGroupBox.Controls.Add(this.rightTurnButton);
+			this.controlsGroupBox.Controls.Add(this.leftTurnButton);
+			this.controlsGroupBox.Controls.Add(this.forwardButton);
+			this.controlsGroupBox.Controls.Add(this.closeCombatButton);
+			this.controlsGroupBox.Location = new System.Drawing.Point(527, 22);
+			this.controlsGroupBox.Name = "controlsGroupBox";
+			this.controlsGroupBox.Size = new System.Drawing.Size(360, 342);
+			this.controlsGroupBox.TabIndex = 30;
+			this.controlsGroupBox.TabStop = false;
+			this.controlsGroupBox.Text = "Controls";
+			this.controlsGroupBox.Visible = false;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(897, 736);
-			this.Controls.Add(this.useDoorButton);
+			this.Controls.Add(this.controlsGroupBox);
 			this.Controls.Add(this.roomSizeSelectorPanel);
 			this.Controls.Add(this.roomSizeLabel);
-			this.Controls.Add(this.activateHeroButton4);
-			this.Controls.Add(this.activateHeroButton3);
 			this.Controls.Add(this.heroesSelectorPanel);
-			this.Controls.Add(this.activateHeroButton1);
-			this.Controls.Add(this.activateHeroButton2);
 			this.Controls.Add(this.baddieSelectorPanel);
 			this.Controls.Add(this.numberOfHeroesLabel);
 			this.Controls.Add(this.numberOfBaddiesLabel);
 			this.Controls.Add(this.gameOverButton);
 			this.Controls.Add(this.scoreTextBox);
 			this.Controls.Add(this.scoreLabel);
-			this.Controls.Add(this.rangedCombatButton);
 			this.Controls.Add(this.successfulFightButton);
-			this.Controls.Add(this.rightTurnButton);
-			this.Controls.Add(this.leftTurnButton);
 			this.Controls.Add(this.failedFightButton);
 			this.Controls.Add(this.outOfBoundsButton);
 			this.Controls.Add(this.startButton);
-			this.Controls.Add(this.forwardButton);
-			this.Controls.Add(this.closeCombatButton);
 			this.Controls.Add(this.pictureBox1);
 			this.Name = "MainForm";
 			this.Text = "Move And Fight";
@@ -502,9 +509,11 @@ namespace Dungeons
 			this.baddieSelectorPanel.ResumeLayout(false);
 			this.heroesSelectorPanel.ResumeLayout(false);
 			this.roomSizeSelectorPanel.ResumeLayout(false);
+			this.controlsGroupBox.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.GroupBox controlsGroupBox;
 		private System.Windows.Forms.Button useDoorButton;
 		private System.Windows.Forms.RadioButton roomSelectorButton1;
 		private System.Windows.Forms.RadioButton roomSelectorButton2;

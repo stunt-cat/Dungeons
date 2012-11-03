@@ -54,8 +54,8 @@ namespace Dungeons
 		// Origin for all graphics locations - N.B. All graphics are 100x100 pixels.
 		public Point origin;
 		
-		// Create Room for action to take place in
-		public Room room;
+		// Create Board for action to take place in
+		public Board board;
 	
 		ResourceManager resources = new ResourceManager("Dungeons.images", Assembly.GetExecutingAssembly());
 		private System.Drawing.Graphics g;
@@ -103,8 +103,9 @@ namespace Dungeons
 				this.pictureBox1.BackgroundImage = global::Dungeons.Images.room5x5;
 			}
 			*/
+			
 			origin = new Point(0,0);
-			room = new Room(origin);  // Currently room is the only room, so is anchored at origin.
+			board = new Board();
 			
 			// Randomly select hero start point(s), ensuring there are no conflicts with other heroes (N.B. no baddies exist at this point)
 			for (int i = 0; i < numberOfHeroes; i++)
@@ -177,7 +178,8 @@ namespace Dungeons
 		
 		public Tile RandomLocation()
 		{
-			Tile randomTile = (Tile)room.tiles[random.Next(16)];			// EDIT THIS WHEN CHANGING TRIAL ROOM!!!
+			Room randomRoom = board.rooms[random.Next(board.rooms.Count)];
+			Tile randomTile = randomRoom.tiles[random.Next(randomRoom.tiles.Count)];
 			return randomTile;
 		}
 		
@@ -188,12 +190,8 @@ namespace Dungeons
 			roomSizeSelectorPanel.Visible = false;
 			gameOverButton.Visible = false;
 			startButton.Visible = false;
-			forwardButton.Enabled = true;
-			leftTurnButton.Enabled = true;
-			rightTurnButton.Enabled = true;
-			closeCombatButton.Enabled = true;
-			rangedCombatButton.Enabled = true;
-			useDoorButton.Enabled = true;
+			controlsGroupBox.Visible = true;
+			controlsGroupBox.Enabled = true;
 			drawHeroSelectorButtons(numberOfHeroes);	
 			DrawLocation();
 		}
@@ -228,7 +226,10 @@ namespace Dungeons
 			g = pictureBox1.CreateGraphics();
 			
 			// Draw Room(s)
-			foreach (Tile tile in room.tiles){
+			foreach (Room room in board.rooms)
+			{
+				foreach (Tile tile in room.tiles)
+				{
 				
 				g.DrawImageUnscaled((Bitmap)resources.GetObject(tile.imageRef), tile.tileLocation);
 				
@@ -238,12 +239,50 @@ namespace Dungeons
 				if(tile.adjacencies[Direction.South] == null) g.DrawImageUnscaled((Bitmap)resources.GetObject("tileWallS"), tile.tileLocation);
 				if(tile.adjacencies[Direction.West] == null) g.DrawImageUnscaled((Bitmap)resources.GetObject("tileWallW"), tile.tileLocation);	
 				
-				// Draw door images as necessary over the Tile base image.
-				if(tile.adjacencies[Direction.North] is Door) g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.North] as Door).imageRef), (tile.adjacencies[Direction.North] as Door).location.tileLocation);
-				if(tile.adjacencies[Direction.East] is Door) g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.East] as Door).imageRef), (tile.adjacencies[Direction.East] as Door).location.tileLocation);
-				if(tile.adjacencies[Direction.South] is Door) g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.South] as Door).imageRef), (tile.adjacencies[Direction.South] as Door).location.tileLocation);
-				if(tile.adjacencies[Direction.West] is Door) g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.West] as Door).imageRef), (tile.adjacencies[Direction.West] as Door).location.tileLocation);
+					// Draw door images as necessary over the Tile base images. N.B. There is a front and a back image for each Door.
+					if(tile.adjacencies[Direction.North] is Door)
+					{
+						// See if front or back image is required.
+						if(tile.tileLocation == (tile.adjacencies[Direction.North] as Door).sideA.tileLocation){			// tile is location of Door, so front image required.
+							g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.North] as Door).imageRefSideA), tile.tileLocation);
+						} else {																							// tile is not location of Door, so back image required.
+							g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.North] as Door).imageRefSideB), tile.tileLocation);
+						}
+					}
+					if(tile.adjacencies[Direction.East] is Door)
+						g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.East] as Door).imageRefSideA), tile.tileLocation);
+					/*
+					{
+						// See if front or back image is required.
+						if(tile.tileLocation == (tile.adjacencies[Direction.East] as Door).sideA.tileLocation){			// tile is location of Door, so front image required.
+							g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.East] as Door).imageRefSideA), tile.tileLocation);
+						} else {																							// tile is not location of Door, so back image required.
+							g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.East] as Door).imageRefSideB), tile.tileLocation);
+						}
+					}
+					
+					*/
+					if(tile.adjacencies[Direction.South] is Door)
+					{
+						// See if front or back image is required.
+						if(tile.tileLocation == (tile.adjacencies[Direction.South] as Door).sideA.tileLocation){			// tile is location of Door, so front image required.
+							g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.South] as Door).imageRefSideA), tile.tileLocation);
+						} else {																							// tile is not location of Door, so back image required.
+							g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.South] as Door).imageRefSideB), tile.tileLocation);
+						}
+					}
+					if(tile.adjacencies[Direction.West] is Door)
+					{
+						// See if front or back image is required.
+						if(tile.tileLocation == (tile.adjacencies[Direction.West] as Door).sideA.tileLocation){			// tile is location of Door, so front image required.
+							g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.West] as Door).imageRefSideA), tile.tileLocation);
+						} else {																							// tile is not location of Door, so back image required.
+							g.DrawImageUnscaled((Bitmap)resources.GetObject((tile.adjacencies[Direction.West] as Door).imageRefSideB), tile.tileLocation);
+						}
+					}
+				}
 			}
+			
 			
 			// Draw baddie(s)
 			foreach (Baddie baddie in baddies) {
@@ -377,23 +416,13 @@ namespace Dungeons
 		private void OutOfBounds()
 		{
 			outOfBoundsButton.Visible = true;
-			forwardButton.Enabled = false;
-			leftTurnButton.Enabled = false;
-			rightTurnButton.Enabled = false;
-			closeCombatButton.Enabled = false;
-			rangedCombatButton.Enabled = false;
-			activateHeroButton2.Enabled = false;
+			controlsGroupBox.Enabled = false;
 		}
 		
 		void OutOfBoundsButtonClick(object sender, System.EventArgs e)
 		{
 			outOfBoundsButton.Visible = false;
-			forwardButton.Enabled = true;
-			leftTurnButton.Enabled = true;
-			rightTurnButton.Enabled = true;
-			closeCombatButton.Enabled = true;
-			rangedCombatButton.Enabled = true;
-			activateHeroButton2.Enabled = true;
+			controlsGroupBox.Enabled = true;
 			DrawLocation();
 		}
 		
@@ -411,13 +440,8 @@ namespace Dungeons
 		
 		void FightButtonClick(object sender, System.EventArgs e)
 		{
-			forwardButton.Enabled = false;
-			leftTurnButton.Enabled = false;
-			rightTurnButton.Enabled = false;
-			closeCombatButton.Enabled = false;
-			rangedCombatButton.Enabled = false;
-			useDoorButton.Enabled = false;
-
+			controlsGroupBox.Enabled = false;
+			
 			// Find if there is a baddie adjacent to activeHero, and if so set activeBaddie to it.
 			activeBaddie = null;
 			Tile attackLocation = null;
@@ -480,13 +504,7 @@ namespace Dungeons
 		void FailedFightButtonClick(object sender, EventArgs e)
 		{
 			failedFightButton.Visible = false;
-			forwardButton.Enabled = true;
-			leftTurnButton.Enabled = true;
-			rightTurnButton.Enabled = true;
-			closeCombatButton.Enabled = true;
-			rangedCombatButton.Enabled = true;
-			activateHeroButton2.Enabled = true;
-			useDoorButton.Enabled = true;
+			controlsGroupBox.Enabled = true;
 			DrawLocation();
 		}
 		
@@ -544,24 +562,14 @@ namespace Dungeons
 			this.score += 3;
 			scoreTextBox.Clear();
 			scoreTextBox.Text = score.ToString();
-			forwardButton.Enabled = false;
-			leftTurnButton.Enabled = false;
-			rightTurnButton.Enabled = false;
-			closeCombatButton.Enabled = false;
-			rangedCombatButton.Enabled = false;
-			useDoorButton.Enabled = false;
+			controlsGroupBox.Enabled = false;
 			successfulFightButton.Visible = true;
 			baddies.Remove(activeBaddie);
 		}
 		
 		void FailShot()
 		{
-			forwardButton.Enabled = false;
-			leftTurnButton.Enabled = false;
-			rightTurnButton.Enabled = false;
-			closeCombatButton.Enabled = false;
-			rangedCombatButton.Enabled = false;
-			useDoorButton.Enabled = false;
+			controlsGroupBox.Enabled = false;
 			failedFightButton.Visible = true;
 		}
 		
@@ -573,24 +581,20 @@ namespace Dungeons
 	
 		public void GameOver()
 		{
-			forwardButton.Enabled = false;
-			leftTurnButton.Enabled = false;
-			rightTurnButton.Enabled = false;
-			closeCombatButton.Enabled = false;
-			rangedCombatButton.Enabled = false;
-			useDoorButton.Enabled = false;
+			controlsGroupBox.Enabled = false;
 			
 			// Fire ActivateHeroButton1Click event so correct movement buttons displayed if number of heroes goes from > 1 to 1.
 			activateHeroButton1.PerformClick();
 			
 			// If game stops with the following buttons visible, then GameOver() will hide them
+			controlsGroupBox.Visible = false;
 			successfulFightButton.Visible = false;
 			outOfBoundsButton.Visible = false;
 			failedFightButton.Visible = false;
-			activateHeroButton1.Visible = false;
-			activateHeroButton2.Visible = false;
-			activateHeroButton3.Visible = false;
-			activateHeroButton4.Visible = false;
+			//activateHeroButton1.Visible = false;
+			//activateHeroButton2.Visible = false;
+			//activateHeroButton3.Visible = false;
+			//activateHeroButton4.Visible = false;
 			
 			gameOverButton.Visible = true;
 			gameOverButton.Enabled = true;

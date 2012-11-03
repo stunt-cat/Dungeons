@@ -165,6 +165,13 @@ namespace Dungeons {
 			}
 		}
 		
+		internal static System.Drawing.Bitmap door_e_back {
+			get {
+				object obj = ResourceManager.GetObject("door_e_back", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
 		internal static System.Drawing.Bitmap door_e_closed {
 			get {
 				object obj = ResourceManager.GetObject("door_e_closed", resourceCulture);
@@ -175,6 +182,13 @@ namespace Dungeons {
 		internal static System.Drawing.Bitmap door_e_open {
 			get {
 				object obj = ResourceManager.GetObject("door_e_open", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap door_n_back {
+			get {
+				object obj = ResourceManager.GetObject("door_n_back", resourceCulture);
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}
@@ -193,6 +207,13 @@ namespace Dungeons {
 			}
 		}
 		
+		internal static System.Drawing.Bitmap door_s_back {
+			get {
+				object obj = ResourceManager.GetObject("door_s_back", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
 		internal static System.Drawing.Bitmap door_s_closed {
 			get {
 				object obj = ResourceManager.GetObject("door_s_closed", resourceCulture);
@@ -203,6 +224,13 @@ namespace Dungeons {
 		internal static System.Drawing.Bitmap door_s_open {
 			get {
 				object obj = ResourceManager.GetObject("door_s_open", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap door_w_back {
+			get {
+				object obj = ResourceManager.GetObject("door_w_back", resourceCulture);
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}
