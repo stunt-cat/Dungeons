@@ -75,20 +75,30 @@ namespace Dungeons
 			this.controlsGroupBox = new System.Windows.Forms.GroupBox();
 			this.scaleLabel = new System.Windows.Forms.Label();
 			this.scaleSelectorPanel = new System.Windows.Forms.Panel();
+			this.scaleRadioButton_25 = new System.Windows.Forms.RadioButton();
 			this.scaleRadioButton_100 = new System.Windows.Forms.RadioButton();
 			this.scaleRadioButton_50 = new System.Windows.Forms.RadioButton();
+			this.scrollNorthButton = new System.Windows.Forms.Button();
+			this.scrollResetButton = new System.Windows.Forms.Button();
+			this.scrollEastButton = new System.Windows.Forms.Button();
+			this.scrollSouthButton = new System.Windows.Forms.Button();
+			this.scrollWestButton = new System.Windows.Forms.Button();
+			this.scrollGroupBox = new System.Windows.Forms.GroupBox();
+			this.baddieSelectorButton7 = new System.Windows.Forms.RadioButton();
+			this.baddieSelectorButton8 = new System.Windows.Forms.RadioButton();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.baddieSelectorPanel.SuspendLayout();
 			this.heroesSelectorPanel.SuspendLayout();
 			this.controlsGroupBox.SuspendLayout();
 			this.scaleSelectorPanel.SuspendLayout();
+			this.scrollGroupBox.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// pictureBox1
 			// 
 			this.pictureBox1.BackColor = System.Drawing.SystemColors.Control;
 			this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-			this.pictureBox1.Location = new System.Drawing.Point(16, 71);
+			this.pictureBox1.Location = new System.Drawing.Point(12, 120);
 			this.pictureBox1.Name = "pictureBox1";
 			this.pictureBox1.Size = new System.Drawing.Size(500, 500);
 			this.pictureBox1.TabIndex = 0;
@@ -116,7 +126,7 @@ namespace Dungeons
 			// 
 			// startButton
 			// 
-			this.startButton.Location = new System.Drawing.Point(62, 116);
+			this.startButton.Location = new System.Drawing.Point(58, 165);
 			this.startButton.Name = "startButton";
 			this.startButton.Size = new System.Drawing.Size(409, 413);
 			this.startButton.TabIndex = 8;
@@ -126,7 +136,7 @@ namespace Dungeons
 			// 
 			// outOfBoundsButton
 			// 
-			this.outOfBoundsButton.Location = new System.Drawing.Point(536, 444);
+			this.outOfBoundsButton.Location = new System.Drawing.Point(534, 555);
 			this.outOfBoundsButton.Name = "outOfBoundsButton";
 			this.outOfBoundsButton.Size = new System.Drawing.Size(167, 161);
 			this.outOfBoundsButton.TabIndex = 9;
@@ -137,7 +147,7 @@ namespace Dungeons
 			// 
 			// failedFightButton
 			// 
-			this.failedFightButton.Location = new System.Drawing.Point(724, 444);
+			this.failedFightButton.Location = new System.Drawing.Point(722, 555);
 			this.failedFightButton.Name = "failedFightButton";
 			this.failedFightButton.Size = new System.Drawing.Size(167, 161);
 			this.failedFightButton.TabIndex = 10;
@@ -168,7 +178,7 @@ namespace Dungeons
 			// 
 			// successfulFightButton
 			// 
-			this.successfulFightButton.Location = new System.Drawing.Point(575, 364);
+			this.successfulFightButton.Location = new System.Drawing.Point(573, 475);
 			this.successfulFightButton.Name = "successfulFightButton";
 			this.successfulFightButton.Size = new System.Drawing.Size(269, 64);
 			this.successfulFightButton.TabIndex = 13;
@@ -189,7 +199,7 @@ namespace Dungeons
 			// 
 			// scoreLabel
 			// 
-			this.scoreLabel.Location = new System.Drawing.Point(216, 597);
+			this.scoreLabel.Location = new System.Drawing.Point(216, 629);
 			this.scoreLabel.Name = "scoreLabel";
 			this.scoreLabel.Size = new System.Drawing.Size(59, 27);
 			this.scoreLabel.TabIndex = 15;
@@ -197,7 +207,7 @@ namespace Dungeons
 			// 
 			// scoreTextBox
 			// 
-			this.scoreTextBox.Location = new System.Drawing.Point(295, 594);
+			this.scoreTextBox.Location = new System.Drawing.Point(295, 626);
 			this.scoreTextBox.Name = "scoreTextBox";
 			this.scoreTextBox.ReadOnly = true;
 			this.scoreTextBox.Size = new System.Drawing.Size(70, 20);
@@ -206,7 +216,7 @@ namespace Dungeons
 			// 
 			// gameOverButton
 			// 
-			this.gameOverButton.Location = new System.Drawing.Point(75, 133);
+			this.gameOverButton.Location = new System.Drawing.Point(71, 182);
 			this.gameOverButton.Name = "gameOverButton";
 			this.gameOverButton.Size = new System.Drawing.Size(382, 383);
 			this.gameOverButton.TabIndex = 18;
@@ -236,6 +246,8 @@ namespace Dungeons
 			// 
 			// baddieSelectorPanel
 			// 
+			this.baddieSelectorPanel.Controls.Add(this.baddieSelectorButton8);
+			this.baddieSelectorPanel.Controls.Add(this.baddieSelectorButton7);
 			this.baddieSelectorPanel.Controls.Add(this.baddieSelectorButton6);
 			this.baddieSelectorPanel.Controls.Add(this.baddieSelectorButton5);
 			this.baddieSelectorPanel.Controls.Add(this.baddieSelectorButton4);
@@ -244,12 +256,12 @@ namespace Dungeons
 			this.baddieSelectorPanel.Controls.Add(this.baddieSelectorButton1);
 			this.baddieSelectorPanel.Location = new System.Drawing.Point(122, 7);
 			this.baddieSelectorPanel.Name = "baddieSelectorPanel";
-			this.baddieSelectorPanel.Size = new System.Drawing.Size(70, 59);
+			this.baddieSelectorPanel.Size = new System.Drawing.Size(70, 84);
 			this.baddieSelectorPanel.TabIndex = 23;
 			// 
 			// baddieSelectorButton6
 			// 
-			this.baddieSelectorButton6.Location = new System.Drawing.Point(37, 38);
+			this.baddieSelectorButton6.Location = new System.Drawing.Point(37, 19);
 			this.baddieSelectorButton6.Name = "baddieSelectorButton6";
 			this.baddieSelectorButton6.Size = new System.Drawing.Size(33, 20);
 			this.baddieSelectorButton6.TabIndex = 5;
@@ -258,7 +270,7 @@ namespace Dungeons
 			// 
 			// baddieSelectorButton5
 			// 
-			this.baddieSelectorButton5.Location = new System.Drawing.Point(37, 19);
+			this.baddieSelectorButton5.Location = new System.Drawing.Point(37, 0);
 			this.baddieSelectorButton5.Name = "baddieSelectorButton5";
 			this.baddieSelectorButton5.Size = new System.Drawing.Size(33, 20);
 			this.baddieSelectorButton5.TabIndex = 4;
@@ -267,7 +279,7 @@ namespace Dungeons
 			// 
 			// baddieSelectorButton4
 			// 
-			this.baddieSelectorButton4.Location = new System.Drawing.Point(37, 0);
+			this.baddieSelectorButton4.Location = new System.Drawing.Point(7, 58);
 			this.baddieSelectorButton4.Name = "baddieSelectorButton4";
 			this.baddieSelectorButton4.Size = new System.Drawing.Size(33, 20);
 			this.baddieSelectorButton4.TabIndex = 3;
@@ -425,7 +437,7 @@ namespace Dungeons
 			this.controlsGroupBox.Controls.Add(this.leftTurnButton);
 			this.controlsGroupBox.Controls.Add(this.forwardButton);
 			this.controlsGroupBox.Controls.Add(this.closeCombatButton);
-			this.controlsGroupBox.Location = new System.Drawing.Point(527, 22);
+			this.controlsGroupBox.Location = new System.Drawing.Point(525, 133);
 			this.controlsGroupBox.Name = "controlsGroupBox";
 			this.controlsGroupBox.Size = new System.Drawing.Size(360, 342);
 			this.controlsGroupBox.TabIndex = 30;
@@ -435,7 +447,7 @@ namespace Dungeons
 			// 
 			// scaleLabel
 			// 
-			this.scaleLabel.Location = new System.Drawing.Point(402, 12);
+			this.scaleLabel.Location = new System.Drawing.Point(573, 39);
 			this.scaleLabel.Name = "scaleLabel";
 			this.scaleLabel.Size = new System.Drawing.Size(103, 22);
 			this.scaleLabel.TabIndex = 31;
@@ -443,40 +455,136 @@ namespace Dungeons
 			// 
 			// scaleSelectorPanel
 			// 
+			this.scaleSelectorPanel.Controls.Add(this.scaleRadioButton_25);
 			this.scaleSelectorPanel.Controls.Add(this.scaleRadioButton_100);
 			this.scaleSelectorPanel.Controls.Add(this.scaleRadioButton_50);
-			this.scaleSelectorPanel.Location = new System.Drawing.Point(402, 31);
+			this.scaleSelectorPanel.Location = new System.Drawing.Point(534, 58);
 			this.scaleSelectorPanel.Name = "scaleSelectorPanel";
-			this.scaleSelectorPanel.Size = new System.Drawing.Size(114, 28);
+			this.scaleSelectorPanel.Size = new System.Drawing.Size(167, 28);
 			this.scaleSelectorPanel.TabIndex = 25;
+			this.scaleSelectorPanel.Visible = false;
+			// 
+			// scaleRadioButton_25
+			// 
+			this.scaleRadioButton_25.Checked = true;
+			this.scaleRadioButton_25.Location = new System.Drawing.Point(8, 2);
+			this.scaleRadioButton_25.Name = "scaleRadioButton_25";
+			this.scaleRadioButton_25.Size = new System.Drawing.Size(49, 25);
+			this.scaleRadioButton_25.TabIndex = 2;
+			this.scaleRadioButton_25.TabStop = true;
+			this.scaleRadioButton_25.Text = "25%";
+			this.scaleRadioButton_25.UseVisualStyleBackColor = true;
+			this.scaleRadioButton_25.CheckedChanged += new System.EventHandler(this.ScaleRadioButton_25CheckedChanged);
 			// 
 			// scaleRadioButton_100
 			// 
-			this.scaleRadioButton_100.Checked = true;
-			this.scaleRadioButton_100.Location = new System.Drawing.Point(49, 0);
+			this.scaleRadioButton_100.Location = new System.Drawing.Point(110, 4);
 			this.scaleRadioButton_100.Name = "scaleRadioButton_100";
 			this.scaleRadioButton_100.Size = new System.Drawing.Size(54, 21);
 			this.scaleRadioButton_100.TabIndex = 1;
-			this.scaleRadioButton_100.TabStop = true;
 			this.scaleRadioButton_100.Text = "100%";
 			this.scaleRadioButton_100.UseVisualStyleBackColor = true;
 			this.scaleRadioButton_100.CheckedChanged += new System.EventHandler(this.ScaleRadioButton_100CheckedChanged);
 			// 
 			// scaleRadioButton_50
 			// 
-			this.scaleRadioButton_50.Location = new System.Drawing.Point(3, -2);
+			this.scaleRadioButton_50.Location = new System.Drawing.Point(58, 2);
 			this.scaleRadioButton_50.Name = "scaleRadioButton_50";
-			this.scaleRadioButton_50.Size = new System.Drawing.Size(52, 25);
+			this.scaleRadioButton_50.Size = new System.Drawing.Size(46, 25);
 			this.scaleRadioButton_50.TabIndex = 0;
 			this.scaleRadioButton_50.Text = "50%";
 			this.scaleRadioButton_50.UseVisualStyleBackColor = true;
 			this.scaleRadioButton_50.CheckedChanged += new System.EventHandler(this.ScaleRadioButton_50CheckedChanged);
+			// 
+			// scrollNorthButton
+			// 
+			this.scrollNorthButton.Image = global::Dungeons.Images.arrow_scroll_north;
+			this.scrollNorthButton.Location = new System.Drawing.Point(55, 12);
+			this.scrollNorthButton.Name = "scrollNorthButton";
+			this.scrollNorthButton.Size = new System.Drawing.Size(35, 35);
+			this.scrollNorthButton.TabIndex = 30;
+			this.scrollNorthButton.UseVisualStyleBackColor = true;
+			this.scrollNorthButton.Click += new System.EventHandler(this.ScrollNorthButtonClick);
+			// 
+			// scrollResetButton
+			// 
+			this.scrollResetButton.Image = global::Dungeons.Images.arrow_scroll_reset;
+			this.scrollResetButton.Location = new System.Drawing.Point(56, 51);
+			this.scrollResetButton.Name = "scrollResetButton";
+			this.scrollResetButton.Size = new System.Drawing.Size(35, 35);
+			this.scrollResetButton.TabIndex = 32;
+			this.scrollResetButton.UseVisualStyleBackColor = true;
+			this.scrollResetButton.Click += new System.EventHandler(this.ScrollResetButtonClick);
+			// 
+			// scrollEastButton
+			// 
+			this.scrollEastButton.Image = global::Dungeons.Images.arrow_scroll_east;
+			this.scrollEastButton.Location = new System.Drawing.Point(97, 51);
+			this.scrollEastButton.Name = "scrollEastButton";
+			this.scrollEastButton.Size = new System.Drawing.Size(35, 35);
+			this.scrollEastButton.TabIndex = 33;
+			this.scrollEastButton.UseVisualStyleBackColor = true;
+			this.scrollEastButton.Click += new System.EventHandler(this.ScrollEastButtonClick);
+			// 
+			// scrollSouthButton
+			// 
+			this.scrollSouthButton.Image = global::Dungeons.Images.arrow_scroll_south;
+			this.scrollSouthButton.Location = new System.Drawing.Point(56, 91);
+			this.scrollSouthButton.Name = "scrollSouthButton";
+			this.scrollSouthButton.Size = new System.Drawing.Size(35, 35);
+			this.scrollSouthButton.TabIndex = 34;
+			this.scrollSouthButton.UseVisualStyleBackColor = true;
+			this.scrollSouthButton.Click += new System.EventHandler(this.ScrollSouthButtonClick);
+			// 
+			// scrollWestButton
+			// 
+			this.scrollWestButton.Image = global::Dungeons.Images.arrow_scroll_west;
+			this.scrollWestButton.Location = new System.Drawing.Point(15, 53);
+			this.scrollWestButton.Name = "scrollWestButton";
+			this.scrollWestButton.Size = new System.Drawing.Size(35, 35);
+			this.scrollWestButton.TabIndex = 35;
+			this.scrollWestButton.UseVisualStyleBackColor = true;
+			this.scrollWestButton.Click += new System.EventHandler(this.ScrollWestButtonClick);
+			// 
+			// scrollGroupBox
+			// 
+			this.scrollGroupBox.Controls.Add(this.scrollWestButton);
+			this.scrollGroupBox.Controls.Add(this.scrollSouthButton);
+			this.scrollGroupBox.Controls.Add(this.scrollEastButton);
+			this.scrollGroupBox.Controls.Add(this.scrollResetButton);
+			this.scrollGroupBox.Controls.Add(this.scrollNorthButton);
+			this.scrollGroupBox.Location = new System.Drawing.Point(722, 5);
+			this.scrollGroupBox.Name = "scrollGroupBox";
+			this.scrollGroupBox.Size = new System.Drawing.Size(149, 128);
+			this.scrollGroupBox.TabIndex = 37;
+			this.scrollGroupBox.TabStop = false;
+			this.scrollGroupBox.Text = "Scroll";
+			this.scrollGroupBox.Visible = false;
+			// 
+			// baddieSelectorButton7
+			// 
+			this.baddieSelectorButton7.Location = new System.Drawing.Point(37, 38);
+			this.baddieSelectorButton7.Name = "baddieSelectorButton7";
+			this.baddieSelectorButton7.Size = new System.Drawing.Size(33, 20);
+			this.baddieSelectorButton7.TabIndex = 6;
+			this.baddieSelectorButton7.Text = "7";
+			this.baddieSelectorButton7.UseVisualStyleBackColor = true;
+			// 
+			// baddieSelectorButton8
+			// 
+			this.baddieSelectorButton8.Location = new System.Drawing.Point(37, 58);
+			this.baddieSelectorButton8.Name = "baddieSelectorButton8";
+			this.baddieSelectorButton8.Size = new System.Drawing.Size(33, 20);
+			this.baddieSelectorButton8.TabIndex = 7;
+			this.baddieSelectorButton8.Text = "8";
+			this.baddieSelectorButton8.UseVisualStyleBackColor = true;
 			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(897, 736);
+			this.Controls.Add(this.scrollGroupBox);
 			this.Controls.Add(this.scaleSelectorPanel);
 			this.Controls.Add(this.scaleLabel);
 			this.Controls.Add(this.controlsGroupBox);
@@ -499,9 +607,19 @@ namespace Dungeons
 			this.heroesSelectorPanel.ResumeLayout(false);
 			this.controlsGroupBox.ResumeLayout(false);
 			this.scaleSelectorPanel.ResumeLayout(false);
+			this.scrollGroupBox.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.RadioButton baddieSelectorButton7;
+		private System.Windows.Forms.RadioButton baddieSelectorButton8;
+		private System.Windows.Forms.RadioButton scaleRadioButton_25;
+		private System.Windows.Forms.GroupBox scrollGroupBox;
+		private System.Windows.Forms.Button scrollWestButton;
+		private System.Windows.Forms.Button scrollSouthButton;
+		private System.Windows.Forms.Button scrollEastButton;
+		private System.Windows.Forms.Button scrollResetButton;
+		private System.Windows.Forms.Button scrollNorthButton;
 		private System.Windows.Forms.RadioButton scaleRadioButton_50;
 		private System.Windows.Forms.RadioButton scaleRadioButton_100;
 		private System.Windows.Forms.Panel scaleSelectorPanel;

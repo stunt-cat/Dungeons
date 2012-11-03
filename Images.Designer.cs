@@ -144,6 +144,41 @@ namespace Dungeons {
 			}
 		}
 		
+		internal static System.Drawing.Bitmap arrow_scroll_east {
+			get {
+				object obj = ResourceManager.GetObject("arrow_scroll_east", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap arrow_scroll_north {
+			get {
+				object obj = ResourceManager.GetObject("arrow_scroll_north", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap arrow_scroll_reset {
+			get {
+				object obj = ResourceManager.GetObject("arrow_scroll_reset", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap arrow_scroll_south {
+			get {
+				object obj = ResourceManager.GetObject("arrow_scroll_south", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap arrow_scroll_west {
+			get {
+				object obj = ResourceManager.GetObject("arrow_scroll_west", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
 		internal static System.Drawing.Bitmap baddie {
 			get {
 				object obj = ResourceManager.GetObject("baddie", resourceCulture);
@@ -396,27 +431,6 @@ namespace Dungeons {
 			}
 		}
 		
-		internal static System.Drawing.Bitmap room3x5 {
-			get {
-				object obj = ResourceManager.GetObject("room3x5", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
-			}
-		}
-		
-		internal static System.Drawing.Bitmap room4x4 {
-			get {
-				object obj = ResourceManager.GetObject("room4x4", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
-			}
-		}
-		
-		internal static System.Drawing.Bitmap room5x5 {
-			get {
-				object obj = ResourceManager.GetObject("room5x5", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
-			}
-		}
-		
 		internal static System.Drawing.Bitmap tile1 {
 			get {
 				object obj = ResourceManager.GetObject("tile1", resourceCulture);
@@ -441,6 +455,20 @@ namespace Dungeons {
 		internal static System.Drawing.Bitmap tile4 {
 			get {
 				object obj = ResourceManager.GetObject("tile4", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap tile5 {
+			get {
+				object obj = ResourceManager.GetObject("tile5", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap tile6 {
+			get {
+				object obj = ResourceManager.GetObject("tile6", resourceCulture);
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}

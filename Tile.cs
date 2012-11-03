@@ -31,7 +31,7 @@ namespace Dungeons
 			this.tileLocation = offset;						// Adds room origin location to point locations.
 		}
 		
-		public void InitialiseTile(TileType type, Point tileLocationOffset, string imageRef, ITileJoiner north, ITileJoiner east, ITileJoiner south, ITileJoiner west)
+		public void Initialise(TileType type, Point tileLocationOffset, string imageRef, ITileJoiner north, ITileJoiner east, ITileJoiner south, ITileJoiner west)
 		{
 			this.type = type;
 			tileLocation.Offset(tileLocationOffset);
@@ -58,6 +58,11 @@ namespace Dungeons
 					Door door = (Door)potentialAdjacent;
 					// If Door open, return Tile on the other side.
 					if (door.open) return door.OtherSide(this);
+				}
+				if(potentialAdjacent is TileConnector)
+				{
+					TileConnector connector = (TileConnector)potentialAdjacent;
+					return connector.OtherSide(this);
 				}
 			}
 			return null; // There is no adjacent move.

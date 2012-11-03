@@ -12,12 +12,13 @@ namespace Dungeons
 {
 	/// <summary>
 	/// Represents a doorway link between two tiles, which may themselves not be adjacent.
+	/// Requires having an 'owning' Tile (SideA) for location of the graphics.					TODO change this so Door is a discrete entity!
 	/// </summary>
 	
 	public class Door : ITileJoiner
 	{
 		public Boolean open = false;		// Refers to if door is open or closed.
-		public Tile sideA;					// Side A is the location of the Door, for the purposes of 'Direction wallLocation'.
+		public Tile sideA;					// Side A is the location of the Door, for the purposes of 'Direction wallLocation', which anchors the graphics.
 		public Tile sideB;					// Side B is 'back' image of Door. N.B. Does not have to be adjacent to Side A!
 		public string imageRefSideA;		// Can be open or closed image.
 		public string imageRefSideB;		// Is only ever 'back' image.
@@ -27,7 +28,7 @@ namespace Dungeons
 		public Door()
 		{}
 		
-		public void InitialiseDoor(Tile sideA, Direction wallLocation, Tile sideB)
+		public void Initialise(Tile sideA, Direction wallLocation, Tile sideB)
 		{
 			this.wallLocation = wallLocation;
 			this.sideA = sideA;
@@ -81,9 +82,8 @@ namespace Dungeons
 		// Method to get Tile on other side of door
 		public Tile OtherSide(Tile viewer)
 		{
-			if(viewer == sideA){
-				return sideB;
-			} else return sideA;
+			if(viewer == sideA) return sideB;
+			else return sideA;
 		}
 		
 	}
