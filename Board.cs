@@ -27,17 +27,16 @@ namespace Dungeons
 		public Board()
 		{
 			// Create any Door(s)
-			doors.Add(new Door());
-			doors.Add(new Door());
-			doors.Add(new Door());
-			doors.Add(new Door());
-			doors.Add(new Door());
-			
+			for (int i=0; i<6; i++)
+			{
+				doors.Add(new Door());
+			}
 			
 			// Create any TileConnector(s)
-			connectors.Add(new TileConnector());
-			connectors.Add(new TileConnector());
-			
+			for (int i=0; i<8; i++)
+			{
+				connectors.Add(new TileConnector());
+			}
 			
 			// Create Room(s)
 			rooms.Add(new Room(new Point(0,0), 1));
@@ -47,38 +46,27 @@ namespace Dungeons
 			rooms.Add(new Room(new Point(3,7), 4));
 			rooms.Add(new Room(new Point(-2,7), 4));
 			rooms.Add(new Room(new Point(-6,7), 2));
+			rooms.Add(new Room(new Point(4,9), 1));
+			rooms.Add(new Room(new Point(3,14), 2));
+			rooms.Add(new Room(new Point(-1,14), 2));
 			          
-			
-			// Initialise any Door(s) and update relevant Tiles in relevant Room(s) to point to it/them.
+			// Initialise any Door(s). N.B. This updates relevant Tiles in relevant Rooms to point to it/them.
 			doors[0].Initialise(rooms[0].tiles[7], Direction.East, rooms[1].tiles[4]);
-			rooms[0].tiles[7].adjacencies[Direction.East] = doors[0];
-			rooms[1].tiles[4].adjacencies[Direction.West] = doors[0];
-			
 			doors[1].Initialise(rooms[1].tiles[11], Direction.East, rooms[2].tiles[0]);
-			rooms[1].tiles[11].adjacencies[Direction.East] = doors[1];
-			rooms[2].tiles[0].adjacencies[Direction.West] = doors[1];
-			
 			doors[2].Initialise(rooms[2].tiles[8], Direction.South, rooms[3].tiles[1]);
-			rooms[2].tiles[8].adjacencies[Direction.South] = doors[2];
-			rooms[3].tiles[1].adjacencies[Direction.North] = doors[2];
-			
 			doors[3].Initialise(rooms[3].tiles[6], Direction.West, rooms[4].tiles[9]);
-			rooms[3].tiles[6].adjacencies[Direction.West] = doors[3];
-			rooms[4].tiles[9].adjacencies[Direction.East] = doors[3];
-			
 			doors[4].Initialise(rooms[5].tiles[0], Direction.West, rooms[6].tiles[3]);
-			rooms[5].tiles[0].adjacencies[Direction.West] = doors[4];
-			rooms[6].tiles[3].adjacencies[Direction.East] = doors[4];
+			doors[5].Initialise(rooms[7].tiles[8], Direction.South, rooms[8].tiles[1]);
 			
-			
-			// Initialise any TileConnector(s) and update relevant Tiles in relevant Room(s) to reflect connection.
-			connectors[0].Initialse(rooms[5].tiles[4], rooms[4].tiles[0]);
-			rooms[5].tiles[4].adjacencies[Direction.East] = connectors[0];
-			rooms[4].tiles[0].adjacencies[Direction.West] = connectors[0];
-			
-			connectors[1].Initialse(rooms[5].tiles[9], rooms[4].tiles[5]);
-			rooms[5].tiles[9].adjacencies[Direction.East] = connectors[1];
-			rooms[4].tiles[5].adjacencies[Direction.West] = connectors[1];
+			// Initialise any TileConnector(s). N.B. This updates relevant Tiles in relevant Rooms to point to it/them.
+			connectors[0].Initialse(rooms[5].tiles[4], Direction.East, rooms[4].tiles[0]);
+			connectors[1].Initialse(rooms[5].tiles[9], Direction.East, rooms[4].tiles[5]);
+			connectors[2].Initialse(rooms[4].tiles[6], Direction.South, rooms[7].tiles[0]);
+			connectors[3].Initialse(rooms[4].tiles[7], Direction.South, rooms[7].tiles[1]);
+			connectors[4].Initialse(rooms[9].tiles[3], Direction.East, rooms[8].tiles[0]);
+			connectors[5].Initialse(rooms[9].tiles[7], Direction.East, rooms[8].tiles[4]);
+			connectors[6].Initialse(rooms[9].tiles[11], Direction.East, rooms[8].tiles[8]);
+			connectors[7].Initialse(rooms[9].tiles[15], Direction.East, rooms[8].tiles[12]);
 		}
 	}
 }

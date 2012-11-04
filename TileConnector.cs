@@ -21,15 +21,37 @@ namespace Dungeons
 	{
 		public Tile sideA;
 		public Tile sideB;
+		public Direction wallLocation;	// Refers to side of sideA Tile that connector is on.
 		
 		// TileConnector constructor is empty but TileConnector is initialised with InitialiseTileConnector() method.
 		public TileConnector()
 		{}
 		
-		public void Initialse(Tile sideA, Tile sideB)
+		public void Initialse(Tile sideA, Direction wallLocation, Tile sideB)
 		{
 			this.sideA = sideA;
 			this.sideB = sideB;
+			this.wallLocation = wallLocation;
+			
+			// Update Tile adjacencies to reference TileConnector.
+			sideA.adjacencies[wallLocation] = this;
+			sideB.adjacencies[Opposite(wallLocation)] = this;
+		}
+		
+		// Method to find opposite Direction Enum, for Initialise().
+		public Direction Opposite(Direction direction)
+		{
+			Direction opposite = direction; // Dummy value to initialise enum
+			
+			switch(direction)
+			{
+				case Direction.North: opposite = Direction.South; break;
+				case Direction.East: opposite = Direction.West; break;
+				case Direction.South: opposite = Direction.North; break;
+				case Direction.West: opposite = Direction.East; break;
+			}
+			
+			return opposite;
 		}
 		
 		public Tile OtherSide(Tile viewer)

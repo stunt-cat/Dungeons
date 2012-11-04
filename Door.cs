@@ -35,7 +35,8 @@ namespace Dungeons
 			this.sideB = sideB;
 			
 			// Get correct image files for door, due to the wall it is located on.
-			switch(wallLocation){
+			switch(wallLocation)
+			{
 				case Direction.North:
 					this.imageRefSideA = "door_n_closed";
 					this.imageRefSideB = "door_s_back";
@@ -53,6 +54,26 @@ namespace Dungeons
 					this.imageRefSideB = "door_e_back";
 					break;
 			}
+			
+			// Update Tile adjacencies to reference Door.
+			sideA.adjacencies[wallLocation] = this;
+			sideB.adjacencies[Opposite(wallLocation)] = this;
+		}
+		
+		// Method to find opposite Direction Enum, for Initialise().
+		public Direction Opposite(Direction direction)
+		{
+			Direction opposite = direction; // Dummy value to initialise enum
+			
+			switch(direction)
+			{
+				case Direction.North: opposite = Direction.South; break;
+				case Direction.East: opposite = Direction.West; break;
+				case Direction.South: opposite = Direction.North; break;
+				case Direction.West: opposite = Direction.East; break;
+			}
+			
+			return opposite;
 		}
 		
 		// Method to open/shut door.
