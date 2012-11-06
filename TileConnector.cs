@@ -41,17 +41,15 @@ namespace Dungeons
 		// Method to find opposite Direction Enum, for Initialise().
 		public Direction Opposite(Direction direction)
 		{
-			Direction opposite = direction; // Dummy value to initialise enum
-			
 			switch(direction)
 			{
-				case Direction.North: opposite = Direction.South; break;
-				case Direction.East: opposite = Direction.West; break;
-				case Direction.South: opposite = Direction.North; break;
-				case Direction.West: opposite = Direction.East; break;
+				case Direction.North: return Direction.South;
+				case Direction.East: return Direction.West;
+				case Direction.South: return Direction.North;
+				case Direction.West: return Direction.East;
+				
+				default: return Direction.None;
 			}
-			
-			return opposite;
 		}
 		
 		public Tile OtherSide(Tile viewer)

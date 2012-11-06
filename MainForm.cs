@@ -17,6 +17,8 @@ using System.Linq;
 
 namespace Dungeons
 {
+	public enum Direction {North, East, South, West, None}; // 'None' is used for default cases in the Opposite() in TileConnector and Door.
+	
 	/// <summary>
 	/// MainForm is where all the jazz goes down.
 	/// </summary>

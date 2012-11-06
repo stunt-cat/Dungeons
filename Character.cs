@@ -11,9 +11,6 @@ using System.Drawing;
 
 namespace Dungeons
 {
-	
-	public enum Direction {North, East, South, West};
-	
 	/// <summary>
 	/// Character contains members common to both Hero and Baddie, which inherit from it.
 	/// </summary>
