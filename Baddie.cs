@@ -19,7 +19,7 @@ namespace Dungeons
 	{
 		public Baddie(Tile location, Direction facing) : base (location, facing)
 		{
-			
+			this.imageRef = "baddie";
 		}
 		
 	}

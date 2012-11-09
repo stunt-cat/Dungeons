@@ -53,23 +53,24 @@ namespace Dungeons
 		public Tile shotLocation;
 		public Character shotVictim;
 		
-		// Origin for all graphics locations - N.B. All graphics are 100x100 pixels.
-		// initialOrigin is used for resetting graphics area with scrollResetButton
+		// origin is the root of all graphics locations.
+		// initialOrigin is used for resetting graphics area with scrollResetButton.
 		public Point initialOrigin;
 		public Point origin;
 		
 		// Create Board for action to take place in
 		public Board board;
 		
-		// Set scale for Board
+		// Lists to help with minimising redraw after something happens e.g. movement, open/close door, fight
+		public List<Tile> tilesForRedraw = new List<Tile>();
+		public List<Character> charactersForRedraw = new List<Character>();
+		
+		// Set scale for Board - N.B. All graphics are initially 100x100 pixels.
 		// Currently starting at default of 25% to accommodate trial Board
 		public int scale = 25;
 	
 		ResourceManager resources = new ResourceManager("Dungeons.images", Assembly.GetExecutingAssembly());
-		private System.Drawing.Graphics g;
-		private System.Drawing.Pen pen1 = new System.Drawing.Pen(Color.Blue, 7F);
-		private System.Drawing.Pen pen2 = new System.Drawing.Pen(Color.Red, 10F);
-		private System.Drawing.Pen pen3 = new System.Drawing.Pen(Color.Magenta, 10F);
+		public System.Drawing.Graphics g;
 		
 		public int score = 0;
 		Random random = new Random();
@@ -195,6 +196,7 @@ namespace Dungeons
 			controlsGroupBox.Enabled = true;
 			drawHeroSelectorButtons(numberOfHeroes);	
 			DrawLocation();
+			DrawCharacter();
 		}
 		
 		private void drawHeroSelectorButtons(int i)
@@ -221,6 +223,7 @@ namespace Dungeons
 			}
 		}
 		
+		// Method to draw entire board.
 		private void DrawLocation()
 		{
 			pictureBox1.Refresh();
@@ -231,108 +234,47 @@ namespace Dungeons
 			{
 				foreach (Tile tile in room.tiles)
 				{
-				
-					g.DrawImage((Bitmap)resources.GetObject(tile.imageRef), new Rectangle((tile.tileLocation.X*scale)+origin.X, (tile.tileLocation.Y*scale)+origin.Y, scale, scale));
-				
-				// Draw wall images as necessary over the Tile base image.
-				if(tile.adjacencies[Direction.North] == null)
-				{
-					g.DrawImage((Bitmap)resources.GetObject("tileWallN"), new Rectangle((tile.tileLocation.X*scale)+origin.X, (tile.tileLocation.Y*scale)+origin.Y, scale, scale));
-				}
-				
-				if(tile.adjacencies[Direction.East] == null)
-				{
-					g.DrawImage((Bitmap)resources.GetObject("tileWallE"), new Rectangle((tile.tileLocation.X*scale)+origin.X, (tile.tileLocation.Y*scale)+origin.Y, scale, scale));
-				}
-				
-				if(tile.adjacencies[Direction.South] == null)
-				{
-					g.DrawImage((Bitmap)resources.GetObject("tileWallS"), new Rectangle((tile.tileLocation.X*scale)+origin.X, (tile.tileLocation.Y*scale)+origin.Y, scale, scale));
-				}
-				
-				if(tile.adjacencies[Direction.West] == null)
-				{
-					g.DrawImage((Bitmap)resources.GetObject("tileWallW"), new Rectangle((tile.tileLocation.X*scale)+origin.X, (tile.tileLocation.Y*scale)+origin.Y, scale, scale));
-				}
-				
-					// Draw door images as necessary over the Tile base images. N.B. There is a front and a back image for each Door.
-					if(tile.adjacencies[Direction.North] is Door)
-					{
-						// See if front or back image is required.
-						if(tile.tileLocation == (tile.adjacencies[Direction.North] as Door).sideA.tileLocation) // tile is location of Door, so front image required.
-						{			
-							g.DrawImage((Bitmap)resources.GetObject((tile.adjacencies[Direction.North] as Door).imageRefSideA), 
-							            new Rectangle((tile.tileLocation.X*scale)+origin.X, (tile.tileLocation.Y*scale)+origin.Y, scale, scale));
-						} 
-						else   // tile is not location of Door, so back image required.
-						{																							
-							g.DrawImage((Bitmap)resources.GetObject((tile.adjacencies[Direction.North] as Door).imageRefSideB), 
-							            new Rectangle((tile.tileLocation.X*scale)+origin.X, (tile.tileLocation.Y*scale)+origin.Y, scale, scale));
-						}
-					}
-					
-					if(tile.adjacencies[Direction.East] is Door)
-					{
-						// See if front or back image is required.
-						if(tile.tileLocation == (tile.adjacencies[Direction.East] as Door).sideA.tileLocation)	// tile is location of Door, so front image required.
-						{			
-							g.DrawImage((Bitmap)resources.GetObject((tile.adjacencies[Direction.East] as Door).imageRefSideA), 
-									new Rectangle((tile.tileLocation.X*scale)+origin.X, (tile.tileLocation.Y*scale)+origin.Y, scale, scale));
-						}
-						else
-						{																							// tile is not location of Door, so back image required.
-							g.DrawImage((Bitmap)resources.GetObject((tile.adjacencies[Direction.East] as Door).imageRefSideB), 
-									new Rectangle((tile.tileLocation.X*scale)+origin.X, (tile.tileLocation.Y*scale)+origin.Y, scale, scale));
-						}
-					}
-					
-					if(tile.adjacencies[Direction.South] is Door)
-					{
-						// See if front or back image is required.
-						if(tile.tileLocation == (tile.adjacencies[Direction.South] as Door).sideA.tileLocation) // tile is location of Door, so front image required.
-						{			
-							g.DrawImage((Bitmap)resources.GetObject((tile.adjacencies[Direction.South] as Door).imageRefSideA), 
-							            new Rectangle((tile.tileLocation.X*scale)+origin.X, (tile.tileLocation.Y*scale)+origin.Y, scale, scale));
-						}
-						else	// tile is not location of Door, so back image required.
-						{																							
-							g.DrawImage((Bitmap)resources.GetObject((tile.adjacencies[Direction.South] as Door).imageRefSideB),
-							            new Rectangle((tile.tileLocation.X*scale)+origin.X, (tile.tileLocation.Y*scale)+origin.Y, scale, scale));
-						}
-					}
-					
-					if(tile.adjacencies[Direction.West] is Door)
-					{
-						// See if front or back image is required.
-						if(tile.tileLocation == (tile.adjacencies[Direction.West] as Door).sideA.tileLocation)  // tile is location of Door, so front image required.
-						{			
-							g.DrawImage((Bitmap)resources.GetObject((tile.adjacencies[Direction.West] as Door).imageRefSideA), 
-							            new Rectangle((tile.tileLocation.X*scale)+origin.X, (tile.tileLocation.Y*scale)+origin.Y, scale, scale));
-						}
-						else	// tile is not location of Door, so back image required.
-						{																				
-							g.DrawImage((Bitmap)resources.GetObject((tile.adjacencies[Direction.West] as Door).imageRefSideB),
-							            new Rectangle((tile.tileLocation.X*scale)+origin.X, (tile.tileLocation.Y*scale)+origin.Y, scale, scale));
-						}
-					}
+					tile.Draw(resources, g, origin, scale);
 				}
 			}
 			
-			
-			// Draw baddie(s)
-			foreach (Baddie baddie in baddies)
+			// Draw all Characters on the board.
+			DrawCharacter();
+		}
+		
+		// Overloaded method to only draw specified Tile(s).
+		private void DrawLocation(List<Tile> tilesForRedraw)
+		{
+			foreach(Tile tile in tilesForRedraw)
 			{
-				g.DrawImage((Bitmap)resources.GetObject("baddie"), 
-				            new Rectangle((baddie.location.tileLocation.X*scale)+origin.X, (baddie.location.tileLocation.Y*scale)+origin.Y, scale, scale));
-			}    
+				tile.Draw(resources, g, origin, scale);
+			}
 			
-			// Draw hero(es)
-			foreach (Hero hero in heroes)
+			// Clear List for next use.
+			tilesForRedraw.Clear();
+		}
+		
+		// Method to draw all characters.
+		private void DrawCharacter()
+		{
+			everybody = heroes.Concat(baddies);
+			
+			foreach (Character anybody in everybody)
 			{
-				string arrow = string.Format("hero_{0}_{1}", hero.facing.ToString().ToLower(), hero.number.ToString());
-				g.DrawImage((Bitmap)resources.GetObject(arrow), 
-				            new Rectangle((hero.location.tileLocation.X*scale)+origin.X, (hero.location.tileLocation.Y*scale)+origin.Y, scale, scale));
-			}                                       
+				anybody.Draw(resources, g, origin, scale);
+			}                             
+		}
+		
+		// Method to only draw specified Character(s).
+		private void DrawCharacter(List<Character> charactersForRedraw)
+		{
+			foreach (Character character in charactersForRedraw)
+			{
+				character.Draw(resources, g, origin, scale);
+			}
+			
+			// Clear list for next use.
+			charactersForRedraw.Clear();
 		}
 		
 		void ActivateHeroButton1Click(object sender, EventArgs e)
@@ -397,21 +339,32 @@ namespace Dungeons
 			if(directionProblem)
 			{				// Problem of some sort - inform user.
 				OutOfBounds();
-				DrawLocation();
 			}
 			
 			else
 			{
-				activeHero.MoveTo(moveTarget);  // Move is fine to execute!
-				DrawLocation();
+				// Invalidate areas of graphics to be redrawn (activeHero's current location and intended location).
+				pictureBox1.Invalidate(new Rectangle((activeHero.location.tileLocation.X*scale)+origin.X, (activeHero.location.tileLocation.Y*scale)+origin.Y, scale, scale));
+				pictureBox1.Invalidate(new Rectangle((moveTarget.tileLocation.X*scale)+origin.X, (moveTarget.tileLocation.Y*scale)+origin.Y, scale, scale));
+				// Add tiles and character to redraw lists.
+				tilesForRedraw.Add(activeHero.location);
+				tilesForRedraw.Add(moveTarget);
+				charactersForRedraw.Add(activeHero);
+				
+				// Move is now fine to execute!
+				activeHero.MoveTo(moveTarget);
 				
 				// Possibly also move Baddies, 50% chance of running method.
 				if(random.Next(2) == 0)
 				{
 					MoveBaddie();
 				}
+				
+				// Redraw invalidated regions and redraw activeHero i.e. update Hero location graphically.
+				pictureBox1.Update();
+				DrawLocation(tilesForRedraw);
+				DrawCharacter(charactersForRedraw);
 			}
-			
 		}
 		
 		void MoveBaddie()
@@ -449,18 +402,28 @@ namespace Dungeons
 				}
 				// <end> CODE FROM HERO MOVEMENT
 				
-				if(!directionProblem)
+				if(!directionProblem)		// N.B. If directionProblem=true movingBaddie doesn't move or change facing.
 				{
+					// Invalidate areas of graphics to be redrawn (baddie's current location and intended location).
+					pictureBox1.Invalidate(new Rectangle((movingBaddie.location.tileLocation.X*scale)+origin.X, (movingBaddie.location.tileLocation.Y*scale)+origin.Y, scale, scale));
+					//pictureBox1.Invalidate(new Rectangle((moveTarget.tileLocation.X*scale)+origin.X, (moveTarget.tileLocation.Y*scale)+origin.Y, scale, scale));
+					
+					// Add tile to redraw list.
+					tilesForRedraw.Add(movingBaddie.location);
+					// Add character to redraw list.
+					charactersForRedraw.Add(movingBaddie);
+					
 					// Move is okay to execute!
 					movingBaddie.MoveTo(moveTarget);
 					// Update movingBaddie facing to reflect completed move.
 					movingBaddie.NewFacing(baddieMoveDirection);
-					
-					DrawLocation();
-					
-					// N.B. If moveProblem=true movingBaddie doesn't move or change facing.
 				} 
 			}
+				
+				// Redraw invalidated regions i.e. update all locations graphically for the baddies who moved.
+				pictureBox1.Update();
+				DrawLocation(tilesForRedraw);
+				DrawCharacter(charactersForRedraw);
 		}
 		
 		private void OutOfBounds()
@@ -473,19 +436,37 @@ namespace Dungeons
 		{
 			outOfBoundsButton.Visible = false;
 			controlsGroupBox.Enabled = true;
-			DrawLocation();
+			//DrawLocation();
 		}
 		
 		void LeftTurnButtonClick(object sender, EventArgs e)
 		{
 			activeHero.TurnLeft();
-			DrawLocation();
+			
+			// Invalidate areas of graphics to be redrawn - activeHero's current location.
+			pictureBox1.Invalidate(new Rectangle((activeHero.location.tileLocation.X*scale)+origin.X, (activeHero.location.tileLocation.Y*scale)+origin.Y, scale, scale));
+			// Add tile and activeHero to redraw list.
+			tilesForRedraw.Add(activeHero.location);
+			charactersForRedraw.Add(activeHero);
+			
+			pictureBox1.Update();
+			DrawLocation(tilesForRedraw);
+			DrawCharacter(charactersForRedraw);
 		}
 		
 		void RightTurnButtonClick(object sender, EventArgs e)
 		{
 			activeHero.TurnRight();
-			DrawLocation();
+			
+			// Invalidate areas of graphics to be redrawn - activeHero's current location.
+			pictureBox1.Invalidate(new Rectangle((activeHero.location.tileLocation.X*scale)+origin.X, (activeHero.location.tileLocation.Y*scale)+origin.Y, scale, scale));
+			// Add tile and activeHero to redraw list.
+			tilesForRedraw.Add(activeHero.location);
+			charactersForRedraw.Add(activeHero);
+			
+			pictureBox1.Update();
+			DrawLocation(tilesForRedraw);
+			DrawCharacter(charactersForRedraw);
 		}
 		
 		void FightButtonClick(object sender, System.EventArgs e)
@@ -533,10 +514,14 @@ namespace Dungeons
 				// Draw dead baddie, with wide-lined red square round!
 				g.DrawImage((Bitmap) resources.GetObject("dead_baddie"), 
 				            new Rectangle((activeBaddie.location.tileLocation.X*scale)+origin.X, (activeBaddie.location.tileLocation.Y*scale)+origin.Y, scale, scale));
-				g.DrawRectangle (pen2, (activeBaddie.location.tileLocation.X*scale)+origin.X, (activeBaddie.location.tileLocation.Y*scale)+origin.Y, scale, scale);
+				g.DrawImage((Bitmap) resources.GetObject("square_red"), 
+				            new Rectangle((activeBaddie.location.tileLocation.X*scale)+origin.X, (activeBaddie.location.tileLocation.Y*scale)+origin.Y, scale, scale));
 				
-				// Remove baddie from baddies
+				// Remove baddie from baddies and add activeBaddie and activeBaddie.location to redraw lists.
 				baddies.Remove(activeBaddie);
+				charactersForRedraw.Add(activeBaddie);
+				tilesForRedraw.Add(activeBaddie.location);
+				
 			} else failedFightButton.Visible = true;
 		}
 		
@@ -547,8 +532,16 @@ namespace Dungeons
 			{
 				// Get more baddies! N.B. same number as initial user selection
 				AssignBaddieLocations();
+				// Add new baddies to redraw list.
+				foreach(Baddie baddie in baddies)
+				{
+					charactersForRedraw.Add(baddie);
+				}
 			}
-			ResetGame();
+			
+			controlsGroupBox.Enabled = true;
+			DrawCharacter(charactersForRedraw);
+			DrawLocation(tilesForRedraw);
 		}
 		
 		
@@ -556,7 +549,11 @@ namespace Dungeons
 		{
 			failedFightButton.Visible = false;
 			controlsGroupBox.Enabled = true;
-			DrawLocation();
+			DrawLocation(tilesForRedraw);
+			if(charactersForRedraw.Count != 0)
+			{
+				DrawCharacter(charactersForRedraw);
+			}
 		}
 		
 		void RangedCombatButtonClick(object sender, EventArgs e){
@@ -591,7 +588,10 @@ namespace Dungeons
 							break;
 						}
 					}
-					g.DrawRectangle(pen1, new Rectangle((shotLocation.tileLocation.X*scale)+origin.X, (shotLocation.tileLocation.Y*scale)+origin.Y, scale, scale));
+					// Draw a square round the location to show it is the shot path, and add to redraw list
+					g.DrawImage((Bitmap) resources.GetObject("square_blue"),
+				            new Rectangle((shotLocation.tileLocation.X*scale)+origin.X, (shotLocation.tileLocation.Y*scale)+origin.Y, scale, scale));
+					tilesForRedraw.Add(shotLocation);
 				}
 			}
 			
@@ -602,15 +602,23 @@ namespace Dungeons
 				{
 					activeBaddie = (Baddie) shotVictim;
 					KillShot();
-				} else FailShot();
-			} else FailShot();
+				}
+				else
+				{
+					// shotVictim is a Hero, so add to redraw list.
+					charactersForRedraw.Add(shotVictim);
+					FailShot();
+				}
+			}
+			else FailShot();
 		}
 		
 		void KillShot()
 		{
 			g.DrawImage((Bitmap) resources.GetObject("dead_baddie"), 
 			            new Rectangle((activeBaddie.location.tileLocation.X*scale)+origin.X, (activeBaddie.location.tileLocation.Y*scale)+origin.Y, scale, scale));
-			g.DrawRectangle(pen3, (shotLocation.tileLocation.X*scale)+origin.X, (shotLocation.tileLocation.Y*scale)+origin.Y, scale, scale);
+			g.DrawImage((Bitmap) resources.GetObject("square_magenta"), 
+				            new Rectangle((shotLocation.tileLocation.X*scale)+origin.X, (shotLocation.tileLocation.Y*scale)+origin.Y, scale, scale));
 			this.score += 3;
 			scoreTextBox.Clear();
 			scoreTextBox.Text = score.ToString();
@@ -643,11 +651,6 @@ namespace Dungeons
 			successfulFightButton.Visible = false;
 			outOfBoundsButton.Visible = false;
 			failedFightButton.Visible = false;
-			//activateHeroButton1.Visible = false;
-			//activateHeroButton2.Visible = false;
-			//activateHeroButton3.Visible = false;
-			//activateHeroButton4.Visible = false;
-			
 			gameOverButton.Visible = true;
 			gameOverButton.Enabled = true;
 			gameOverButton.Text = "GAME OVER!\rYou scored " + score + "\r Click to play again!";
@@ -668,7 +671,27 @@ namespace Dungeons
 		{
 			if(activeHero.location.adjacencies[activeHero.facing] is Door){
 				(activeHero.location.adjacencies[activeHero.facing] as Door).OpenShut();
-				DrawLocation();
+				
+				// Add both sides of door to Tile redraw list (one of which is activeHero.location).
+				tilesForRedraw.Add(activeHero.location);
+				tilesForRedraw.Add((activeHero.location.adjacencies[activeHero.facing] as Door).OtherSide(activeHero.location));
+				
+				// Add activeHero to the Character redraw list.
+				charactersForRedraw.Add(activeHero);
+				
+				// If any other Character is behind door, at it to Character redraw list.
+				everybody = heroes.Concat(baddies);
+				foreach(Character anybody in everybody)
+				{
+					if(anybody.location == (activeHero.location.adjacencies[activeHero.facing] as Door).OtherSide(activeHero.location))
+					{
+						charactersForRedraw.Add(anybody);
+					}
+				}
+				
+				// Redraw both lists.
+				DrawLocation(tilesForRedraw);
+				DrawCharacter(charactersForRedraw);
 			}
 		}
 		

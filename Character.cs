@@ -8,6 +8,8 @@
  */
 using System;
 using System.Drawing;
+using System.Resources;
+using System.Windows.Forms;
 
 namespace Dungeons
 {
@@ -19,6 +21,11 @@ namespace Dungeons
 	{
 		public Tile location;
 		public Direction facing;
+		public string imageRef;
+		public ResourceManager resources;
+		public Graphics g;
+		public Point origin;
+		public int scale;
 		
 		public Character(Tile location, Direction facing)
 		{
@@ -26,7 +33,7 @@ namespace Dungeons
 			this.facing = facing;
 		}
 	
-		public void TurnLeft()
+		public virtual void TurnLeft()
 		{
 			switch (this.facing)
 			{
@@ -37,7 +44,7 @@ namespace Dungeons
 			}
 		}
 		
-		public void TurnRight()
+		public virtual void TurnRight()
 		{
 			switch (this.facing)
 			{
@@ -55,6 +62,17 @@ namespace Dungeons
 		
 		public void MoveTo(Tile location){	// N.B. Does not have to be adjacent to current location!
 			this.location = location;
+		}
+		
+		public void Draw(ResourceManager resources, Graphics g, Point origin, int scale)
+		{
+			this.resources = resources;
+			this.g = g;
+			this.origin = origin;
+			this.scale = scale;
+			
+			g.DrawImage((Bitmap)resources.GetObject(this.imageRef),
+			            new Rectangle((this.location.tileLocation.X*this.scale)+this.origin.X, (this.location.tileLocation.Y*this.scale)+this.origin.Y, this.scale, this.scale));
 		}
 	}
 }
