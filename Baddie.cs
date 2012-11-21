@@ -17,7 +17,8 @@ namespace Dungeons
 	/// 
 	public class Baddie : Character
 	{
-		public Baddie(Tile location, Direction facing) : base (location, facing)
+		public Baddie(Tile location, Direction facing, int ws, int bs, int s, int t, int w)
+			: base (location, facing, ws, bs, s, t, w)
 		{
 			this.imageRef = "baddie";
 		}

@@ -14,6 +14,8 @@ using System.Windows.Forms;
 
 namespace Dungeons
 {
+	public enum Direction {North, East, South, West, None}; // 'None' is used for default cases in the Opposite() in TileConnector and Door.
+	
 	/// <summary>
 	/// Tile represents the smallest divisor of area on the game Board.
 	/// It should have one or zero occupants, but there are no explicit checks for this!

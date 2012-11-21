@@ -25,8 +25,6 @@ namespace Dungeons
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			
-			// N.B. game runs for 60 seconds before freezing all controls and outputting a Game Over screen.
 			Application.Run(new MainForm());
 		}
 	}

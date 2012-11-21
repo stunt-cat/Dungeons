@@ -12,22 +12,25 @@ using System.Drawing;
 
 namespace Dungeons
 {
+	public enum HeroType{Elf, Warrior, Dwarf, Wizard};
+	
 	/// <summary>
 	/// Hero extends Character and represents the forces of good.
 	/// </summary>
 	public class Hero : Character
 	{
-		public int number;
+		public HeroType type;
 		
-		public Hero(Tile location, Direction facing, int number) : base (location, facing)
+		public Hero(Tile location, Direction facing, int ws, int bs, int s, int t, int w, HeroType type) 
+			: base (location, facing, ws, bs, s, t, w)
 		{
-			this.number = number;
+			this.type = type;
 			UpdateImageRef();
 		}
 		
 		public void UpdateImageRef()
 		{
-			this.imageRef = string.Format("hero_{0}_{1}", this.facing.ToString().ToLower(), this.number.ToString());
+			this.imageRef = string.Format("hero_{0}_{1}", this.type.ToString().ToLower(), this.facing.ToString().ToLower());
 		}
 		
 		public override void TurnLeft()

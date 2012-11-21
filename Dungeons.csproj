@@ -81,6 +81,7 @@
     <Compile Include="Room.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="TileConnector.cs" />
+    <Compile Include="Wizard.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images.resx">

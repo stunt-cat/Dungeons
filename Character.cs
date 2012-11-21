@@ -8,11 +8,13 @@
  */
 using System;
 using System.Drawing;
+using System.Collections.Generic;
 using System.Resources;
 using System.Windows.Forms;
 
 namespace Dungeons
 {
+	public enum Stats {WS, BS, S, T, W};  // Represent Weapon Skill, Ballistic Skill, Strength, Toughness, Wounds, respectively
 	/// <summary>
 	/// Character contains members common to both Hero and Baddie, which inherit from it.
 	/// </summary>
@@ -26,11 +28,17 @@ namespace Dungeons
 		public Graphics g;
 		public Point origin;
 		public int scale;
+		public Dictionary <Stats, int> stats = new Dictionary<Stats, int>();
 		
-		public Character(Tile location, Direction facing)
+		public Character(Tile location, Direction facing, int ws, int bs, int s, int t, int w)
 		{
 			this.location = location;
 			this.facing = facing;
+			this.stats.Add(Stats.WS, ws);
+			this.stats.Add(Stats.BS, bs);
+			this.stats.Add(Stats.S, s);
+			this.stats.Add(Stats.T, t);
+			this.stats.Add(Stats.W, w);
 		}
 	
 		public virtual void TurnLeft()

@@ -17,7 +17,6 @@ using System.Linq;
 
 namespace Dungeons
 {
-	public enum Direction {North, East, South, West, None}; // 'None' is used for default cases in the Opposite() in TileConnector and Door.
 	
 	/// <summary>
 	/// MainForm is where all the jazz goes down.
@@ -38,10 +37,11 @@ namespace Dungeons
 			//	
 		}
 		
-		// list populated in StartButtonClick(), from user parameters
+		// lists populated in StartButtonClick(), from user parameters
 		public List<Character> heroes;
+		public List<Button> selectorButtons = new List<Button>();
+		public List<Hero> heroSelectorList;
 		Hero activeHero;
-		int numberOfHeroes;
 		
 		// list populated in StartButtonClick(), from user parameters
 		public List<Character> baddies;
@@ -52,6 +52,7 @@ namespace Dungeons
 		public IEnumerable<Character> everybody;
 		public Tile shotLocation;
 		public Character shotVictim;
+		public List<Baddie> spellVictims;
 		
 		// origin is the root of all graphics locations.
 		// initialOrigin is used for resetting graphics area with scrollResetButton.
@@ -71,15 +72,21 @@ namespace Dungeons
 	
 		ResourceManager resources = new ResourceManager("Dungeons.images", Assembly.GetExecutingAssembly());
 		public System.Drawing.Graphics g;
-		
-		public int score = 0;
+
 		Random random = new Random();
 		
 		
 		void StartButtonClick(object sender, EventArgs e)
 		{
+			// Create board.
+			// N.B. All Points are in abstract integer sizes to relate each Room/Tile to each other.
+			// 		These sizes are converted to actual pixels in DrawLocation().
+			initialOrigin = new Point(7*scale,0*scale);	//N.B. Origin is currently selected to display trial board centered in graphics window!;
+			origin = initialOrigin;
+			board = new Board();
+			
 			// Get numberOfBaddies from RadioBox in baddieSelectorPanel.
-			if (baddieSelectorButton1.Checked) numberOfBaddies = 1;
+			if (baddieSelectorButton1.Checked) numberOfBaddies = 50;
 			else if (baddieSelectorButton2.Checked) numberOfBaddies = 2;
 			else if (baddieSelectorButton3.Checked) numberOfBaddies = 3;
 			else if (baddieSelectorButton4.Checked) numberOfBaddies = 4;
@@ -90,23 +97,22 @@ namespace Dungeons
 			
 			baddies = new List<Character>(numberOfBaddies);
 			
-			// Get numberOfHeroes from RadioBox in heroSelectorPanel.
-			if (heroSelectorButton1.Checked) numberOfHeroes = 1;
-			else if (heroSelectorButton2.Checked) numberOfHeroes = 2;
-			else if (heroSelectorButton3.Checked) numberOfHeroes = 3;
-			else if (heroSelectorButton4.Checked) numberOfHeroes = 4;
 			
-			heroes = new List<Character>(numberOfHeroes);
+			// Create Heroes from checkBox selections in herosSelectorPanel.
+			// N.B. Each Hero is initially assigned to a random location, which may be occupied by another hero. TODO Add standard entry tile to avoid this.
+			heroes = new List<Character>();
 			
-			// Create board.
-			// N.B. All Points are in abstract integer sizes to relate each Room/Tile to each other.
-			// 		These sizes are converted to actual pixels in DrawLocation().
-			initialOrigin = new Point(7*scale,0*scale);	//N.B. Origin is currently selected to display trial board centered in graphics window!;
-			origin = initialOrigin;
-			board = new Board();
+			if (warriorSelectCheckBox.Checked) heroes.Add(new Hero (RandomLocation(), (Direction) random.Next(4), 8, 6, 6, 8, 4, HeroType.Warrior));
+			if (dwarfSelectCheckBox.Checked) heroes.Add(new Hero (RandomLocation(), (Direction) random.Next(4), 8, 5, 6, 8, 5, HeroType.Dwarf));
+			if (elfSelectCheckBox.Checked) heroes.Add(new Hero (RandomLocation(), (Direction) random.Next(4), 9, 9, 5, 5, 4, HeroType.Elf));
+			if (wizardSelectCheckBox.Checked) heroes.Add(new Wizard (RandomLocation(), (Direction) random.Next(4), 5, 6, 4, 4, 3, HeroType.Wizard));
+			
+			// If no heroes are selected, assign Warrior only.
+			if (heroes.Count == 0) heroes.Add(new Hero (RandomLocation(), (Direction) random.Next(4), 8, 6, 6, 8, 4, HeroType.Warrior));
+			
 			
 			// Randomly select hero start point(s), ensuring there are no conflicts with other heroes (N.B. no baddies exist at this point).
-			for (int i = 0; i < numberOfHeroes; i++)
+			for (int i = 0; i < heroes.Count; i++)
 			{
 				Tile bufferLocation = RandomLocation();
 				Boolean tileAvailable = true;
@@ -127,19 +133,16 @@ namespace Dungeons
 						}
 					} while (!tileAvailable);	
 				
-				// bufferLocation is available, so assign it to new Hero
-				heroes.Add(new Hero (bufferLocation, (Direction) random.Next(4), i+1));
+				// bufferLocation is available, so assign it to current Hero
+				heroes[i].location = bufferLocation;
+				
 			}
 			
 			// Randomly select baddie start point(s), ensuring there are no conflicts with heroes or other baddies
 			AssignBaddieLocations();
 			
-			// Assign active hero (green/1)
+			// Assign active hero (1st in Heroes List)
 			activeHero = (Hero) heroes[0];
-			
-			// Start timer.
-			gameClock.Start();
-			gameClock.Tick += new EventHandler(GameTimeUp);
 			
 			// Set up GUI controls.
 			ResetGame();
@@ -173,7 +176,7 @@ namespace Dungeons
 				} while (!tileAvailable);
 					
 				// bufferLocation is available, so assign it to new Baddie
-				baddies.Add(new Baddie (bufferLocation, (Direction)random.Next(4)));
+				baddies.Add(new Baddie (bufferLocation, (Direction)random.Next(4), 1, 1, 1, 1, 1));
 			}
 		}
 		
@@ -194,32 +197,62 @@ namespace Dungeons
 			scaleSelectorPanel.Visible = true;
 			controlsGroupBox.Visible = true;
 			controlsGroupBox.Enabled = true;
-			drawHeroSelectorButtons(numberOfHeroes);	
+			drawHeroSelectorButtons();	
 			DrawLocation();
 			DrawCharacter();
+			DrawActionButtons();
 		}
 		
-		private void drawHeroSelectorButtons(int i)
+		private void drawHeroSelectorButtons()
 		{
-			// Display correct active hero selector buttons for number of heroes
-			switch (i)
-			{	
-				case 1 : break;
-				case 2 : activateHeroButton1.Visible = true;
-				activateHeroButton1.Enabled = true;
-				activateHeroButton2.Visible = true;
-				activateHeroButton2.Enabled = true;
-				break;
+			// Display correct active hero selector buttons for selected heroes.
+			
+			switch(heroes.Count)
+			{
+				case 1:	activateHeroButton1.Visible = true;
+						activateHeroButton1.Enabled = true;
+						selectorButtons.Add(activateHeroButton1);
+						selectorButtons.Reverse();
+						break;
+				case 2:	activateHeroButton2.Visible = true;
+						activateHeroButton2.Enabled = true;
+						selectorButtons.Add(activateHeroButton2);
+						goto case 1;
+				case 3:	activateHeroButton3.Visible = true;
+						activateHeroButton3.Enabled = true;
+						selectorButtons.Add(activateHeroButton3);
+						goto case 2;
+				case 4:	activateHeroButton4.Visible = true;
+						activateHeroButton4.Enabled = true;
+						selectorButtons.Add(activateHeroButton4);
+						goto case 3;
+			}
+			
+			// Populate heroSelector list - it is essentially a copy of heroes List.
+			heroSelectorList = new List<Hero>();
+			foreach(Character selectorHero in heroes)
+			{
+				heroSelectorList.Add(selectorHero as Hero);
+			}
+			heroSelectorList.Reverse();
+			
+			// Iterate over selectorButtons list, assigning correct hero image to button
+			for (int i=0; i<selectorButtons.Count; i++)
+			{
+				Hero forDeletion = null;
 				
-				case 3 : 
-				activateHeroButton3.Visible = true;
-				activateHeroButton3.Enabled = true;
-				goto case 2;
+				foreach(Hero selectorHero in heroSelectorList)
+				{
+					if(selectorHero.type == HeroType.Warrior) selectorButtons[i].Image = Dungeons.Images.hero_select_warrior;
+					if(selectorHero.type == HeroType.Dwarf) selectorButtons[i].Image = Dungeons.Images.hero_select_dwarf;
+					if(selectorHero.type == HeroType.Elf) selectorButtons[i].Image = Dungeons.Images.hero_select_elf;
+					if(selectorHero.type == HeroType.Wizard) selectorButtons[i].Image = Dungeons.Images.hero_select_wizard;
 				
-				case 4: 
-				activateHeroButton4.Visible = true;
-				activateHeroButton4.Enabled = true;
-				goto case 3;
+					forDeletion = selectorHero;
+				}
+				
+				heroSelectorList.Remove(forDeletion);
+
 			}
 		}
 		
@@ -279,34 +312,91 @@ namespace Dungeons
 		
 		void ActivateHeroButton1Click(object sender, EventArgs e)
 		{
-			leftTurnButton.Image = global::Dungeons.Images.arrow_leftturn_1;
-			rightTurnButton.Image = global::Dungeons.Images.arrow_rightturn_1;
-			forwardButton.Image = global::Dungeons.Images.arrow_north_1;
 			activeHero = (Hero) heroes[0];
+			DrawActionButtons();
 		}
 		
 		void ActivateHeroButton2Click(object sender, EventArgs e)
 		{
-			leftTurnButton.Image = global::Dungeons.Images.arrow_leftturn_2;
-			rightTurnButton.Image = global::Dungeons.Images.arrow_rightturn_2;
-			forwardButton.Image = global::Dungeons.Images.arrow_north_2;
 			activeHero = (Hero) heroes[1];
+			DrawActionButtons();
 		}
 		
 		void ActivateHeroButton3Click(object sender, EventArgs e)
 		{
-			leftTurnButton.Image = global::Dungeons.Images.arrow_leftturn_3;
-			rightTurnButton.Image = global::Dungeons.Images.arrow_rightturn_3;
-			forwardButton.Image = global::Dungeons.Images.arrow_north_3;
 			activeHero = (Hero) heroes[2];
+			DrawActionButtons();
 		}
 
 		void ActivateHeroButton4Click(object sender, EventArgs e)
 		{
-			leftTurnButton.Image = global::Dungeons.Images.arrow_leftturn_4;
-			rightTurnButton.Image = global::Dungeons.Images.arrow_rightturn_4;
-			forwardButton.Image = global::Dungeons.Images.arrow_north_4;
 			activeHero = (Hero) heroes[3];
+			DrawActionButtons();
+		}
+		
+		void DrawActionButtons()
+		{
+			if(activeHero.type == HeroType.Warrior)
+			{
+				combatCloseButton.Visible = true;
+				combatCloseButton.Enabled = true;
+				
+				combatRangedButton.Visible = false;
+				combatRangedButton.Enabled = false;
+				spellAffectAllButton.Visible = false;
+				spellAffectAllButton.Enabled = false;
+				spellExplodeButton.Visible = false;
+				spellExplodeButton.Enabled = false;	
+			}
+			
+			if(activeHero.type == HeroType.Dwarf)
+			{
+				combatCloseButton.Visible = true;
+				combatCloseButton.Enabled = true;
+				
+				combatRangedButton.Visible = false;
+				combatRangedButton.Enabled = false;
+				spellAffectAllButton.Visible = false;
+				spellAffectAllButton.Enabled = false;
+				spellExplodeButton.Visible = false;
+				spellExplodeButton.Enabled = false;
+			}
+			
+			if(activeHero.type == HeroType.Elf)
+			{
+				combatCloseButton.Visible = true;
+				combatCloseButton.Enabled = true;
+				combatRangedButton.Visible = true;
+				combatRangedButton.Enabled = true;
+				
+				spellAffectAllButton.Visible = false;
+				spellAffectAllButton.Enabled = false;
+				spellExplodeButton.Visible = false;
+				spellExplodeButton.Enabled = false;
+			}
+			if(activeHero.type == HeroType.Wizard)
+			{
+				combatCloseButton.Visible = true;
+				combatCloseButton.Enabled = true;
+				spellAffectAllButton.Visible = true;
+				spellAffectAllButton.Enabled = true;
+				spellExplodeButton.Visible = true;
+				spellExplodeButton.Enabled = true;
+				
+				combatRangedButton.Visible = false;
+				combatRangedButton.Enabled = false;
+			}
+			
+			if(activeHero.location.adjacencies[activeHero.facing] is Door)
+				{
+					useDoorButton.Visible = true;
+					useDoorButton.Enabled = true;
+				}
+			else
+				{
+					useDoorButton.Visible = false;
+					useDoorButton.Enabled = false;
+				}
 		}
 		
 		void ForwardButtonClick(object sender, System.EventArgs e)
@@ -364,6 +454,7 @@ namespace Dungeons
 				pictureBox1.Update();
 				DrawLocation(tilesForRedraw);
 				DrawCharacter(charactersForRedraw);
+				DrawActionButtons();
 			}
 		}
 		
@@ -452,6 +543,7 @@ namespace Dungeons
 			pictureBox1.Update();
 			DrawLocation(tilesForRedraw);
 			DrawCharacter(charactersForRedraw);
+			DrawActionButtons();
 		}
 		
 		void RightTurnButtonClick(object sender, EventArgs e)
@@ -467,6 +559,7 @@ namespace Dungeons
 			pictureBox1.Update();
 			DrawLocation(tilesForRedraw);
 			DrawCharacter(charactersForRedraw);
+			DrawActionButtons();
 		}
 		
 		void FightButtonClick(object sender, System.EventArgs e)
@@ -504,44 +597,25 @@ namespace Dungeons
 			} else failedFightButton.Visible = true;
 			
 			// If there is a baddie infront of activeHero, kill it
-			if (activeBaddie !=null)
-			{
-				successfulFightButton.Visible = true;
-				this.score += 5;
-				scoreTextBox.Clear();
-				scoreTextBox.Text = score.ToString();
-		
-				// Draw dead baddie, with wide-lined red square round!
-				g.DrawImage((Bitmap) resources.GetObject("dead_baddie"), 
-				            new Rectangle((activeBaddie.location.tileLocation.X*scale)+origin.X, (activeBaddie.location.tileLocation.Y*scale)+origin.Y, scale, scale));
-				g.DrawImage((Bitmap) resources.GetObject("square_red"), 
-				            new Rectangle((activeBaddie.location.tileLocation.X*scale)+origin.X, (activeBaddie.location.tileLocation.Y*scale)+origin.Y, scale, scale));
-				
-				// Remove baddie from baddies and add activeBaddie and activeBaddie.location to redraw lists.
-				baddies.Remove(activeBaddie);
-				charactersForRedraw.Add(activeBaddie);
-				tilesForRedraw.Add(activeBaddie.location);
-				
-			} else failedFightButton.Visible = true;
+			if (activeBaddie !=null) KillBaddie();
+			else failedFightButton.Visible = true;
 		}
 		
 		void SuccessfulFightButtonClick(object sender, EventArgs e)
 		{
 			successfulFightButton.Visible = false;
-			if (baddies.Count == 0)
+			if (baddies.Count == 0)	
 			{
-				// Get more baddies! N.B. same number as initial user selection
-				AssignBaddieLocations();
-				// Add new baddies to redraw list.
-				foreach(Baddie baddie in baddies)
-				{
-					charactersForRedraw.Add(baddie);
-				}
+				// Success!! Game Over!
+				GameOver();
+			}
+			else
+			{
+				controlsGroupBox.Enabled = true;
+				DrawCharacter(charactersForRedraw);
+				DrawLocation(tilesForRedraw);
 			}
 			
-			controlsGroupBox.Enabled = true;
-			DrawCharacter(charactersForRedraw);
-			DrawLocation(tilesForRedraw);
 		}
 		
 		
@@ -557,7 +631,6 @@ namespace Dungeons
 		}
 		
 		void RangedCombatButtonClick(object sender, EventArgs e){
-			// This is just a dummy while I work out how to do it again..
 			
 			// See if there is an adjacent Tile in activeHero.facing direction, next to activeHero.location
 			//   if (adjacent = null), fail shot
@@ -595,13 +668,13 @@ namespace Dungeons
 				}
 			}
 			
-			// If there is a shotVictim, check its type. If if it a Baddie, kill it! If it is a Hero, shot does nothing.
+			// If there is a shotVictim, check its type. If it is a Baddie, kill it! If it is a Hero, shot does nothing.
 			if(shotVictim != null)
 			{
 				if (shotVictim.GetType() != activeHero.GetType())
 				{
 					activeBaddie = (Baddie) shotVictim;
-					KillShot();
+					KillBaddie();
 				}
 				else
 				{
@@ -613,17 +686,15 @@ namespace Dungeons
 			else FailShot();
 		}
 		
-		void KillShot()
+		void KillBaddie()
 		{
 			g.DrawImage((Bitmap) resources.GetObject("dead_baddie"), 
 			            new Rectangle((activeBaddie.location.tileLocation.X*scale)+origin.X, (activeBaddie.location.tileLocation.Y*scale)+origin.Y, scale, scale));
-			g.DrawImage((Bitmap) resources.GetObject("square_magenta"), 
-				            new Rectangle((shotLocation.tileLocation.X*scale)+origin.X, (shotLocation.tileLocation.Y*scale)+origin.Y, scale, scale));
-			this.score += 3;
-			scoreTextBox.Clear();
-			scoreTextBox.Text = score.ToString();
+			g.DrawImage((Bitmap) resources.GetObject("square_red"), 
+			            new Rectangle((activeBaddie.location.tileLocation.X*scale)+origin.X, (activeBaddie.location.tileLocation.Y*scale)+origin.Y, scale, scale));
 			controlsGroupBox.Enabled = false;
 			successfulFightButton.Visible = true;
+			tilesForRedraw.Add(activeBaddie.location);
 			baddies.Remove(activeBaddie);
 		}
 		
@@ -631,12 +702,6 @@ namespace Dungeons
 		{
 			controlsGroupBox.Enabled = false;
 			failedFightButton.Visible = true;
-		}
-		
-		void GameTimeUp(Object o, EventArgs e)
-		{
-			gameClock.Stop();
-			GameOver();
 		}
 	
 		public void GameOver()
@@ -653,18 +718,33 @@ namespace Dungeons
 			failedFightButton.Visible = false;
 			gameOverButton.Visible = true;
 			gameOverButton.Enabled = true;
-			gameOverButton.Text = "GAME OVER!\rYou scored " + score + "\r Click to play again!";
+			gameOverButton.Text = "GAME OVER!\rYou killed eveyone!\r Click to play again!";
 		}
 		
 		void GameOverButtonClick(object sender, EventArgs e)
 		{
-			this.score = 0;
-			scoreTextBox.Clear();
-			scoreTextBox.Text = score.ToString();
 			startButton.Visible = true;
 			heroesSelectorPanel.Visible = true;
 			baddieSelectorPanel.Visible = true;
 			gameOverButton.Visible = false;
+			
+			// Clear lists
+			heroes.Clear();
+			selectorButtons.Clear();
+			
+			// Clear hero selector buttons.
+			activateHeroButton1.Visible = false;
+			activateHeroButton1.Enabled = false;
+			activateHeroButton2.Visible = false;
+			activateHeroButton2.Enabled = false;
+			activateHeroButton3.Visible = false;
+			activateHeroButton3.Enabled = false;
+			activateHeroButton4.Visible = false;
+			activateHeroButton4.Enabled = false;
+			
+			// Reset spell button images.
+			spellAffectAllButton.Image = Dungeons.Images.spell_affectAll;
+			spellExplodeButton.Image = Dungeons.Images.spell_explode;
 		}
 		
 		void UseDoorButtonClick(object sender, EventArgs e)
@@ -744,6 +824,196 @@ namespace Dungeons
 			DrawLocation();
 		}
 		
+		void SpellExplodeButtonClick(object sender, EventArgs e)
+		{
+			// Only cast spell if wizard has some spell uses left!
+			if((activeHero as Wizard).spellExplodeRemaining != 0)
+				{ 
+			
+				// See if there is an adjacent Tile in activeHero.facing direction, next to activeHero.location
+				//   if (adjacent = null), fail shot
+				//	 if (adjacent != null) see who is in location
+				//   	if(nobody) continue shot
+				//		if baddie, add to hit list
+				//		add any other adjacent baddies to hit list
+				//		resolve damage on hit list characters
+				//	TODO when Heroes are damageable, add Heroes to hit list
+				//	TODO add diagonals
+				
+				shotLocation = activeHero.location;
+				Boolean shotOver = false;
+				activeBaddie = null;
+				shotVictim = null;
+				everybody = heroes.Concat(baddies);
+				spellVictims = new List<Baddie>();
+				
+				// Shoot in straight line until hit wall or other Character. If Character encountered, decide outcome based on Type.
+				
+				while (!shotOver){
+					if(shotLocation.Adjacent(activeHero.facing) == null) shotOver = true;
+					else
+					{
+						shotLocation = shotLocation.Adjacent(activeHero.facing);
+						foreach(Character potentialVictim in everybody)
+						{
+							if(potentialVictim.location == shotLocation)
+							{
+								shotVictim = potentialVictim;
+								shotOver = true;
+								break;
+							}
+						}
+						// Draw a square round the location to show it is the shot path, and add to redraw list
+						g.DrawImage((Bitmap) resources.GetObject("square_blue"),
+					            new Rectangle((shotLocation.tileLocation.X*scale)+origin.X, (shotLocation.tileLocation.Y*scale)+origin.Y, scale, scale));
+						tilesForRedraw.Add(shotLocation);
+					}
+				}
+				
+				// If there is a shotVictim, check its type. If it is a Baddie, add it to hitlist! If it is a Hero, shot does nothing.
+				if(shotVictim != null)
+				{
+					if (shotVictim.GetType() != activeHero.GetType())
+					{
+						spellVictims.Add((Baddie) shotVictim);
+						// Get adjacent baddies (if any)
+						
+						if(shotVictim.location.Adjacent(Direction.North) != null)
+						{
+							foreach(Character potentialVictim in everybody)
+							{
+								if(potentialVictim.location == shotVictim.location.Adjacent(Direction.North))
+								{
+									if (potentialVictim.GetType() != activeHero.GetType())
+									{
+										spellVictims.Add((Baddie) potentialVictim);
+									}
+								}
+							}
+						}
+						if(shotVictim.location.Adjacent(Direction.East) != null)
+						{
+							foreach(Character potentialVictim in everybody)
+							{
+								if(potentialVictim.location == shotVictim.location.Adjacent(Direction.East))
+								{
+									if (potentialVictim.GetType() != activeHero.GetType())
+									{
+										spellVictims.Add((Baddie) potentialVictim);
+									}
+								}
+							}
+						}
+						if(shotVictim.location.Adjacent(Direction.South) != null)
+						{
+							foreach(Character potentialVictim in everybody)
+							{
+								if(potentialVictim.location == shotVictim.location.Adjacent(Direction.South))
+								{
+									if (potentialVictim.GetType() != activeHero.GetType())
+									{
+										spellVictims.Add((Baddie) potentialVictim);
+									}
+								}
+							}
+						}
+						if(shotVictim.location.Adjacent(Direction.West) != null)
+						{
+							foreach(Character potentialVictim in everybody)
+							{
+								if(potentialVictim.location == shotVictim.location.Adjacent(Direction.West))
+								{
+									if (potentialVictim.GetType() != activeHero.GetType())
+									{
+										spellVictims.Add((Baddie) potentialVictim);
+									}
+								}
+							}
+						}
+						
+						// Kill all baddies in spellVictims list!
+						foreach(Baddie victim in spellVictims)
+							{
+								activeBaddie = victim;	
+								KillBaddie();
+							}
+					}
+					else
+					{
+						// shotVictim is a Hero, so add to redraw list.
+						charactersForRedraw.Add(shotVictim);
+						FailShot();
+					}
+				}
+				else FailShot();
+				
+				// Deplete wizard remaining uses and update spell action button if appropriate.
+				(activeHero as Wizard).spellExplodeRemaining--;
+				if((activeHero as Wizard).spellExplodeRemaining == 0)
+				{
+					spellExplodeButton.Image = Dungeons.Images.spell_explode_used;
+					DrawActionButtons();
+				}
+			}
+			
+			
+		}
+		
+		void SpellAffectAllButtonClick(object sender, EventArgs e)
+		{
+			// Only cast spell if wizard has some spell uses left!
+			if((activeHero as Wizard).spellAffectAllRemaining != 0)
+			{
+				// Find Room wizard is in.
+				Room affected = null;
+				
+				foreach (Room potentialRoom in board.rooms)
+				{
+					foreach(Tile potentialTile in potentialRoom.tiles)
+					{
+						if(activeHero.location == potentialTile)
+						{
+							affected = potentialRoom;
+						}
+					}
+				}
+				
+				
+				// Make list of affeted Baddies.
+				List<Baddie> hitBySpell = new List<Baddie>();
+				
+				// Populate list with baddies affected i.e. the ones in the same room as the wizard.
+				foreach (Baddie baddie in baddies)
+				{
+					foreach(Tile potentialTile in affected.tiles)
+					{
+						if(baddie.location == potentialTile)
+						{
+							hitBySpell.Add(baddie);
+						}
+					}
+				}
+				
+				// Apply spell affect to each baddie in list.
+				foreach (Baddie baddie in hitBySpell)
+				{
+					activeBaddie = baddie;
+					tilesForRedraw.Add(activeBaddie.location);
+					KillBaddie();
+				}
+				
+				// Clear affected list.
+				hitBySpell.Clear();
+
+				// Deplete wizard remaining uses and update spell action button if appropriate.
+				(activeHero as Wizard).spellAffectAllRemaining--;
+				if((activeHero as Wizard).spellAffectAllRemaining == 0)
+				{
+					spellAffectAllButton.Image = Dungeons.Images.spell_affectAll_used;
+					DrawActionButtons();
+				}
+			}
+		}
 	}
 }
 
