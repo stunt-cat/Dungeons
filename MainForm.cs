@@ -873,7 +873,7 @@ namespace Dungeons
 				// If there is a shotVictim, check its type. If it is a Baddie, add it to hitlist! If it is a Hero, shot does nothing.
 				if(shotVictim != null)
 				{
-					if (shotVictim.GetType() != activeHero.GetType())
+					if (shotVictim is Baddie)
 					{
 						spellVictims.Add((Baddie) shotVictim);
 						// Get adjacent baddies (if any)
@@ -884,7 +884,7 @@ namespace Dungeons
 							{
 								if(potentialVictim.location == shotVictim.location.Adjacent(Direction.North))
 								{
-									if (potentialVictim.GetType() != activeHero.GetType())
+									if (potentialVictim is Baddie)
 									{
 										spellVictims.Add((Baddie) potentialVictim);
 									}
@@ -897,7 +897,7 @@ namespace Dungeons
 							{
 								if(potentialVictim.location == shotVictim.location.Adjacent(Direction.East))
 								{
-									if (potentialVictim.GetType() != activeHero.GetType())
+									if (potentialVictim is Baddie)
 									{
 										spellVictims.Add((Baddie) potentialVictim);
 									}
@@ -910,7 +910,7 @@ namespace Dungeons
 							{
 								if(potentialVictim.location == shotVictim.location.Adjacent(Direction.South))
 								{
-									if (potentialVictim.GetType() != activeHero.GetType())
+									if (potentialVictim is Baddie)
 									{
 										spellVictims.Add((Baddie) potentialVictim);
 									}
@@ -923,7 +923,7 @@ namespace Dungeons
 							{
 								if(potentialVictim.location == shotVictim.location.Adjacent(Direction.West))
 								{
-									if (potentialVictim.GetType() != activeHero.GetType())
+									if (potentialVictim is Baddie)
 									{
 										spellVictims.Add((Baddie) potentialVictim);
 									}
