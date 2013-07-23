@@ -49,18 +49,8 @@ namespace Dungeons
 			this.successfulFightButton = new System.Windows.Forms.Button();
 			this.combatRangedButton = new System.Windows.Forms.Button();
 			this.gameOverButton = new System.Windows.Forms.Button();
-			this.numberOfBaddiesLabel = new System.Windows.Forms.Label();
-			this.heroesSelectorLabel = new System.Windows.Forms.Label();
-			this.baddieSelectorPanel = new System.Windows.Forms.Panel();
-			this.baddieSelectorButton8 = new System.Windows.Forms.RadioButton();
-			this.baddieSelectorButton7 = new System.Windows.Forms.RadioButton();
-			this.baddieSelectorButton6 = new System.Windows.Forms.RadioButton();
-			this.baddieSelectorButton5 = new System.Windows.Forms.RadioButton();
-			this.baddieSelectorButton4 = new System.Windows.Forms.RadioButton();
-			this.baddieSelectorButton3 = new System.Windows.Forms.RadioButton();
-			this.baddieSelectorButton2 = new System.Windows.Forms.RadioButton();
-			this.baddieSelectorButton1 = new System.Windows.Forms.RadioButton();
 			this.heroesSelectorPanel = new System.Windows.Forms.Panel();
+			this.heroesSelectorLabel = new System.Windows.Forms.Label();
 			this.wizardSelectCheckBox = new System.Windows.Forms.CheckBox();
 			this.dwarfSelectCheckBox = new System.Windows.Forms.CheckBox();
 			this.elfSelectCheckBox = new System.Windows.Forms.CheckBox();
@@ -71,6 +61,8 @@ namespace Dungeons
 			this.activateHeroButton4 = new System.Windows.Forms.Button();
 			this.useDoorButton = new System.Windows.Forms.Button();
 			this.controlsGroupBox = new System.Windows.Forms.GroupBox();
+			this.ActiveHeroStatsLabel = new System.Windows.Forms.Label();
+			this.ActiveHeroPictureBox = new System.Windows.Forms.PictureBox();
 			this.controls_movementLabel = new System.Windows.Forms.Label();
 			this.controls_actionsLabel = new System.Windows.Forms.Label();
 			this.controls_characterSelectLabel = new System.Windows.Forms.Label();
@@ -87,12 +79,17 @@ namespace Dungeons
 			this.scrollSouthButton = new System.Windows.Forms.Button();
 			this.scrollWestButton = new System.Windows.Forms.Button();
 			this.scrollGroupBox = new System.Windows.Forms.GroupBox();
+			this.difficultySelectorPanel = new System.Windows.Forms.Panel();
+			this.difficultyLabel = new System.Windows.Forms.Label();
+			this.difficultyRadioButton_easy = new System.Windows.Forms.RadioButton();
+			this.difficultyRadioButton_medium = new System.Windows.Forms.RadioButton();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-			this.baddieSelectorPanel.SuspendLayout();
 			this.heroesSelectorPanel.SuspendLayout();
 			this.controlsGroupBox.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.ActiveHeroPictureBox)).BeginInit();
 			this.scaleSelectorPanel.SuspendLayout();
 			this.scrollGroupBox.SuspendLayout();
+			this.difficultySelectorPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// pictureBox1
@@ -101,14 +98,14 @@ namespace Dungeons
 			this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
 			this.pictureBox1.Location = new System.Drawing.Point(12, 120);
 			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(676, 723);
+			this.pictureBox1.Size = new System.Drawing.Size(676, 793);
 			this.pictureBox1.TabIndex = 0;
 			this.pictureBox1.TabStop = false;
 			// 
 			// combatCloseButton
 			// 
 			this.combatCloseButton.Image = global::Dungeons.Images.combat_close;
-			this.combatCloseButton.Location = new System.Drawing.Point(16, 308);
+			this.combatCloseButton.Location = new System.Drawing.Point(21, 388);
 			this.combatCloseButton.Name = "combatCloseButton";
 			this.combatCloseButton.Size = new System.Drawing.Size(100, 100);
 			this.combatCloseButton.TabIndex = 1;
@@ -119,7 +116,7 @@ namespace Dungeons
 			// forwardButton
 			// 
 			this.forwardButton.Image = global::Dungeons.Images.arrow_north;
-			this.forwardButton.Location = new System.Drawing.Point(139, 146);
+			this.forwardButton.Location = new System.Drawing.Point(133, 214);
 			this.forwardButton.Name = "forwardButton";
 			this.forwardButton.Size = new System.Drawing.Size(100, 100);
 			this.forwardButton.TabIndex = 5;
@@ -138,7 +135,7 @@ namespace Dungeons
 			// 
 			// outOfBoundsButton
 			// 
-			this.outOfBoundsButton.Location = new System.Drawing.Point(699, 753);
+			this.outOfBoundsButton.Location = new System.Drawing.Point(715, 819);
 			this.outOfBoundsButton.Name = "outOfBoundsButton";
 			this.outOfBoundsButton.Size = new System.Drawing.Size(167, 90);
 			this.outOfBoundsButton.TabIndex = 9;
@@ -149,7 +146,7 @@ namespace Dungeons
 			// 
 			// failedFightButton
 			// 
-			this.failedFightButton.Location = new System.Drawing.Point(887, 753);
+			this.failedFightButton.Location = new System.Drawing.Point(903, 819);
 			this.failedFightButton.Name = "failedFightButton";
 			this.failedFightButton.Size = new System.Drawing.Size(167, 90);
 			this.failedFightButton.TabIndex = 10;
@@ -161,7 +158,7 @@ namespace Dungeons
 			// leftTurnButton
 			// 
 			this.leftTurnButton.Image = global::Dungeons.Images.arrow_turn_left;
-			this.leftTurnButton.Location = new System.Drawing.Point(33, 167);
+			this.leftTurnButton.Location = new System.Drawing.Point(27, 235);
 			this.leftTurnButton.Name = "leftTurnButton";
 			this.leftTurnButton.Size = new System.Drawing.Size(100, 100);
 			this.leftTurnButton.TabIndex = 11;
@@ -171,7 +168,7 @@ namespace Dungeons
 			// rightTurnButton
 			// 
 			this.rightTurnButton.Image = global::Dungeons.Images.arrow_turn_right;
-			this.rightTurnButton.Location = new System.Drawing.Point(245, 167);
+			this.rightTurnButton.Location = new System.Drawing.Point(239, 235);
 			this.rightTurnButton.Name = "rightTurnButton";
 			this.rightTurnButton.Size = new System.Drawing.Size(100, 100);
 			this.rightTurnButton.TabIndex = 12;
@@ -180,11 +177,11 @@ namespace Dungeons
 			// 
 			// successfulFightButton
 			// 
-			this.successfulFightButton.Location = new System.Drawing.Point(738, 683);
+			this.successfulFightButton.Location = new System.Drawing.Point(754, 749);
 			this.successfulFightButton.Name = "successfulFightButton";
 			this.successfulFightButton.Size = new System.Drawing.Size(269, 64);
 			this.successfulFightButton.TabIndex = 13;
-			this.successfulFightButton.Text = "YOU KILLED \'EM!\r\n\r\nClick to continue.";
+			this.successfulFightButton.Text = "YOU HIT \'EM!\r\n\r\nClick to continue.";
 			this.successfulFightButton.UseVisualStyleBackColor = true;
 			this.successfulFightButton.Visible = false;
 			this.successfulFightButton.Click += new System.EventHandler(this.SuccessfulFightButtonClick);
@@ -192,7 +189,7 @@ namespace Dungeons
 			// combatRangedButton
 			// 
 			this.combatRangedButton.Image = global::Dungeons.Images.combat_ranged;
-			this.combatRangedButton.Location = new System.Drawing.Point(128, 308);
+			this.combatRangedButton.Location = new System.Drawing.Point(133, 388);
 			this.combatRangedButton.Name = "combatRangedButton";
 			this.combatRangedButton.Size = new System.Drawing.Size(100, 100);
 			this.combatRangedButton.TabIndex = 14;
@@ -210,145 +207,49 @@ namespace Dungeons
 			this.gameOverButton.Visible = false;
 			this.gameOverButton.Click += new System.EventHandler(this.GameOverButtonClick);
 			// 
-			// numberOfBaddiesLabel
-			// 
-			this.numberOfBaddiesLabel.Location = new System.Drawing.Point(21, 13);
-			this.numberOfBaddiesLabel.Name = "numberOfBaddiesLabel";
-			this.numberOfBaddiesLabel.Size = new System.Drawing.Size(103, 22);
-			this.numberOfBaddiesLabel.TabIndex = 20;
-			this.numberOfBaddiesLabel.Text = "Number of baddies";
-			// 
-			// heroesSelectorLabel
-			// 
-			this.heroesSelectorLabel.Location = new System.Drawing.Point(201, 12);
-			this.heroesSelectorLabel.Name = "heroesSelectorLabel";
-			this.heroesSelectorLabel.Size = new System.Drawing.Size(103, 22);
-			this.heroesSelectorLabel.TabIndex = 22;
-			this.heroesSelectorLabel.Text = "Select Heroes";
-			// 
-			// baddieSelectorPanel
-			// 
-			this.baddieSelectorPanel.Controls.Add(this.baddieSelectorButton8);
-			this.baddieSelectorPanel.Controls.Add(this.baddieSelectorButton7);
-			this.baddieSelectorPanel.Controls.Add(this.baddieSelectorButton6);
-			this.baddieSelectorPanel.Controls.Add(this.baddieSelectorButton5);
-			this.baddieSelectorPanel.Controls.Add(this.baddieSelectorButton4);
-			this.baddieSelectorPanel.Controls.Add(this.baddieSelectorButton3);
-			this.baddieSelectorPanel.Controls.Add(this.baddieSelectorButton2);
-			this.baddieSelectorPanel.Controls.Add(this.baddieSelectorButton1);
-			this.baddieSelectorPanel.Location = new System.Drawing.Point(122, 7);
-			this.baddieSelectorPanel.Name = "baddieSelectorPanel";
-			this.baddieSelectorPanel.Size = new System.Drawing.Size(70, 84);
-			this.baddieSelectorPanel.TabIndex = 23;
-			// 
-			// baddieSelectorButton8
-			// 
-			this.baddieSelectorButton8.Location = new System.Drawing.Point(37, 58);
-			this.baddieSelectorButton8.Name = "baddieSelectorButton8";
-			this.baddieSelectorButton8.Size = new System.Drawing.Size(33, 20);
-			this.baddieSelectorButton8.TabIndex = 7;
-			this.baddieSelectorButton8.Text = "8";
-			this.baddieSelectorButton8.UseVisualStyleBackColor = true;
-			// 
-			// baddieSelectorButton7
-			// 
-			this.baddieSelectorButton7.Location = new System.Drawing.Point(37, 38);
-			this.baddieSelectorButton7.Name = "baddieSelectorButton7";
-			this.baddieSelectorButton7.Size = new System.Drawing.Size(33, 20);
-			this.baddieSelectorButton7.TabIndex = 6;
-			this.baddieSelectorButton7.Text = "7";
-			this.baddieSelectorButton7.UseVisualStyleBackColor = true;
-			// 
-			// baddieSelectorButton6
-			// 
-			this.baddieSelectorButton6.Location = new System.Drawing.Point(37, 19);
-			this.baddieSelectorButton6.Name = "baddieSelectorButton6";
-			this.baddieSelectorButton6.Size = new System.Drawing.Size(33, 20);
-			this.baddieSelectorButton6.TabIndex = 5;
-			this.baddieSelectorButton6.Text = "6";
-			this.baddieSelectorButton6.UseVisualStyleBackColor = true;
-			// 
-			// baddieSelectorButton5
-			// 
-			this.baddieSelectorButton5.Location = new System.Drawing.Point(37, 0);
-			this.baddieSelectorButton5.Name = "baddieSelectorButton5";
-			this.baddieSelectorButton5.Size = new System.Drawing.Size(33, 20);
-			this.baddieSelectorButton5.TabIndex = 4;
-			this.baddieSelectorButton5.Text = "5";
-			this.baddieSelectorButton5.UseVisualStyleBackColor = true;
-			// 
-			// baddieSelectorButton4
-			// 
-			this.baddieSelectorButton4.Location = new System.Drawing.Point(7, 58);
-			this.baddieSelectorButton4.Name = "baddieSelectorButton4";
-			this.baddieSelectorButton4.Size = new System.Drawing.Size(33, 20);
-			this.baddieSelectorButton4.TabIndex = 3;
-			this.baddieSelectorButton4.Text = "4";
-			this.baddieSelectorButton4.UseVisualStyleBackColor = true;
-			// 
-			// baddieSelectorButton3
-			// 
-			this.baddieSelectorButton3.Location = new System.Drawing.Point(7, 38);
-			this.baddieSelectorButton3.Name = "baddieSelectorButton3";
-			this.baddieSelectorButton3.Size = new System.Drawing.Size(56, 20);
-			this.baddieSelectorButton3.TabIndex = 2;
-			this.baddieSelectorButton3.Text = "3";
-			this.baddieSelectorButton3.UseVisualStyleBackColor = true;
-			// 
-			// baddieSelectorButton2
-			// 
-			this.baddieSelectorButton2.Location = new System.Drawing.Point(7, 19);
-			this.baddieSelectorButton2.Name = "baddieSelectorButton2";
-			this.baddieSelectorButton2.Size = new System.Drawing.Size(56, 20);
-			this.baddieSelectorButton2.TabIndex = 1;
-			this.baddieSelectorButton2.Text = "2";
-			this.baddieSelectorButton2.UseVisualStyleBackColor = true;
-			// 
-			// baddieSelectorButton1
-			// 
-			this.baddieSelectorButton1.Checked = true;
-			this.baddieSelectorButton1.Location = new System.Drawing.Point(7, 0);
-			this.baddieSelectorButton1.Name = "baddieSelectorButton1";
-			this.baddieSelectorButton1.Size = new System.Drawing.Size(56, 20);
-			this.baddieSelectorButton1.TabIndex = 0;
-			this.baddieSelectorButton1.TabStop = true;
-			this.baddieSelectorButton1.Text = "1";
-			this.baddieSelectorButton1.UseVisualStyleBackColor = true;
-			// 
 			// heroesSelectorPanel
 			// 
+			this.heroesSelectorPanel.Controls.Add(this.heroesSelectorLabel);
 			this.heroesSelectorPanel.Controls.Add(this.wizardSelectCheckBox);
 			this.heroesSelectorPanel.Controls.Add(this.dwarfSelectCheckBox);
 			this.heroesSelectorPanel.Controls.Add(this.elfSelectCheckBox);
 			this.heroesSelectorPanel.Controls.Add(this.warriorSelectCheckBox);
-			this.heroesSelectorPanel.Location = new System.Drawing.Point(295, 7);
+			this.heroesSelectorPanel.Location = new System.Drawing.Point(75, 12);
 			this.heroesSelectorPanel.Name = "heroesSelectorPanel";
-			this.heroesSelectorPanel.Size = new System.Drawing.Size(138, 81);
+			this.heroesSelectorPanel.Size = new System.Drawing.Size(188, 76);
 			this.heroesSelectorPanel.TabIndex = 24;
+			// 
+			// heroesSelectorLabel
+			// 
+			this.heroesSelectorLabel.Location = new System.Drawing.Point(52, 7);
+			this.heroesSelectorLabel.Name = "heroesSelectorLabel";
+			this.heroesSelectorLabel.Size = new System.Drawing.Size(81, 22);
+			this.heroesSelectorLabel.TabIndex = 23;
+			this.heroesSelectorLabel.Text = "Select Heroes";
 			// 
 			// wizardSelectCheckBox
 			// 
-			this.wizardSelectCheckBox.Location = new System.Drawing.Point(25, 54);
+			this.wizardSelectCheckBox.Location = new System.Drawing.Point(100, 53);
 			this.wizardSelectCheckBox.Name = "wizardSelectCheckBox";
-			this.wizardSelectCheckBox.Size = new System.Drawing.Size(88, 18);
+			this.wizardSelectCheckBox.Size = new System.Drawing.Size(71, 18);
 			this.wizardSelectCheckBox.TabIndex = 3;
 			this.wizardSelectCheckBox.Text = "Wizard";
 			this.wizardSelectCheckBox.UseVisualStyleBackColor = true;
 			// 
 			// dwarfSelectCheckBox
 			// 
-			this.dwarfSelectCheckBox.Location = new System.Drawing.Point(25, 21);
+			this.dwarfSelectCheckBox.Location = new System.Drawing.Point(20, 52);
 			this.dwarfSelectCheckBox.Name = "dwarfSelectCheckBox";
-			this.dwarfSelectCheckBox.Size = new System.Drawing.Size(88, 18);
+			this.dwarfSelectCheckBox.Size = new System.Drawing.Size(74, 18);
 			this.dwarfSelectCheckBox.TabIndex = 2;
 			this.dwarfSelectCheckBox.Text = "Dwarf";
 			this.dwarfSelectCheckBox.UseVisualStyleBackColor = true;
 			// 
 			// elfSelectCheckBox
 			// 
-			this.elfSelectCheckBox.Location = new System.Drawing.Point(25, 37);
+			this.elfSelectCheckBox.Location = new System.Drawing.Point(100, 32);
 			this.elfSelectCheckBox.Name = "elfSelectCheckBox";
-			this.elfSelectCheckBox.Size = new System.Drawing.Size(88, 18);
+			this.elfSelectCheckBox.Size = new System.Drawing.Size(71, 18);
 			this.elfSelectCheckBox.TabIndex = 1;
 			this.elfSelectCheckBox.Text = "Elf";
 			this.elfSelectCheckBox.UseVisualStyleBackColor = true;
@@ -357,9 +258,9 @@ namespace Dungeons
 			// 
 			this.warriorSelectCheckBox.Checked = true;
 			this.warriorSelectCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.warriorSelectCheckBox.Location = new System.Drawing.Point(25, 5);
+			this.warriorSelectCheckBox.Location = new System.Drawing.Point(20, 30);
 			this.warriorSelectCheckBox.Name = "warriorSelectCheckBox";
-			this.warriorSelectCheckBox.Size = new System.Drawing.Size(88, 18);
+			this.warriorSelectCheckBox.Size = new System.Drawing.Size(74, 18);
 			this.warriorSelectCheckBox.TabIndex = 0;
 			this.warriorSelectCheckBox.Text = "Warrior";
 			this.warriorSelectCheckBox.UseVisualStyleBackColor = true;
@@ -411,7 +312,7 @@ namespace Dungeons
 			// useDoorButton
 			// 
 			this.useDoorButton.Image = global::Dungeons.Images.useDoor;
-			this.useDoorButton.Location = new System.Drawing.Point(245, 371);
+			this.useDoorButton.Location = new System.Drawing.Point(250, 451);
 			this.useDoorButton.Name = "useDoorButton";
 			this.useDoorButton.Size = new System.Drawing.Size(100, 100);
 			this.useDoorButton.TabIndex = 29;
@@ -421,6 +322,8 @@ namespace Dungeons
 			// 
 			// controlsGroupBox
 			// 
+			this.controlsGroupBox.Controls.Add(this.ActiveHeroStatsLabel);
+			this.controlsGroupBox.Controls.Add(this.ActiveHeroPictureBox);
 			this.controlsGroupBox.Controls.Add(this.controls_movementLabel);
 			this.controlsGroupBox.Controls.Add(this.controls_actionsLabel);
 			this.controlsGroupBox.Controls.Add(this.controls_characterSelectLabel);
@@ -438,16 +341,32 @@ namespace Dungeons
 			this.controlsGroupBox.Controls.Add(this.combatCloseButton);
 			this.controlsGroupBox.Location = new System.Drawing.Point(694, 142);
 			this.controlsGroupBox.Name = "controlsGroupBox";
-			this.controlsGroupBox.Size = new System.Drawing.Size(360, 535);
+			this.controlsGroupBox.Size = new System.Drawing.Size(360, 601);
 			this.controlsGroupBox.TabIndex = 30;
 			this.controlsGroupBox.TabStop = false;
 			this.controlsGroupBox.Text = "Controls";
 			this.controlsGroupBox.Visible = false;
 			// 
+			// ActiveHeroStatsLabel
+			// 
+			this.ActiveHeroStatsLabel.Location = new System.Drawing.Point(186, 126);
+			this.ActiveHeroStatsLabel.Name = "ActiveHeroStatsLabel";
+			this.ActiveHeroStatsLabel.Size = new System.Drawing.Size(108, 37);
+			this.ActiveHeroStatsLabel.TabIndex = 36;
+			this.ActiveHeroStatsLabel.Text = "Wounds";
+			// 
+			// ActiveHeroPictureBox
+			// 
+			this.ActiveHeroPictureBox.Location = new System.Drawing.Point(119, 114);
+			this.ActiveHeroPictureBox.Name = "ActiveHeroPictureBox";
+			this.ActiveHeroPictureBox.Size = new System.Drawing.Size(50, 50);
+			this.ActiveHeroPictureBox.TabIndex = 35;
+			this.ActiveHeroPictureBox.TabStop = false;
+			// 
 			// controls_movementLabel
 			// 
 			this.controls_movementLabel.Font = new System.Drawing.Font("Comic Sans MS", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.controls_movementLabel.Location = new System.Drawing.Point(133, 116);
+			this.controls_movementLabel.Location = new System.Drawing.Point(127, 184);
 			this.controls_movementLabel.Name = "controls_movementLabel";
 			this.controls_movementLabel.Size = new System.Drawing.Size(112, 27);
 			this.controls_movementLabel.TabIndex = 34;
@@ -456,7 +375,7 @@ namespace Dungeons
 			// controls_actionsLabel
 			// 
 			this.controls_actionsLabel.Font = new System.Drawing.Font("Comic Sans MS", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.controls_actionsLabel.Location = new System.Drawing.Point(139, 278);
+			this.controls_actionsLabel.Location = new System.Drawing.Point(133, 346);
 			this.controls_actionsLabel.Name = "controls_actionsLabel";
 			this.controls_actionsLabel.Size = new System.Drawing.Size(103, 27);
 			this.controls_actionsLabel.TabIndex = 33;
@@ -474,7 +393,7 @@ namespace Dungeons
 			// spellAffectAllButton
 			// 
 			this.spellAffectAllButton.Image = global::Dungeons.Images.spell_affectAll;
-			this.spellAffectAllButton.Location = new System.Drawing.Point(128, 414);
+			this.spellAffectAllButton.Location = new System.Drawing.Point(133, 494);
 			this.spellAffectAllButton.Name = "spellAffectAllButton";
 			this.spellAffectAllButton.Size = new System.Drawing.Size(100, 100);
 			this.spellAffectAllButton.TabIndex = 31;
@@ -485,7 +404,7 @@ namespace Dungeons
 			// spellExplodeButton
 			// 
 			this.spellExplodeButton.Image = global::Dungeons.Images.spell_explode;
-			this.spellExplodeButton.Location = new System.Drawing.Point(16, 414);
+			this.spellExplodeButton.Location = new System.Drawing.Point(21, 494);
 			this.spellExplodeButton.Name = "spellExplodeButton";
 			this.spellExplodeButton.Size = new System.Drawing.Size(100, 100);
 			this.spellExplodeButton.TabIndex = 30;
@@ -495,9 +414,9 @@ namespace Dungeons
 			// 
 			// scaleLabel
 			// 
-			this.scaleLabel.Location = new System.Drawing.Point(742, 44);
+			this.scaleLabel.Location = new System.Drawing.Point(58, 2);
 			this.scaleLabel.Name = "scaleLabel";
-			this.scaleLabel.Size = new System.Drawing.Size(103, 22);
+			this.scaleLabel.Size = new System.Drawing.Size(52, 22);
 			this.scaleLabel.TabIndex = 31;
 			this.scaleLabel.Text = "Scale";
 			// 
@@ -506,37 +425,38 @@ namespace Dungeons
 			this.scaleSelectorPanel.Controls.Add(this.scaleRadioButton_25);
 			this.scaleSelectorPanel.Controls.Add(this.scaleRadioButton_100);
 			this.scaleSelectorPanel.Controls.Add(this.scaleRadioButton_50);
-			this.scaleSelectorPanel.Location = new System.Drawing.Point(703, 63);
+			this.scaleSelectorPanel.Controls.Add(this.scaleLabel);
+			this.scaleSelectorPanel.Location = new System.Drawing.Point(703, 44);
 			this.scaleSelectorPanel.Name = "scaleSelectorPanel";
-			this.scaleSelectorPanel.Size = new System.Drawing.Size(167, 28);
+			this.scaleSelectorPanel.Size = new System.Drawing.Size(167, 47);
 			this.scaleSelectorPanel.TabIndex = 25;
 			this.scaleSelectorPanel.Visible = false;
 			// 
 			// scaleRadioButton_25
 			// 
-			this.scaleRadioButton_25.Checked = true;
-			this.scaleRadioButton_25.Location = new System.Drawing.Point(8, 2);
+			this.scaleRadioButton_25.Location = new System.Drawing.Point(8, 16);
 			this.scaleRadioButton_25.Name = "scaleRadioButton_25";
 			this.scaleRadioButton_25.Size = new System.Drawing.Size(49, 25);
 			this.scaleRadioButton_25.TabIndex = 2;
-			this.scaleRadioButton_25.TabStop = true;
 			this.scaleRadioButton_25.Text = "25%";
 			this.scaleRadioButton_25.UseVisualStyleBackColor = true;
 			this.scaleRadioButton_25.CheckedChanged += new System.EventHandler(this.ScaleRadioButton_25CheckedChanged);
 			// 
 			// scaleRadioButton_100
 			// 
-			this.scaleRadioButton_100.Location = new System.Drawing.Point(110, 4);
+			this.scaleRadioButton_100.Checked = true;
+			this.scaleRadioButton_100.Location = new System.Drawing.Point(110, 18);
 			this.scaleRadioButton_100.Name = "scaleRadioButton_100";
 			this.scaleRadioButton_100.Size = new System.Drawing.Size(54, 21);
 			this.scaleRadioButton_100.TabIndex = 1;
+			this.scaleRadioButton_100.TabStop = true;
 			this.scaleRadioButton_100.Text = "100%";
 			this.scaleRadioButton_100.UseVisualStyleBackColor = true;
 			this.scaleRadioButton_100.CheckedChanged += new System.EventHandler(this.ScaleRadioButton_100CheckedChanged);
 			// 
 			// scaleRadioButton_50
 			// 
-			this.scaleRadioButton_50.Location = new System.Drawing.Point(58, 2);
+			this.scaleRadioButton_50.Location = new System.Drawing.Point(58, 16);
 			this.scaleRadioButton_50.Name = "scaleRadioButton_50";
 			this.scaleRadioButton_50.Size = new System.Drawing.Size(46, 25);
 			this.scaleRadioButton_50.TabIndex = 0;
@@ -609,19 +529,54 @@ namespace Dungeons
 			this.scrollGroupBox.Text = "Scroll";
 			this.scrollGroupBox.Visible = false;
 			// 
+			// difficultySelectorPanel
+			// 
+			this.difficultySelectorPanel.Controls.Add(this.difficultyLabel);
+			this.difficultySelectorPanel.Controls.Add(this.difficultyRadioButton_easy);
+			this.difficultySelectorPanel.Controls.Add(this.difficultyRadioButton_medium);
+			this.difficultySelectorPanel.Location = new System.Drawing.Point(293, 22);
+			this.difficultySelectorPanel.Name = "difficultySelectorPanel";
+			this.difficultySelectorPanel.Size = new System.Drawing.Size(144, 60);
+			this.difficultySelectorPanel.TabIndex = 26;
+			// 
+			// difficultyLabel
+			// 
+			this.difficultyLabel.Location = new System.Drawing.Point(30, 5);
+			this.difficultyLabel.Name = "difficultyLabel";
+			this.difficultyLabel.Size = new System.Drawing.Size(87, 22);
+			this.difficultyLabel.TabIndex = 32;
+			this.difficultyLabel.Text = "Select Difficulty";
+			// 
+			// difficultyRadioButton_easy
+			// 
+			this.difficultyRadioButton_easy.Checked = true;
+			this.difficultyRadioButton_easy.Location = new System.Drawing.Point(14, 24);
+			this.difficultyRadioButton_easy.Name = "difficultyRadioButton_easy";
+			this.difficultyRadioButton_easy.Size = new System.Drawing.Size(49, 25);
+			this.difficultyRadioButton_easy.TabIndex = 2;
+			this.difficultyRadioButton_easy.TabStop = true;
+			this.difficultyRadioButton_easy.Text = "Easy";
+			this.difficultyRadioButton_easy.UseVisualStyleBackColor = true;
+			// 
+			// difficultyRadioButton_medium
+			// 
+			this.difficultyRadioButton_medium.Location = new System.Drawing.Point(64, 24);
+			this.difficultyRadioButton_medium.Name = "difficultyRadioButton_medium";
+			this.difficultyRadioButton_medium.Size = new System.Drawing.Size(64, 25);
+			this.difficultyRadioButton_medium.TabIndex = 0;
+			this.difficultyRadioButton_medium.Text = "Medium";
+			this.difficultyRadioButton_medium.UseVisualStyleBackColor = true;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1077, 856);
+			this.ClientSize = new System.Drawing.Size(1101, 925);
+			this.Controls.Add(this.difficultySelectorPanel);
 			this.Controls.Add(this.scrollGroupBox);
 			this.Controls.Add(this.scaleSelectorPanel);
-			this.Controls.Add(this.scaleLabel);
 			this.Controls.Add(this.controlsGroupBox);
 			this.Controls.Add(this.heroesSelectorPanel);
-			this.Controls.Add(this.baddieSelectorPanel);
-			this.Controls.Add(this.heroesSelectorLabel);
-			this.Controls.Add(this.numberOfBaddiesLabel);
 			this.Controls.Add(this.gameOverButton);
 			this.Controls.Add(this.successfulFightButton);
 			this.Controls.Add(this.failedFightButton);
@@ -631,13 +586,20 @@ namespace Dungeons
 			this.Name = "MainForm";
 			this.Text = "Move And Fight";
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-			this.baddieSelectorPanel.ResumeLayout(false);
 			this.heroesSelectorPanel.ResumeLayout(false);
 			this.controlsGroupBox.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.ActiveHeroPictureBox)).EndInit();
 			this.scaleSelectorPanel.ResumeLayout(false);
 			this.scrollGroupBox.ResumeLayout(false);
+			this.difficultySelectorPanel.ResumeLayout(false);
 			this.ResumeLayout(false);
 		}
+		private System.Windows.Forms.RadioButton difficultyRadioButton_medium;
+		private System.Windows.Forms.RadioButton difficultyRadioButton_easy;
+		private System.Windows.Forms.Label difficultyLabel;
+		private System.Windows.Forms.Panel difficultySelectorPanel;
+		private System.Windows.Forms.Label ActiveHeroStatsLabel;
+		private System.Windows.Forms.PictureBox ActiveHeroPictureBox;
 		private System.Windows.Forms.CheckBox warriorSelectCheckBox;
 		private System.Windows.Forms.CheckBox elfSelectCheckBox;
 		private System.Windows.Forms.CheckBox dwarfSelectCheckBox;
@@ -647,8 +609,6 @@ namespace Dungeons
 		private System.Windows.Forms.Label controls_characterSelectLabel;
 		private System.Windows.Forms.Label controls_actionsLabel;
 		private System.Windows.Forms.Label controls_movementLabel;
-		private System.Windows.Forms.RadioButton baddieSelectorButton7;
-		private System.Windows.Forms.RadioButton baddieSelectorButton8;
 		private System.Windows.Forms.RadioButton scaleRadioButton_25;
 		private System.Windows.Forms.GroupBox scrollGroupBox;
 		private System.Windows.Forms.Button scrollWestButton;
@@ -664,17 +624,9 @@ namespace Dungeons
 		private System.Windows.Forms.Button useDoorButton;
 		private System.Windows.Forms.Button activateHeroButton4;
 		private System.Windows.Forms.Button activateHeroButton3;
-		private System.Windows.Forms.RadioButton baddieSelectorButton4;
-		private System.Windows.Forms.RadioButton baddieSelectorButton5;
-		private System.Windows.Forms.RadioButton baddieSelectorButton6;
 		private System.Windows.Forms.Button activateHeroButton1;
 		private System.Windows.Forms.Panel heroesSelectorPanel;
-		private System.Windows.Forms.RadioButton baddieSelectorButton1;
-		private System.Windows.Forms.RadioButton baddieSelectorButton2;
-		private System.Windows.Forms.RadioButton baddieSelectorButton3;
-		private System.Windows.Forms.Panel baddieSelectorPanel;
 		private System.Windows.Forms.Label heroesSelectorLabel;
-		private System.Windows.Forms.Label numberOfBaddiesLabel;
 		private System.Windows.Forms.Button gameOverButton;
 		private System.Windows.Forms.Button activateHeroButton2;
 		private System.Windows.Forms.Button combatRangedButton;

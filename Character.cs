@@ -29,6 +29,7 @@ namespace Dungeons
 		public Point origin;
 		public int scale;
 		public Dictionary <Stats, int> stats = new Dictionary<Stats, int>();
+		public int damageTaken;		//TODO - make this decremented as part of the set() of W stats.
 		
 		public Character(Tile location, Direction facing, int ws, int bs, int s, int t, int w)
 		{
@@ -39,6 +40,17 @@ namespace Dungeons
 			this.stats.Add(Stats.S, s);
 			this.stats.Add(Stats.T, t);
 			this.stats.Add(Stats.W, w);
+			this.damageTaken = 0;
+		}
+		
+		public Character(int ws, int bs, int s, int t, int w)
+		{
+			this.stats.Add(Stats.WS, ws);
+			this.stats.Add(Stats.BS, bs);
+			this.stats.Add(Stats.S, s);
+			this.stats.Add(Stats.T, t);
+			this.stats.Add(Stats.W, w);
+			this.damageTaken = 0;
 		}
 	
 		public virtual void TurnLeft()
@@ -81,6 +93,12 @@ namespace Dungeons
 			
 			g.DrawImage((Bitmap)resources.GetObject(this.imageRef),
 			            new Rectangle((this.location.tileLocation.X*this.scale)+this.origin.X, (this.location.tileLocation.Y*this.scale)+this.origin.Y, this.scale, this.scale));
+			
+			if(this.damageTaken >0)
+			{
+				g.DrawImage((Bitmap) resources.GetObject(String.Format("damage_{0}", damageTaken)),
+			            new Rectangle((this.location.tileLocation.X*this.scale)+this.origin.X, (this.location.tileLocation.Y*this.scale)+this.origin.Y, this.scale, this.scale));
+			}
 		}
 	}
 }

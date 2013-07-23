@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Baddie.cs" />
+    <Compile Include="BaddieLord.cs" />
     <Compile Include="Board.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="Door.cs" />

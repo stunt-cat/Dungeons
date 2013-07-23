@@ -12,7 +12,7 @@ namespace Dungeons
 {
 	/// <summary>
 	/// TileConnector is a way of connecting Tiles simply.
-	/// 	It performs the same function as Door but without any open/shut state i.e. it is always 'open'.
+	/// It performs the same function as Door but without any open/shut state i.e. it is always 'open'.
 	/// It does not introduce any extra graphics but does remove 'wall' graphics by replacing previously null entries in affected Tile adjacencies Dictionaries.
 	/// It can be used to join corridors or rooms without needing doors i.e. make long corridors/bigger rooms from standard smaller ones.
 	/// </summary>

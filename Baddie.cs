@@ -17,6 +17,8 @@ namespace Dungeons
 	/// 
 	public class Baddie : Character
 	{
+		public Boolean visible;
+		
 		public Baddie(Tile location, Direction facing, int ws, int bs, int s, int t, int w)
 			: base (location, facing, ws, bs, s, t, w)
 		{

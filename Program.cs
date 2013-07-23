@@ -25,7 +25,9 @@ namespace Dungeons
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new MainForm());
+			// Following line is to enable access to MainForm variables from other classes.
+			MainForm mf = new MainForm();
+			Application.Run(mf);
 		}
 	}
 }

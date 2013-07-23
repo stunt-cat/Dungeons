@@ -43,10 +43,9 @@ namespace Dungeons
 		public List<Hero> heroSelectorList;
 		Hero activeHero;
 		
-		// list populated in StartButtonClick(), from user parameters
-		public List<Character> baddies;
+		public List<Character> remainingBaddies;  // List populated in StartButtonClick(), from Board. This list is used to determine game end condition.
+		public List<Character> visibleBaddies;
 		Baddie activeBaddie;
-		int numberOfBaddies;
 		public Direction baddieMoveDirection;
 		
 		public IEnumerable<Character> everybody;
@@ -67,8 +66,7 @@ namespace Dungeons
 		public List<Character> charactersForRedraw = new List<Character>();
 		
 		// Set scale for Board - N.B. All graphics are initially 100x100 pixels.
-		// Currently starting at default of 25% to accommodate trial Board
-		public int scale = 25;
+		public int scale = 100;
 	
 		ResourceManager resources = new ResourceManager("Dungeons.images", Assembly.GetExecutingAssembly());
 		public System.Drawing.Graphics g;
@@ -81,65 +79,51 @@ namespace Dungeons
 			// Create board.
 			// N.B. All Points are in abstract integer sizes to relate each Room/Tile to each other.
 			// 		These sizes are converted to actual pixels in DrawLocation().
-			initialOrigin = new Point(7*scale,0*scale);	//N.B. Origin is currently selected to display trial board centered in graphics window!;
+			initialOrigin = new Point(scale,scale);	//N.B. Origin is currently selected to display trial board centered in graphics window!;
 			origin = initialOrigin;
-			board = new Board();
 			
-			// Get numberOfBaddies from RadioBox in baddieSelectorPanel.
-			if (baddieSelectorButton1.Checked) numberOfBaddies = 50;
-			else if (baddieSelectorButton2.Checked) numberOfBaddies = 2;
-			else if (baddieSelectorButton3.Checked) numberOfBaddies = 3;
-			else if (baddieSelectorButton4.Checked) numberOfBaddies = 4;
-			else if (baddieSelectorButton5.Checked) numberOfBaddies = 5;
-			else if (baddieSelectorButton6.Checked) numberOfBaddies = 6;
-			else if (baddieSelectorButton7.Checked) numberOfBaddies = 7;
-			else if (baddieSelectorButton8.Checked) numberOfBaddies = 8;
+			// Board to create is dependent on the user selection of difficulty in the difficultySelectorPanel
+			if(difficultyRadioButton_easy.Checked) board = new Board(1);
+			if(difficultyRadioButton_medium.Checked) board = new Board(2);
 			
-			baddies = new List<Character>(numberOfBaddies);
-			
-			
-			// Create Heroes from checkBox selections in herosSelectorPanel.
-			// N.B. Each Hero is initially assigned to a random location, which may be occupied by another hero. TODO Add standard entry tile to avoid this.
-			heroes = new List<Character>();
-			
-			if (warriorSelectCheckBox.Checked) heroes.Add(new Hero (RandomLocation(), (Direction) random.Next(4), 8, 6, 6, 8, 4, HeroType.Warrior));
-			if (dwarfSelectCheckBox.Checked) heroes.Add(new Hero (RandomLocation(), (Direction) random.Next(4), 8, 5, 6, 8, 5, HeroType.Dwarf));
-			if (elfSelectCheckBox.Checked) heroes.Add(new Hero (RandomLocation(), (Direction) random.Next(4), 9, 9, 5, 5, 4, HeroType.Elf));
-			if (wizardSelectCheckBox.Checked) heroes.Add(new Wizard (RandomLocation(), (Direction) random.Next(4), 5, 6, 4, 4, 3, HeroType.Wizard));
-			
-			// If no heroes are selected, assign Warrior only.
-			if (heroes.Count == 0) heroes.Add(new Hero (RandomLocation(), (Direction) random.Next(4), 8, 6, 6, 8, 4, HeroType.Warrior));
-			
-			
-			// Randomly select hero start point(s), ensuring there are no conflicts with other heroes (N.B. no baddies exist at this point).
-			for (int i = 0; i < heroes.Count; i++)
+			// Populate remainingBaddies from Board
+			remainingBaddies = new List<Character>();
+			foreach(Room room in board.rooms)
 			{
-				Tile bufferLocation = RandomLocation();
-				Boolean tileAvailable = true;
-				
-				// Check other Hero locations and reassign bufferLocation until it is an available location.
-					do{
-						// Assume location is initially free
-						tileAvailable = true;
-						foreach (Character hero in heroes)
-						{
-							if (bufferLocation == hero.location)
-							{
-								// If location not free, choose another and check everybody again.
-								bufferLocation = RandomLocation();
-								tileAvailable = false;
-								break;
-							}
-						}
-					} while (!tileAvailable);	
-				
-				// bufferLocation is available, so assign it to current Hero
-				heroes[i].location = bufferLocation;
-				
+				foreach(Character baddie in room.occupants)
+				{
+					remainingBaddies.Add(baddie);
+				}
 			}
 			
-			// Randomly select baddie start point(s), ensuring there are no conflicts with heroes or other baddies
-			AssignBaddieLocations();
+			// N.B. This list starts off empty! (as all baddies are behind doors).
+			visibleBaddies = new List<Character>();
+			
+			// Create Heroes from checkBox selections in herosSelectorPanel.
+			heroes = new List<Character>();
+			
+			// Add Heroes to start square of Board (stairs down tile)
+			// N.B. location of Heroes within the square is checked and assigned in AssignLocation(), so no location conflicts occur.
+			
+			if (warriorSelectCheckBox.Checked){
+				heroes.Add(new Hero (board.AssignLocation(board.rooms[0]), board.startDirection, 8, 6, 6, 8, 4, HeroType.Warrior));
+				board.rooms[0].occupants.Add(heroes[heroes.Count-1]);
+			}
+			if (dwarfSelectCheckBox.Checked){
+				heroes.Add(new Hero (board.AssignLocation(board.rooms[0]), board.startDirection, 8, 5, 6, 8, 5, HeroType.Dwarf));
+				board.rooms[0].occupants.Add(heroes[heroes.Count-1]);
+			}
+			if (elfSelectCheckBox.Checked){
+				heroes.Add(new Hero (board.AssignLocation(board.rooms[0]), board.startDirection, 9, 9, 5, 5, 4, HeroType.Elf));
+				board.rooms[0].occupants.Add(heroes[heroes.Count-1]);
+			}
+			if (wizardSelectCheckBox.Checked){
+				heroes.Add(new Wizard (board.AssignLocation(board.rooms[0]), board.startDirection, 5, 6, 4, 4, 3, HeroType.Wizard));
+				board.rooms[0].occupants.Add(heroes[heroes.Count-1]);
+			}
+			
+			// If no heroes are selected, assign Warrior only.
+			if (heroes.Count == 0) heroes.Add(new Hero (board.AssignLocation(board.rooms[0]), (Direction) random.Next(4), 8, 6, 6, 8, 4, HeroType.Warrior));
 			
 			// Assign active hero (1st in Heroes List)
 			activeHero = (Hero) heroes[0];
@@ -148,49 +132,28 @@ namespace Dungeons
 			ResetGame();
 			
 		}
-
-		// This method is called from multiple locations, so is not part of StartButtonClick() (unlike Hero location assignment)
-		void AssignBaddieLocations()
-			{
-			// Only assigns location if it is not occupied already by hero or preceding baddie
-			for (int i = 0; i < numberOfBaddies; i++) {
-				
-				Tile bufferLocation = RandomLocation();
-				Boolean tileAvailable = true;
-				IEnumerable<Character> everybody = heroes.Concat(baddies);
-				
-				// Check other locations and reassign bufferLocation until it is an available location
-				do{
-					// Assume location is initially free
-					tileAvailable = true;
-					foreach (Character anybody in everybody)
-					{
-						if (bufferLocation == anybody.location)
-						{
-							// If location not free, chooose another and check everybody again
-							bufferLocation = RandomLocation();
-							tileAvailable = false;
-							break;
-						}
-					}
-				} while (!tileAvailable);
-					
-				// bufferLocation is available, so assign it to new Baddie
-				baddies.Add(new Baddie (bufferLocation, (Direction)random.Next(4), 1, 1, 1, 1, 1));
-			}
-		}
 		
+		/*
+		// Returns random Tile location from anywhere in Board.
 		public Tile RandomLocation()
 		{
 			Room randomRoom = board.rooms[random.Next(board.rooms.Count)];
 			Tile randomTile = randomRoom.tiles[random.Next(randomRoom.tiles.Count)];
 			return randomTile;
 		}
+		*/
+		
+		// Returns random Tile location from anywhere in specified Room.
+		public Tile RandomLocation(Room room)
+		{
+			Tile randomTile = room.tiles[random.Next(room.tiles.Count)];
+			return randomTile;
+		}
 		
 		void ResetGame()
 		{
-			baddieSelectorPanel.Visible = false;
 			heroesSelectorPanel.Visible = false;
+			difficultySelectorPanel.Visible = false;
 			gameOverButton.Visible = false;
 			startButton.Visible = false;
 			scrollGroupBox.Visible = true;
@@ -256,20 +219,23 @@ namespace Dungeons
 			}
 		}
 		
-		// Method to draw entire board.
+		// Method to draw entire visible board.
 		private void DrawLocation()
 		{
 			pictureBox1.Refresh();
 			g = pictureBox1.CreateGraphics();
 			
-			// Draw Room(s)
+			// Draw Room(s) - N.B. Only visible rooms are drawn.
 			foreach (Room room in board.rooms)
 			{
-				foreach (Tile tile in room.tiles)
+				if(room.visible == true)
 				{
-					tile.Draw(resources, g, origin, scale);
+					foreach (Tile tile in room.tiles)
+					{
+						tile.Draw(resources, g, origin, scale);
+					}
 				}
-			}
+			}	
 			
 			// Draw all Characters on the board.
 			DrawCharacter();
@@ -290,7 +256,7 @@ namespace Dungeons
 		// Method to draw all characters.
 		private void DrawCharacter()
 		{
-			everybody = heroes.Concat(baddies);
+			everybody = heroes.Concat(visibleBaddies);
 			
 			foreach (Character anybody in everybody)
 			{
@@ -347,6 +313,9 @@ namespace Dungeons
 				spellAffectAllButton.Enabled = false;
 				spellExplodeButton.Visible = false;
 				spellExplodeButton.Enabled = false;	
+				
+				ActiveHeroPictureBox.Image = Dungeons.Images.hero_select_warrior;
+				ActiveHeroStatsLabel.Text = String.Format("Wounds left = {0} of {1}.", (activeHero.stats[Stats.W] - activeHero.damageTaken), activeHero.stats[Stats.W]);
 			}
 			
 			if(activeHero.type == HeroType.Dwarf)
@@ -360,6 +329,9 @@ namespace Dungeons
 				spellAffectAllButton.Enabled = false;
 				spellExplodeButton.Visible = false;
 				spellExplodeButton.Enabled = false;
+				
+				ActiveHeroPictureBox.Image = Dungeons.Images.hero_select_dwarf;
+				ActiveHeroStatsLabel.Text = String.Format("Wounds left = {0} of {1}.", (activeHero.stats[Stats.W] - activeHero.damageTaken), activeHero.stats[Stats.W]);
 			}
 			
 			if(activeHero.type == HeroType.Elf)
@@ -373,6 +345,9 @@ namespace Dungeons
 				spellAffectAllButton.Enabled = false;
 				spellExplodeButton.Visible = false;
 				spellExplodeButton.Enabled = false;
+				
+				ActiveHeroPictureBox.Image = Dungeons.Images.hero_select_elf;
+				ActiveHeroStatsLabel.Text = String.Format("Wounds left = {0} of {1}.", (activeHero.stats[Stats.W] - activeHero.damageTaken), activeHero.stats[Stats.W]);
 			}
 			if(activeHero.type == HeroType.Wizard)
 			{
@@ -385,6 +360,9 @@ namespace Dungeons
 				
 				combatRangedButton.Visible = false;
 				combatRangedButton.Enabled = false;
+				
+				ActiveHeroPictureBox.Image = Dungeons.Images.hero_select_wizard;
+				ActiveHeroStatsLabel.Text = String.Format("Wounds left = {0} of {1}.", (activeHero.stats[Stats.W] - activeHero.damageTaken), activeHero.stats[Stats.W]);
 			}
 			
 			if(activeHero.location.adjacencies[activeHero.facing] is Door)
@@ -404,7 +382,7 @@ namespace Dungeons
 		{
 			Tile moveTarget = activeHero.location.Adjacent(activeHero.facing);
 			Boolean directionProblem = false;
-			everybody = heroes.Concat(baddies);
+			everybody = heroes.Concat(visibleBaddies);
 			
 			// Check there is an adjacent Tile (could be occupied at this point).
 			if(moveTarget == null)
@@ -433,13 +411,61 @@ namespace Dungeons
 			
 			else
 			{
+				/*
+				 * THIS CODE IS AN EARLY ATTEMPT TO ONLY RE-DRAW GRAPHICAL COMPONENTS THAT HAVE CHANGED AS A RESULT OF AN ACTION, INSTEAD OF REDRAWING EVERYTHING AS A RESULT
+				 * OF AN ACTION.
+				 * 
 				// Invalidate areas of graphics to be redrawn (activeHero's current location and intended location).
 				pictureBox1.Invalidate(new Rectangle((activeHero.location.tileLocation.X*scale)+origin.X, (activeHero.location.tileLocation.Y*scale)+origin.Y, scale, scale));
 				pictureBox1.Invalidate(new Rectangle((moveTarget.tileLocation.X*scale)+origin.X, (moveTarget.tileLocation.Y*scale)+origin.Y, scale, scale));
+				
 				// Add tiles and character to redraw lists.
 				tilesForRedraw.Add(activeHero.location);
 				tilesForRedraw.Add(moveTarget);
 				charactersForRedraw.Add(activeHero);
+				
+				
+				//See if other rooms now visible and add to visibleRooms list if so.
+				Boolean newTile = true;
+				foreach(Room room in board.rooms)
+				{
+					if(room.visible == true)
+					{
+						foreach(Tile tile in room.tiles)
+						{
+							if(tile == moveTarget)
+							{
+								newTile = false;							
+							}
+						}
+					}
+				}
+				
+				if(newTile) 		// new Tile is in a currently non-visible room, so update Board.visibleRooms list.
+				{
+					// Find Room that moveTarget is in
+					Boolean tileFound = false;
+					foreach(Room room in board.rooms)
+					{
+						foreach(Tile tile in room.tiles)
+						{
+							if(tile == moveTarget)
+							{
+								// Update newly visible rooms and redraw board.
+								room.UpdateVisibleRooms();
+								tileFound = true;
+								break;
+							}
+							if(tileFound) break;
+						}
+						if(tileFound) break;
+					}
+					
+					// Reset temp variables;
+					newTile = false;
+					tileFound = false;
+				}
+				*/
 				
 				// Move is now fine to execute!
 				activeHero.MoveTo(moveTarget);
@@ -451,9 +477,12 @@ namespace Dungeons
 				}
 				
 				// Redraw invalidated regions and redraw activeHero i.e. update Hero location graphically.
+				pictureBox1.Invalidate();
 				pictureBox1.Update();
-				DrawLocation(tilesForRedraw);
-				DrawCharacter(charactersForRedraw);
+				//DrawLocation(tilesForRedraw);
+				//DrawCharacter(charactersForRedraw);
+				DrawLocation();
+				DrawCharacter();
 				DrawActionButtons();
 			}
 		}
@@ -466,9 +495,9 @@ namespace Dungeons
 			// TODO Add some AI to the baddie/baddies so they move more intelligently!
 			// Currently the MoveBaddie() routine copies the Hero movement one - this will change when Baddies have brains..
 			
-			everybody = heroes.Concat(baddies);
+			everybody = heroes.Concat(visibleBaddies);
 			
-			foreach (Baddie movingBaddie in baddies)
+			foreach (Baddie movingBaddie in visibleBaddies)
 			{
 				Boolean directionProblem = false;
 				
@@ -491,7 +520,6 @@ namespace Dungeons
 						}
 					}
 				}
-				// <end> CODE FROM HERO MOVEMENT
 				
 				if(!directionProblem)		// N.B. If directionProblem=true movingBaddie doesn't move or change facing.
 				{
@@ -501,11 +529,13 @@ namespace Dungeons
 					
 					// Add tile to redraw list.
 					tilesForRedraw.Add(movingBaddie.location);
+					
 					// Add character to redraw list.
 					charactersForRedraw.Add(movingBaddie);
 					
 					// Move is okay to execute!
 					movingBaddie.MoveTo(moveTarget);
+					
 					// Update movingBaddie facing to reflect completed move.
 					movingBaddie.NewFacing(baddieMoveDirection);
 				} 
@@ -536,6 +566,7 @@ namespace Dungeons
 			
 			// Invalidate areas of graphics to be redrawn - activeHero's current location.
 			pictureBox1.Invalidate(new Rectangle((activeHero.location.tileLocation.X*scale)+origin.X, (activeHero.location.tileLocation.Y*scale)+origin.Y, scale, scale));
+			
 			// Add tile and activeHero to redraw list.
 			tilesForRedraw.Add(activeHero.location);
 			charactersForRedraw.Add(activeHero);
@@ -543,7 +574,7 @@ namespace Dungeons
 			pictureBox1.Update();
 			DrawLocation(tilesForRedraw);
 			DrawCharacter(charactersForRedraw);
-			DrawActionButtons();
+			DrawActionButtons();				// This occurs because a Door might become available/unavailable.
 		}
 		
 		void RightTurnButtonClick(object sender, EventArgs e)
@@ -552,6 +583,7 @@ namespace Dungeons
 			
 			// Invalidate areas of graphics to be redrawn - activeHero's current location.
 			pictureBox1.Invalidate(new Rectangle((activeHero.location.tileLocation.X*scale)+origin.X, (activeHero.location.tileLocation.Y*scale)+origin.Y, scale, scale));
+			
 			// Add tile and activeHero to redraw list.
 			tilesForRedraw.Add(activeHero.location);
 			charactersForRedraw.Add(activeHero);
@@ -559,7 +591,7 @@ namespace Dungeons
 			pictureBox1.Update();
 			DrawLocation(tilesForRedraw);
 			DrawCharacter(charactersForRedraw);
-			DrawActionButtons();
+			DrawActionButtons();				// This occurs because a Door might become available/unavailable.
 		}
 		
 		void FightButtonClick(object sender, System.EventArgs e)
@@ -588,7 +620,7 @@ namespace Dungeons
 			
 			// If attackLocation exists see who is in it. If nobody, fight is over.
 			if (attackLocation !=null){
-				foreach (Baddie baddie in baddies){
+				foreach (Baddie baddie in visibleBaddies){
 					if(baddie.location == attackLocation){
 						activeBaddie = baddie;
 						break;
@@ -597,23 +629,23 @@ namespace Dungeons
 			} else failedFightButton.Visible = true;
 			
 			// If there is a baddie infront of activeHero, kill it
-			if (activeBaddie !=null) KillBaddie();
+			if (activeBaddie !=null) HitBaddie();
 			else failedFightButton.Visible = true;
 		}
 		
 		void SuccessfulFightButtonClick(object sender, EventArgs e)
 		{
 			successfulFightButton.Visible = false;
-			if (baddies.Count == 0)	
+			if ((visibleBaddies.Count == 0)	&& remainingBaddies.Count == 0)
 			{
-				// Success!! Game Over!
+				// Success!! Game Over! (All Baddies are dead).
 				GameOver();
 			}
 			else
 			{
 				controlsGroupBox.Enabled = true;
-				DrawCharacter(charactersForRedraw);
 				DrawLocation(tilesForRedraw);
+				DrawCharacter(charactersForRedraw);
 			}
 			
 		}
@@ -643,7 +675,7 @@ namespace Dungeons
 			Boolean shotOver = false;
 			activeBaddie = null;
 			shotVictim = null;
-			everybody = heroes.Concat(baddies);
+			everybody = heroes.Concat(visibleBaddies);
 			
 			// Shoot in straight line until hit wall or other Character. If Character encountered, decide outcome based on Type.
 			
@@ -674,7 +706,7 @@ namespace Dungeons
 				if (shotVictim.GetType() != activeHero.GetType())
 				{
 					activeBaddie = (Baddie) shotVictim;
-					KillBaddie();
+					HitBaddie();
 				}
 				else
 				{
@@ -686,16 +718,31 @@ namespace Dungeons
 			else FailShot();
 		}
 		
-		void KillBaddie()
+		void HitBaddie()
 		{
-			g.DrawImage((Bitmap) resources.GetObject("dead_baddie"), 
+			if((activeBaddie.stats[Stats.W] - activeBaddie.damageTaken) == 1)	// Kill baddie!
+			{
+				g.DrawImage((Bitmap) resources.GetObject("damage"),
 			            new Rectangle((activeBaddie.location.tileLocation.X*scale)+origin.X, (activeBaddie.location.tileLocation.Y*scale)+origin.Y, scale, scale));
-			g.DrawImage((Bitmap) resources.GetObject("square_red"), 
-			            new Rectangle((activeBaddie.location.tileLocation.X*scale)+origin.X, (activeBaddie.location.tileLocation.Y*scale)+origin.Y, scale, scale));
-			controlsGroupBox.Enabled = false;
-			successfulFightButton.Visible = true;
-			tilesForRedraw.Add(activeBaddie.location);
-			baddies.Remove(activeBaddie);
+				g.DrawImage((Bitmap) resources.GetObject("square_red"), 
+				            new Rectangle((activeBaddie.location.tileLocation.X*scale)+origin.X, (activeBaddie.location.tileLocation.Y*scale)+origin.Y, scale, scale));
+				controlsGroupBox.Enabled = false;
+				successfulFightButton.Visible = true;
+				tilesForRedraw.Add(activeBaddie.location);
+				charactersForRedraw.Add(activeBaddie);
+				visibleBaddies.Remove(activeBaddie);
+			}
+			else
+			{
+				g.DrawImage((Bitmap) resources.GetObject("square_red"), 
+				            new Rectangle((activeBaddie.location.tileLocation.X*scale)+origin.X, (activeBaddie.location.tileLocation.Y*scale)+origin.Y, scale, scale));
+				controlsGroupBox.Enabled = false;
+				successfulFightButton.Visible = true;
+				tilesForRedraw.Add(activeBaddie.location);
+				charactersForRedraw.Add(activeBaddie);
+				activeBaddie.damageTaken++;
+			}
+			
 		}
 		
 		void FailShot()
@@ -725,7 +772,7 @@ namespace Dungeons
 		{
 			startButton.Visible = true;
 			heroesSelectorPanel.Visible = true;
-			baddieSelectorPanel.Visible = true;
+			difficultySelectorPanel.Visible = true;
 			gameOverButton.Visible = false;
 			
 			// Clear lists
@@ -745,33 +792,15 @@ namespace Dungeons
 			// Reset spell button images.
 			spellAffectAllButton.Image = Dungeons.Images.spell_affectAll;
 			spellExplodeButton.Image = Dungeons.Images.spell_explode;
+			
 		}
 		
 		void UseDoorButtonClick(object sender, EventArgs e)
 		{
 			if(activeHero.location.adjacencies[activeHero.facing] is Door){
-				(activeHero.location.adjacencies[activeHero.facing] as Door).OpenShut();
+				(activeHero.location.adjacencies[activeHero.facing] as Door).OpenShut(this);
 				
-				// Add both sides of door to Tile redraw list (one of which is activeHero.location).
-				tilesForRedraw.Add(activeHero.location);
-				tilesForRedraw.Add((activeHero.location.adjacencies[activeHero.facing] as Door).OtherSide(activeHero.location));
-				
-				// Add activeHero to the Character redraw list.
-				charactersForRedraw.Add(activeHero);
-				
-				// If any other Character is behind door, at it to Character redraw list.
-				everybody = heroes.Concat(baddies);
-				foreach(Character anybody in everybody)
-				{
-					if(anybody.location == (activeHero.location.adjacencies[activeHero.facing] as Door).OtherSide(activeHero.location))
-					{
-						charactersForRedraw.Add(anybody);
-					}
-				}
-				
-				// Redraw both lists.
-				DrawLocation(tilesForRedraw);
-				DrawCharacter(charactersForRedraw);
+				DrawLocation();
 			}
 		}
 		
@@ -827,6 +856,8 @@ namespace Dungeons
 		void SpellExplodeButtonClick(object sender, EventArgs e)
 		{
 			// Only cast spell if wizard has some spell uses left!
+			// TODO make this a high strength attack.
+			
 			if((activeHero as Wizard).spellExplodeRemaining != 0)
 				{ 
 			
@@ -844,7 +875,7 @@ namespace Dungeons
 				Boolean shotOver = false;
 				activeBaddie = null;
 				shotVictim = null;
-				everybody = heroes.Concat(baddies);
+				everybody = heroes.Concat(visibleBaddies);
 				spellVictims = new List<Baddie>();
 				
 				// Shoot in straight line until hit wall or other Character. If Character encountered, decide outcome based on Type.
@@ -931,11 +962,12 @@ namespace Dungeons
 							}
 						}
 						
-						// Kill all baddies in spellVictims list!
+						// Hit all baddies in spellVictims list!
 						foreach(Baddie victim in spellVictims)
 							{
 								activeBaddie = victim;	
-								KillBaddie();
+								charactersForRedraw.Add(shotVictim);
+								HitBaddie();
 							}
 					}
 					else
@@ -962,6 +994,8 @@ namespace Dungeons
 		void SpellAffectAllButtonClick(object sender, EventArgs e)
 		{
 			// Only cast spell if wizard has some spell uses left!
+			// TODO make this a low-mid strength attack.
+			
 			if((activeHero as Wizard).spellAffectAllRemaining != 0)
 			{
 				// Find Room wizard is in.
@@ -983,7 +1017,7 @@ namespace Dungeons
 				List<Baddie> hitBySpell = new List<Baddie>();
 				
 				// Populate list with baddies affected i.e. the ones in the same room as the wizard.
-				foreach (Baddie baddie in baddies)
+				foreach (Baddie baddie in visibleBaddies)
 				{
 					foreach(Tile potentialTile in affected.tiles)
 					{
@@ -999,7 +1033,8 @@ namespace Dungeons
 				{
 					activeBaddie = baddie;
 					tilesForRedraw.Add(activeBaddie.location);
-					KillBaddie();
+					charactersForRedraw.Add(activeBaddie);
+					HitBaddie();
 				}
 				
 				// Clear affected list.

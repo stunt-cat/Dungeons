@@ -7,12 +7,13 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace Dungeons
 {
 	/// <summary>
 	/// Represents a doorway link between two tiles, which may themselves not be adjacent.
-	/// Requires having an 'owning' Tile (SideA) for location of the graphics.					TODO change this so Door is a discrete entity!
 	/// </summary>
 	
 	public class Door : ITileJoiner
@@ -22,7 +23,8 @@ namespace Dungeons
 		public Tile sideB;					// Side B is 'back' image of Door. N.B. Does not have to be adjacent to Side A!
 		public string imageRefSideA;		// Can be open or closed image.
 		public string imageRefSideB;		// Is only ever 'back' image.
-		public Direction wallLocation;			// Refers to side of Tile the door is on.
+		public Direction wallLocation;		// Refers to side of Tile the door is on.
+		public List<Room> makesVisible;		// List of Rooms that switch to visible when Door opened (for first time only).
 		
 		// Door constructor is empty but Door is initialised with InitialiseDoor() method. This is so Room(s) and Door(s) can be created before referencing each other.
 		public Door()
@@ -33,6 +35,7 @@ namespace Dungeons
 			this.wallLocation = wallLocation;
 			this.sideA = sideA;
 			this.sideB = sideB;
+			makesVisible = new List<Room>();
 			
 			// Get correct image files for door, due to the wall it is located on.
 			switch(wallLocation)
@@ -75,7 +78,7 @@ namespace Dungeons
 		}
 		
 		// Method to open/shut door.
-		public void OpenShut()
+		public void OpenShut(MainForm mf)
 		{
 			if (this.open == false)
 			{
@@ -86,6 +89,15 @@ namespace Dungeons
 					case Direction.South: this.imageRefSideA = "door_s_open"; break;
 					case Direction.West: this.imageRefSideA = "door_w_open"; break;
 				}
+				// Update Rooms and Occupants that are now visible.
+				foreach(Room room in makesVisible){
+					room.visible = true;
+					foreach(Character affectMe in room.occupants){
+						mf.visibleBaddies.Add(affectMe);
+						mf.remainingBaddies.Remove(affectMe);
+					}
+				}
+				
 			} else
 			{
 				this.open = false;
