@@ -154,7 +154,7 @@ namespace Dungeons
 					tiles[21].Initialise(TileType.clear, new Point(1,4), TileSelector(), tiles[16], tiles[22], null, tiles[20]);
 					tiles[22].Initialise(TileType.clear, new Point(2,4), TileSelector(), tiles[17], tiles[23], null, tiles[21]);
 					tiles[23].Initialise(TileType.clear, new Point(3,4), TileSelector(), tiles[18], tiles[24], null, tiles[22]);
-					tiles[24].Initialise(TileType.clear, new Point(4,4), TileSelector(), tiles[19], null, null, tiles[22]);
+					tiles[24].Initialise(TileType.clear, new Point(4,4), TileSelector(), tiles[19], null, null, tiles[23]);
 					
 					break;
 					
