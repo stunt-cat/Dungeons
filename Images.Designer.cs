@@ -172,6 +172,27 @@ namespace Dungeons {
 			}
 		}
 		
+		internal static System.Drawing.Bitmap damage_4 {
+			get {
+				object obj = ResourceManager.GetObject("damage_4", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap damage_5 {
+			get {
+				object obj = ResourceManager.GetObject("damage_5", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		internal static System.Drawing.Bitmap damage_6 {
+			get {
+				object obj = ResourceManager.GetObject("damage_6", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
 		internal static System.Drawing.Bitmap dead_baddie {
 			get {
 				object obj = ResourceManager.GetObject("dead_baddie", resourceCulture);

@@ -742,7 +742,7 @@ namespace Dungeons
 				charactersForRedraw.Add(activeBaddie);
 				activeBaddie.damageTaken++;
 			}
-			
+				
 		}
 		
 		void FailShot()
